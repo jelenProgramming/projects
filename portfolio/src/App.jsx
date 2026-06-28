@@ -12,7 +12,7 @@ const projects = [
     name: 'Job Tracker',
     description: 'Track job applications through every stage — wishlist to offer. Auth with Laravel Sanctum, kanban-style status updates, company management, event timeline per application.',
     tags: ['React', 'Laravel', 'Sanctum', 'MySQL'],
-    url: 'https://job-tracker-web.vercel.app',
+    url: 'https://job-tracker-web-fawn.vercel.app',
     source: 'https://github.com/jelenProgramming/job-tracker',
   },
   {

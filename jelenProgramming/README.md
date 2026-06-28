@@ -12,8 +12,8 @@ CS student at FERI Maribor. I build and ship full-stack web apps.
 
 | Project | What it does | Stack |
 |---|---|---|
-| [Link Shortener](https://link-shortener-web.vercel.app) | Short URLs with click analytics — by day, referrer, recency | React + Laravel + MySQL |
-| [Job Tracker](https://job-tracker-web.vercel.app) | Track applications from wishlist to offer, with auth and event timeline | React + Laravel Sanctum + MySQL |
+| [Link Shortener](https://linkshort-web-six.vercel.app) | Short URLs with click analytics — by day, referrer, recency | React + Laravel + MySQL |
+| [Job Tracker](https://job-tracker-web-fawn.vercel.app) | Track applications from wishlist to offer, with auth and event timeline | React + Laravel Sanctum + MySQL |
 | [Konjugationstrainer](https://deutsch-trainer-orcin.vercel.app) | German verb conjugation drill with instant feedback | React |
 | [GitHub Dev Card](https://github-dev-card-generator-gamma.vercel.app) | Generate a shareable dev profile card from any GitHub username | React + GitHub API |
 | [Weather App](https://vreme-app-chi.vercel.app) | Search weather by city — temp, wind, humidity | React + OpenWeatherMap |
