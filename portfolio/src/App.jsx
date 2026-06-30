@@ -2,6 +2,13 @@ import styles from './App.module.css'
 
 const projects = [
   {
+    name: 'CS Courses',
+    description: '97-topic interactive reference for FERI first-year CS — algorithms, data structures, calculus, discrete math, ARA, and more. 51 live visualizers, bilingual EN/DE, two study modes. KaTeX math rendering.',
+    tags: ['React', 'Vite', 'KaTeX'],
+    url: 'https://cs-courses.vercel.app',
+    source: 'https://github.com/jelenProgramming/cs-courses',
+  },
+  {
     name: 'Link Shortener',
     description: 'Create short URLs and track every click. Full-stack: Laravel REST API (Railway) with per-link analytics — clicks by day, top referrers, recent visits. React dashboard on Vercel.',
     tags: ['React', 'Laravel', 'MySQL', 'REST API'],
