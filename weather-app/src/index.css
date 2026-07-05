@@ -246,9 +246,44 @@ body {
   .card__temp { font-size: 52px; }
 }
 
+/* Header row + language toggle */
+.header__row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.langToggle {
+  display: flex;
+  gap: 2px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 2px;
+  background: var(--surface);
+}
+
+.langToggle__btn {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.langToggle__btn--on {
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+
 /* Focus visibility */
 .search__btn:focus-visible,
-.hint__btn:focus-visible {
+.hint__btn:focus-visible,
+.langToggle__btn:focus-visible {
   outline: 2px solid var(--text);
   outline-offset: 2px;
 }

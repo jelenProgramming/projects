@@ -20,7 +20,7 @@ CS student at FERI Maribor, Slovenia. I build full-stack web apps and deploy the
 
 **[GitHub Dev Card](https://github-dev-card-generator-gamma.vercel.app)** — Generate a shareable developer card from any GitHub username. Stats, top languages, repo count.
 
-**[Weather App](https://vreme-app-chi.vercel.app)** — City weather search. Temperature, humidity, wind speed. React + OpenWeatherMap API.
+**[Weather App](https://weather-app-jelen.vercel.app)** — City weather search. Temperature, humidity, wind speed. React + OpenWeatherMap API.
 
 ---
 
