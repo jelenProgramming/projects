@@ -9,6 +9,13 @@ const projects = [
     source: 'https://github.com/jelenProgramming/cs-courses',
   },
   {
+    name: 'SQL Playground',
+    description: 'Write and run real SQL in the browser: SQLite compiled to WebAssembly, live schema explorer, and 12 guided exercises checked against actual result sets, so any correct query passes. TypeScript throughout, 58 unit tests with Vitest.',
+    tags: ['TypeScript', 'React', 'WebAssembly', 'Vitest'],
+    url: 'https://sql-playground-weld.vercel.app',
+    source: 'https://github.com/jelenProgramming/sql-playground',
+  },
+  {
     name: 'Link Shortener',
     description: 'Create short URLs and track every click. Full-stack: Laravel REST API (Railway) with per-link analytics — clicks by day, top referrers, recent visits. React dashboard on Vercel.',
     tags: ['React', 'Laravel', 'MySQL', 'REST API'],
@@ -45,7 +52,7 @@ const projects = [
   },
 ]
 
-const stack = ['React', 'PHP', 'Laravel', 'SQL', 'JavaScript', 'HTML / CSS']
+const stack = ['React', 'TypeScript', 'PHP', 'Laravel', 'SQL', 'JavaScript', 'HTML / CSS']
 
 export default function App() {
   return (

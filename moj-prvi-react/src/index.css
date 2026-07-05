@@ -245,3 +245,38 @@ body {
   .stats { grid-template-columns: repeat(2, 1fr); }
   .card__temp { font-size: 52px; }
 }
+
+/* Focus visibility */
+.search__btn:focus-visible,
+.hint__btn:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+/* Micro-interactions, gated for motion sensitivity */
+@media (prefers-reduced-motion: no-preference) {
+  .search__btn { transition: background-color 0.12s ease, transform 0.08s ease; }
+  .search__btn:active:not(:disabled) { transform: scale(0.985); }
+
+  .weather-icon { animation: iconin 0.35s ease-out both; }
+  @keyframes iconin {
+    from { opacity: 0; transform: scale(0.88); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .card .stat { animation: statin 0.3s ease-out both; }
+  .card .stat:nth-child(1) { animation-delay: 0.05s; }
+  .card .stat:nth-child(2) { animation-delay: 0.1s; }
+  .card .stat:nth-child(3) { animation-delay: 0.15s; }
+  .card .stat:nth-child(4) { animation-delay: 0.2s; }
+  @keyframes statin {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .error { animation: slideup 0.2s ease; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card { animation: none; }
+}

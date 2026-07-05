@@ -18,4 +18,14 @@ CS student at FERI Maribor, Slovenia. I build full-stack web apps and deploy the
 
 **[Konjugationstrainer](https://deutsch-trainer-orcin.vercel.app)** — German verb conjugation drill with instant feedback. Accepts umlauts and alternate spellings. React.
 
-**[GitHub Dev Card](https://github-dev-card-generator-gamma
+**[GitHub Dev Card](https://github-dev-card-generator-gamma.vercel.app)** — Generate a shareable developer card from any GitHub username. Stats, top languages, repo count.
+
+**[Weather App](https://vreme-app-chi.vercel.app)** — City weather search. Temperature, humidity, wind speed. React + OpenWeatherMap API.
+
+---
+
+**Portfolio:** [portfolio-green-zeta-25.vercel.app](https://portfolio-green-zeta-25.vercel.app)  
+**Email:** jelenprogramming@gmail.com  
+**Languages:** EN / DE (C1)
+
+Open to freelance work and junior roles in Slovenia and Austria.
