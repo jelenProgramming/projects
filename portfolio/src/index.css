@@ -79,3 +79,22 @@ a {
     transition: background-color 0.12s ease, color 0.12s ease;
   }
 }
+
+/* reveal on scroll, js sets data-in via IntersectionObserver */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+[data-reveal][data-in] { opacity: 1; transform: none; }
+
+/* native crossfade for lang + project switching */
+::view-transition-old(root),
+::view-transition-new(root) { animation-duration: 0.28s; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  [data-reveal] { opacity: 1; transform: none; transition: none; }
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation: none; }
+}

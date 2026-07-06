@@ -1,0 +1,16 @@
+# dependencies + build output, all regenerable
+node_modules/
+dist/
+dist-ssr/
+
+# local env + secrets
+*.local
+.env
+.env.*
+!.env.example
+
+# editor + os cruft
+.idea/
+.vscode/
+.DS_Store
+.vercel
