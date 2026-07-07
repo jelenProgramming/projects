@@ -135,14 +135,17 @@ const loadLang = () => {
 // reveal sections as they scroll in
 function useReveal() {
   useEffect(() => {
+    const els = [...document.querySelectorAll('[data-reveal]')]
     const io = new IntersectionObserver((entries) => {
       for (const e of entries) if (e.isIntersecting) {
         e.target.setAttribute('data-in', '')
         io.unobserve(e.target)
       }
     }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 })
-    document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el))
-    return () => io.disconnect()
+    els.forEach(el => io.observe(el))
+    // safety net, above-the-fold content must never stay hidden
+    const t = setTimeout(() => els.forEach(el => el.setAttribute('data-in', '')), 1200)
+    return () => { io.disconnect(); clearTimeout(t) }
   }, [])
 }
 
