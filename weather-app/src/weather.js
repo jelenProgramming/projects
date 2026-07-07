@@ -80,23 +80,29 @@ export async function geocode(name, lang = 'en') {
 }
 
 async function fetchOpenMeteo(lat, lon) {
+  // multi-model suffixing only works on hourly, so pull hourly and read the current hour
   const u = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
-    `&current=${CUR.join(',')}&models=${OM_MODELS.join(',')}&timezone=auto`
+    `&current=temperature_2m&hourly=${CUR.join(',')}&models=${OM_MODELS.join(',')}&forecast_days=1&timezone=auto`
   const r = await fetch(u)
   if (!r.ok) throw new Error('open-meteo failed')
-  const data = await r.json()
-  // build one source from a current-block, sfx is the per-model key suffix (or empty)
-  const src = (m, c, sfx) => ({
-    id: m, label: OM_LABELS[m] || m, provider: 'Open-Meteo', type: 'raw',
-    tempC: c[`temperature_2m${sfx}`], feelsC: c[`apparent_temperature${sfx}`], humidity: c[`relative_humidity_2m${sfx}`],
-    precip: c[`precipitation${sfx}`], code: c[`weather_code${sfx}`], cloud: c[`cloud_cover${sfx}`],
-    windKph: c[`wind_speed_10m${sfx}`], windDir: c[`wind_direction_10m${sfx}`], isDay: c[`is_day${sfx}`],
-  })
-  // multi-model requests come back as an array, one entry per model in order
-  const out = Array.isArray(data)
-    ? data.map((d, i) => src(OM_MODELS[i] || `m${i}`, d.current || {}, ''))
-    : OM_MODELS.map(m => src(m, data.current || {}, `_${m}`))
-  return out.filter(s => typeof s.tempC === 'number')
+  const d = await r.json()
+  const h = d.hourly || {}, times = h.time || []
+  const ref = (d.current?.time || '').slice(0, 13) + ':00' // this hour, on the hour
+  let i = times.indexOf(ref)
+  if (i < 0) i = Math.max(0, times.length - 1)
+  const at = k => (Array.isArray(h[k]) ? h[k][i] : undefined)
+  const out = []
+  for (const m of OM_MODELS) {
+    const t = at(`temperature_2m_${m}`)
+    if (typeof t !== 'number') continue // this model has no data for the spot
+    out.push({
+      id: m, label: OM_LABELS[m] || m, provider: 'Open-Meteo', type: 'raw',
+      tempC: t, feelsC: at(`apparent_temperature_${m}`), humidity: at(`relative_humidity_2m_${m}`),
+      precip: at(`precipitation_${m}`), code: at(`weather_code_${m}`), cloud: at(`cloud_cover_${m}`),
+      windKph: at(`wind_speed_10m_${m}`), windDir: at(`wind_direction_10m_${m}`), isDay: at(`is_day_${m}`),
+    })
+  }
+  return out
 }
 
 async function fetchOWM(lat, lon, key) {
