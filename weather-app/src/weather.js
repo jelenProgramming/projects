@@ -84,19 +84,19 @@ async function fetchOpenMeteo(lat, lon) {
     `&current=${CUR.join(',')}&models=${OM_MODELS.join(',')}&timezone=auto`
   const r = await fetch(u)
   if (!r.ok) throw new Error('open-meteo failed')
-  const c = (await r.json()).current || {}
-  const out = []
-  for (const m of OM_MODELS) {
-    const t = c[`temperature_2m_${m}`]
-    if (t == null) continue // model has no coverage here, skip it honestly
-    out.push({
-      id: m, label: OM_LABELS[m] || m, provider: 'Open-Meteo', type: 'raw',
-      tempC: t, feelsC: c[`apparent_temperature_${m}`], humidity: c[`relative_humidity_2m_${m}`],
-      precip: c[`precipitation_${m}`], code: c[`weather_code_${m}`], cloud: c[`cloud_cover_${m}`],
-      windKph: c[`wind_speed_10m_${m}`], windDir: c[`wind_direction_10m_${m}`], isDay: c[`is_day_${m}`],
-    })
-  }
-  return out
+  const data = await r.json()
+  // build one source from a current-block, sfx is the per-model key suffix (or empty)
+  const src = (m, c, sfx) => ({
+    id: m, label: OM_LABELS[m] || m, provider: 'Open-Meteo', type: 'raw',
+    tempC: c[`temperature_2m${sfx}`], feelsC: c[`apparent_temperature${sfx}`], humidity: c[`relative_humidity_2m${sfx}`],
+    precip: c[`precipitation${sfx}`], code: c[`weather_code${sfx}`], cloud: c[`cloud_cover${sfx}`],
+    windKph: c[`wind_speed_10m${sfx}`], windDir: c[`wind_direction_10m${sfx}`], isDay: c[`is_day${sfx}`],
+  })
+  // multi-model requests come back as an array, one entry per model in order
+  const out = Array.isArray(data)
+    ? data.map((d, i) => src(OM_MODELS[i] || `m${i}`, d.current || {}, ''))
+    : OM_MODELS.map(m => src(m, data.current || {}, `_${m}`))
+  return out.filter(s => typeof s.tempC === 'number')
 }
 
 async function fetchOWM(lat, lon, key) {

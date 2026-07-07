@@ -14,9 +14,8 @@ function withTransition(update) {
 const UI = {
   en: {
     work: 'Work', about: 'About', getInTouch: 'Get in touch',
-    eyebrow: 'CS student · FERI Maribor · Slovenia',
     titleA: 'I build web apps', titleB: 'and bring them to life.',
-    heroSub: 'React, PHP, Laravel. EN / DE (C1). Open to freelance work and junior roles in Slovenia and Austria.',
+    heroSub: 'React, PHP, Laravel, TypeScript, SQL. Open to freelance and junior roles (Slovenia, Austria).',
     seeWork: 'See my work',
     stack: 'Stack',
     selected: 'Selected work', more: 'More projects',
@@ -34,9 +33,8 @@ const UI = {
   },
   de: {
     work: 'Arbeit', about: 'Über mich', getInTouch: 'Kontakt',
-    eyebrow: 'Informatikstudent · FERI Maribor · Slowenien',
     titleA: 'Ich baue Web-Apps', titleB: 'und bringe sie zum Leben.',
-    heroSub: 'React, PHP, Laravel. EN / DE (C1). Offen für Freelance-Aufträge und Junior-Stellen in Slowenien und Österreich.',
+    heroSub: 'React, PHP, Laravel, TypeScript, SQL. Offen für Freelance und Junior-Stellen (Slowenien, Österreich).',
     seeWork: 'Meine Arbeit',
     stack: 'Stack',
     selected: 'Ausgewählte Arbeit', more: 'Weitere Projekte',
@@ -209,7 +207,6 @@ export default function App() {
         <section className={styles.hero}>
           <ConstellationHero />
           <div className={styles.heroInner}>
-            <p className={styles.heroEyebrow} data-reveal>{t.eyebrow}</p>
             <h1 className={styles.heroTitle} data-reveal style={{ transitionDelay: '80ms' }}>
               {t.titleA}<br /><em>{t.titleB}</em>
             </h1>

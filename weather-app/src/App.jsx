@@ -140,7 +140,7 @@ export default function App() {
 
             <div className="conf">
               <div className="confBar"><span style={{ width: `${wx.confidence}%` }} /></div>
-              <div className="confLabel">{t.confidence} {wx.confidence}% · {t.averagedFrom} {wx.rawCount} {t.rawModels} + {wx.apiCount} API</div>
+              <div className="confLabel">{t.confidence} {wx.confidence}%</div>
             </div>
 
             <div className="grid">
