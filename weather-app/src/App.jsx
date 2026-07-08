@@ -121,7 +121,7 @@ export default function App() {
           </ul>
         )}
 
-        {status === 'loading' && <div className="state">{t.loading}…</div>}
+        {status === 'loading' && <div className="state">{t.loading}...</div>}
         {status === 'error' && (
           <div className="state">{t.error}. <button type="button" className="link" onClick={() => load(DEFAULT.lat, DEFAULT.lon, DEFAULT.name)}>{t.retry}</button></div>
         )}
