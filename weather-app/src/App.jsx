@@ -3,7 +3,7 @@ import Sky from './Sky.jsx'
 import { aggregate, geocode, conditionLabel, category } from './weather.js'
 
 const KEY = import.meta.env.VITE_API_KEY
-const DEFAULT = { name: 'Maribor', country: 'Slovenia', lat: 46.5547, lon: 15.6459 }
+const DEFAULT = { name: 'London', country: 'United Kingdom', lat: 51.5074, lon: -0.1278 }
 
 const T = {
   en: {
@@ -57,7 +57,7 @@ export default function App() {
     } catch { setStatus('error') }
   }
 
-  // on mount, try geolocation then fall back to Maribor
+  // on mount, try geolocation then fall back to a default city
   useEffect(() => {
     const fallback = () => load(DEFAULT.lat, DEFAULT.lon, `${DEFAULT.name}, ${DEFAULT.country}`)
     if (!navigator.geolocation) { fallback(); return }

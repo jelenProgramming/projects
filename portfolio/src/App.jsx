@@ -21,7 +21,7 @@ const UI = {
     selected: 'Selected work', more: 'More projects',
     live: 'Live ↗', source: 'Source',
     aboutTitle: 'About',
-    aboutBody: "I'm a first-year Computer Science student at FERI Maribor. I like carrying an idea all the way to a deployed, tested product, React on the front, Laravel and MySQL on the back. I work in English and German (C1) and I'm looking for junior or freelance work in Slovenia and Austria.",
+    aboutBody: "I'm a Computer Science student in Slovenia. I like carrying an idea all the way to a deployed, tested product, React on the front, Laravel and MySQL on the back. I work in English and German (C1) and I'm looking for junior or freelance work in Slovenia and Austria.",
     contactTitle: "Let's work together",
     contactSub: 'Student rates. Fast replies. English and German.',
     sendEmail: 'Send an email',
@@ -40,7 +40,7 @@ const UI = {
     selected: 'Ausgewählte Arbeit', more: 'Weitere Projekte',
     live: 'Live ↗', source: 'Quellcode',
     aboutTitle: 'Über mich',
-    aboutBody: 'Ich studiere Informatik im ersten Jahr an der FERI Maribor. Ich bringe eine Idee gern bis zum fertigen, getesteten Produkt, React im Frontend, Laravel und MySQL im Backend. Ich arbeite auf Englisch und Deutsch (C1) und suche eine Junior- oder Freelance-Stelle in Slowenien und Österreich.',
+    aboutBody: 'Ich studiere Informatik in Slowenien. Ich bringe eine Idee gern bis zum fertigen, getesteten Produkt, React im Frontend, Laravel und MySQL im Backend. Ich arbeite auf Englisch und Deutsch (C1) und suche eine Junior- oder Freelance-Stelle in Slowenien und Österreich.',
     contactTitle: 'Arbeiten wir zusammen',
     contactSub: 'Studententarife. Schnelle Antworten. Deutsch und Englisch.',
     sendEmail: 'E-Mail schreiben',
@@ -70,8 +70,8 @@ const projects = [
     url: 'https://cs-courses.vercel.app',
     source: 'https://github.com/jelenProgramming/cs-courses',
     desc: {
-      en: '97-topic interactive reference for first-year CS at FERI, algorithms, data structures, calculus, discrete math and more. 51 live visualizers, two study modes, KaTeX math, bilingual EN/DE.',
-      de: '97 Themen als interaktives Nachschlagewerk für das erste Studienjahr an der FERI: Algorithmen, Datenstrukturen, Analysis, diskrete Mathematik und mehr. 51 Live-Visualisierungen, zwei Lernmodi, KaTeX für Formeln, zweisprachig EN/DE.',
+      en: '97-topic interactive reference for core CS: algorithms, data structures, calculus, discrete math and more. 51 live visualizers, two study modes, KaTeX math, bilingual EN/DE.',
+      de: '97 Themen als interaktives Nachschlagewerk für die zentrale Informatik: Algorithmen, Datenstrukturen, Analysis, diskrete Mathematik und mehr. 51 Live-Visualisierungen, zwei Lernmodi, KaTeX für Formeln, zweisprachig EN/DE.',
     },
   },
   {

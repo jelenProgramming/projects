@@ -1,6 +1,6 @@
 # David Jelen
 
-CS student at FERI Maribor, Slovenia. I build full-stack web apps and deploy them.
+CS student in Slovenia. I build full-stack web apps and deploy them.
 
 **Stack:** React, TypeScript, Laravel, PHP, MySQL, REST APIs, JavaScript
 
@@ -8,7 +8,7 @@ CS student at FERI Maribor, Slovenia. I build full-stack web apps and deploy the
 
 ## Projects
 
-**[CS Courses](https://cs-courses.vercel.app)** | 97-topic interactive reference for FERI first-year CS. Algorithms, data structures, calculus, discrete math, ARA. 51 live visualizers, bilingual EN/DE, KaTeX math rendering. React + Vite.
+**[CS Courses](https://cs-courses.vercel.app)** | 97-topic interactive reference for core computer science. Algorithms, data structures, calculus, discrete math, databases. 51 live visualizers, bilingual EN/DE, KaTeX math rendering. React + Vite.
 
 **[SQL Playground](https://sql-playground-weld.vercel.app)** | Run real SQL in the browser: SQLite compiled to WebAssembly, live schema explorer, 12 guided exercises checked against actual result sets. TypeScript, 58 Vitest unit tests.
 
