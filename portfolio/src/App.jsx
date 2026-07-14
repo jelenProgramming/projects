@@ -26,7 +26,7 @@ const UI = {
     contactSub: 'Student rates. Fast replies. English and German.',
     sendEmail: 'Send an email',
     stats: [
-      { n: '7', l: 'projects live' },
+      { n: '8', l: 'projects live' },
       { n: '58', l: 'automated tests' },
       { n: 'C1', l: 'German' },
     ],
@@ -45,7 +45,7 @@ const UI = {
     contactSub: 'Studententarife. Schnelle Antworten. Deutsch und Englisch.',
     sendEmail: 'E-Mail schreiben',
     stats: [
-      { n: '7', l: 'Projekte live' },
+      { n: '8', l: 'Projekte live' },
       { n: '58', l: 'automatisierte Tests' },
       { n: 'C1', l: 'Deutsch' },
     ],
@@ -92,6 +92,16 @@ const projects = [
     desc: {
       en: 'Track job applications through every stage, from wishlist to offer. Auth with Laravel Sanctum, kanban-style status, company management, and an event timeline per application.',
       de: 'Bewerbungen durch jede Phase verfolgen, von der Wunschliste bis zum Angebot. Auth mit Laravel Sanctum, Status im Kanban-Stil, Firmenverwaltung und eine Ereignis-Timeline pro Bewerbung.',
+    },
+  },
+  {
+    name: 'Invoicer', featured: true,
+    tags: ['React', 'Laravel', 'Sanctum', 'PDF'],
+    url: 'https://invoicer-web-five.vercel.app',
+    source: 'https://github.com/jelenProgramming/projects/tree/main/projects/invoicer',
+    desc: {
+      en: 'Create clients and invoices, then export a clean PDF. Full-stack: a Laravel API with token auth (Sanctum) and server-side PDF generation, with a React dashboard on top.',
+      de: 'Kunden und Rechnungen anlegen und als sauberes PDF exportieren. Full-Stack: eine Laravel-API mit Token-Authentifizierung (Sanctum) und serverseitiger PDF-Erzeugung, dazu ein React-Dashboard.',
     },
   },
   {
