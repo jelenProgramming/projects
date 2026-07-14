@@ -1,0 +1,18 @@
+node_modules
+dist
+dist-ssr
+*.local
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea
+
+# local test scratch & vite temp
+_*.mjs
+_*.jsx
+*_check.mjs
+*_runner.mjs
+rendercheck.mjs
+vite.config.js.timestamp-*
+
+.vercel

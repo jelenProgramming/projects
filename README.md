@@ -1,19 +1,22 @@
-# projects
+# Projects
 
-Source for my portfolio site and weather app. Everything here is deployed on Vercel.
+Live web apps by David Jelen. React and Vite on the front, Laravel on the back.
 
-Live portfolio: https://portfolio-green-zeta-25.vercel.app
+**Portfolio** | https://portfolio-green-zeta-25.vercel.app | the entry site, in `portfolio/`
 
-## In this repo
+## projects/
 
-- `portfolio/` - the portfolio site (React + Vite). The 3D constellation hero and
-  the project switcher live here, no animation libraries, just Canvas and the
-  platform.
-- `weather-app/` - weather app (React + Vite).
+| App | Live | What it is |
+| --- | --- | --- |
+| CS Courses | https://cs-courses.vercel.app | Interactive reference for core computer science. 51 visualizers, KaTeX math, EN/DE. |
+| SQL Playground | https://sql-playground-weld.vercel.app | Run real SQL in the browser. SQLite via WebAssembly, 58 tests. |
+| Invoicer | React web + Laravel API | Invoices with PDF export and token auth. |
+| Job Tracker | https://job-tracker-web-fawn.vercel.app | Applications kanban with auth and a per-application timeline. |
+| Link Shortener | https://linkshort-web-six.vercel.app | Short URLs with per-link analytics. |
+| Weather App | https://weather-app-jelen.vercel.app | Multi-model consensus forecast. |
+| Konjugationstrainer | https://deutsch-trainer-orcin.vercel.app | German verb conjugation drill. |
+| Dev Card | https://github-dev-card-generator-gamma.vercel.app | Developer card from a GitHub username. |
 
-My other projects each have their own repo, all indexed on my GitHub profile:
-https://github.com/jelenProgramming
+Full-stack apps ship as an `api/` (Laravel) and `web/` (React) pair inside their folder.
 
----
-
-David Jelen. React, TypeScript, Laravel, PHP, MySQL. EN / DE (C1).
+Contact | jelenprogramming@gmail.com | https://linkedin.com/in/david-jelen-007067419

@@ -1,0 +1,99 @@
+:root {
+  --bg: #fbf9f4;
+  --surface: #ffffff;
+  --ink: #1a1714;
+  --ink-2: #5d564e;
+  --ink-3: #989084;
+  --muted: #8a8178;
+  --line: #ece6da;
+  --line-2: #ddd5c6;
+  --accent: #e0552b;
+  --accent-soft: #fbe9e2;
+  --ok: #1f9d63;
+  --ok-soft: #e4f4eb;
+  --no: #d23b3b;
+  --no-soft: #fbe7e7;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  background-image: radial-gradient(600px 360px at 88% -8%, rgba(224, 85, 43, 0.07), transparent 60%);
+}
+
+.app { max-width: 540px; margin: 0 auto; padding: 64px 22px 60px; }
+
+.head { text-align: center; margin-bottom: 26px; }
+.title { font-family: 'Fraunces', serif; font-weight: 700; font-size: 44px; letter-spacing: -0.02em; margin: 0; }
+.sub { color: var(--ink-2); margin: 8px 0 0; }
+
+.groups { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 22px; }
+.chip {
+  border: 1px solid var(--line-2); background: var(--surface); color: var(--ink-2);
+  font-family: 'JetBrains Mono', monospace; font-size: 12.5px; font-weight: 500;
+  padding: 7px 13px; border-radius: 999px; cursor: pointer; transition: all 0.14s;
+}
+.chip:hover { border-color: var(--accent); color: var(--accent); }
+.chip--on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.chip--on:hover { color: var(--bg); }
+
+.card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 22px;
+  padding: 30px 26px; box-shadow: 0 14px 40px rgba(26, 23, 20, 0.06);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.card--ok { border-color: var(--ok); }
+.card--no { border-color: var(--no); }
+
+.card__group {
+  display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent);
+  background: var(--accent-soft); padding: 4px 10px; border-radius: 999px; margin-bottom: 20px;
+}
+
+.prompt { display: flex; align-items: baseline; gap: 14px; }
+.prompt__pron { font-family: 'Fraunces', serif; font-weight: 700; font-size: 38px; letter-spacing: -0.01em; }
+.prompt__blank { font-family: 'Fraunces', serif; font-weight: 600; font-size: 34px; color: var(--line-2); letter-spacing: 0.05em; }
+.prompt__verb { color: var(--muted); font-size: 15px; margin-top: 8px; font-weight: 500; }
+.prompt__en { color: var(--muted); font-weight: 400; }
+
+.answer { display: flex; gap: 10px; margin-top: 24px; }
+.answer__input {
+  flex: 1; border: 1px solid var(--line-2); border-radius: 12px; background: var(--bg);
+  font-size: 17px; padding: 13px 15px; color: var(--ink); outline: none; transition: border-color 0.14s;
+  font-family: 'Inter', sans-serif;
+}
+.answer__input:focus { border-color: var(--accent); }
+.answer__input:disabled { opacity: 0.7; }
+.answer__btn {
+  border: none; background: var(--accent); color: #fff; font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; font-size: 14px; padding: 0 20px; border-radius: 12px; cursor: pointer; transition: background 0.14s;
+}
+.answer__btn:hover { background: #c8461f; }
+
+.feedback { margin-top: 18px; font-size: 15px; padding: 12px 15px; border-radius: 12px; }
+.feedback--ok { background: var(--ok-soft); color: var(--ok); }
+.feedback--no { background: var(--no-soft); color: var(--no); }
+.feedback strong { font-weight: 700; }
+
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 22px; }
+.statbox { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px 8px; text-align: center; }
+.statbox__value { font-family: 'Fraunces', serif; font-weight: 700; font-size: 24px; }
+.statbox__label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 3px; }
+
+.footer { margin-top: 40px; text-align: center; font-size: 12.5px; color: var(--muted); }
+.footer code { font-family: 'JetBrains Mono', monospace; background: var(--surface); border: 1px solid var(--line); padding: 1px 6px; border-radius: 6px; font-size: 11.5px; }
+
+@media (max-width: 480px) {
+  .title { font-size: 36px; }
+  .prompt__pron { font-size: 30px; }
+  .stats { grid-template-columns: repeat(2, 1fr); }
+}

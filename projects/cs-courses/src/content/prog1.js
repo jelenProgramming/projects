@@ -1,0 +1,124 @@
+// Programming I: the imperative core, with a C++ snippet per topic and the
+// same idea shown in Python, JavaScript, Java and C#. Original explanations.
+export const prog1Content = {
+  'variables-types': {
+    tldr: { en: 'A <strong>variable</strong> is a named box that stores a value of some <strong>type</strong>. In <strong>statically typed</strong> languages (C++, Java, C#) the type is fixed at compile time; in <strong>dynamically typed</strong> ones (Python, JavaScript) the type travels with the value at run time.', de: 'Eine <strong>Variable</strong> ist ein benannter Behaelter fuer einen Wert eines <strong>Typs</strong>. In <strong>statisch typisierten</strong> Sprachen (C++, Java, C#) steht der Typ zur Compilezeit fest; in <strong>dynamisch typisierten</strong> (Python, JavaScript) reist der Typ zur Laufzeit mit dem Wert.' },
+    intro: [
+      { en: 'The type decides how many bytes the value occupies, what operations are allowed, and how it is interpreted. An <code>int</code> and a <code>double</code> of the same bit pattern mean completely different numbers.',
+        de: 'Der Typ bestimmt, wie viele Bytes der Wert belegt, welche Operationen erlaubt sind und wie er interpretiert wird. Ein <code>int</code> und ein <code>double</code> mit gleichem Bitmuster bedeuten voellig verschiedene Zahlen.' },
+    ],
+    how: [
+      { en: 'Common primitive types: whole numbers (<code>int</code>), real numbers (<code>double</code>), single characters (<code>char</code>), truth values (<code>bool</code>), and text (<code>string</code>).',
+        de: 'Gaengige primitive Typen: ganze Zahlen (<code>int</code>), reelle Zahlen (<code>double</code>), einzelne Zeichen (<code>char</code>), Wahrheitswerte (<code>bool</code>) und Text (<code>string</code>).' },
+      { en: 'A local variable lives on the <strong>stack</strong> and disappears when its block ends. Static typing catches type errors before the program ever runs.',
+        de: 'Eine lokale Variable liegt auf dem <strong>Stack</strong> und verschwindet am Blockende. Statische Typisierung faengt Typfehler ab, bevor das Programm laeuft.' },
+    ],
+    code: {
+      cpp: `int age = 20;\ndouble price = 9.99;\nchar grade = 'A';\nstd::string name = "Ann";\nbool ok = true;`,
+      python: `age = 20\nprice = 9.99\ngrade = 'A'\nname = "Ann"\nok = True    # types are inferred at run time`,
+      js: `let age = 20;\nconst price = 9.99;\nlet grade = "A";\nlet name = "Ann";\nlet ok = true;`,
+      java: `int age = 20;\ndouble price = 9.99;\nchar grade = 'A';\nString name = "Ann";\nboolean ok = true;`,
+      csharp: `int age = 20;\ndouble price = 9.99;\nchar grade = 'A';\nstring name = "Ann";\nbool ok = true;`,
+    },
+    pitfalls: [
+      { en: 'Integer division truncates: <code>7 / 2</code> is <code>3</code>, not <code>3.5</code>, unless one operand is a real number. A frequent silent bug.',
+        de: 'Ganzzahldivision schneidet ab: <code>7 / 2</code> ist <code>3</code>, nicht <code>3.5</code>, ausser ein Operand ist reell. Ein haeufiger stiller Fehler.' },
+      { en: 'Fixed-size integer types <strong>overflow</strong> when a value exceeds their range, wrapping around instead of growing.',
+        de: 'Ganzzahltypen fester Groesse laufen bei Ueberschreitung ihres Bereichs <strong>ueber</strong> und springen um, statt zu wachsen.' },
+    ],
+  },
+
+  'control-flow': {
+    tldr: { en: 'Control flow decides <strong>which</strong> statements run and <strong>how often</strong>: <strong>conditionals</strong> (if / else / switch) branch on a test, and <strong>loops</strong> (for / while) repeat until a condition changes. Together they turn a straight-line script into an algorithm.', de: 'Ablaufsteuerung entscheidet, <strong>welche</strong> Anweisungen laufen und <strong>wie oft</strong>: <strong>Bedingungen</strong> (if / else / switch) verzweigen nach einem Test, <strong>Schleifen</strong> (for / while) wiederholen, bis sich eine Bedingung aendert.' },
+    intro: [
+      { en: 'A <strong>for</strong> loop is for a known count; a <strong>while</strong> loop repeats as long as a condition holds; <strong>if / else</strong> chooses a path. A <strong>switch</strong> is a clean multi-way branch on one value.',
+        de: 'Eine <strong>for</strong>-Schleife fuer eine bekannte Anzahl; eine <strong>while</strong>-Schleife wiederholt, solange eine Bedingung gilt; <strong>if / else</strong> waehlt einen Pfad. Ein <strong>switch</strong> ist eine saubere Mehrfachverzweigung ueber einen Wert.' },
+    ],
+    how: [
+      { en: 'Every loop needs a <strong>progress step</strong> toward its exit condition, or it never ends.',
+        de: 'Jede Schleife braucht einen <strong>Fortschritt</strong> zur Abbruchbedingung, sonst endet sie nie.' },
+    ],
+    code: {
+      cpp: `if (x > 0) std::cout << "pos";\nelse         std::cout << "non-pos";\n\nfor (int i = 0; i < n; i++)\n  sum += i;`,
+      python: `if x > 0:\n    print("pos")\nelse:\n    print("non-pos")\n\nfor i in range(n):\n    total += i`,
+      js: `if (x > 0) console.log("pos");\nelse       console.log("non-pos");\n\nfor (let i = 0; i < n; i++)\n  sum += i;`,
+      java: `if (x > 0) System.out.println("pos");\nelse       System.out.println("non-pos");\n\nfor (int i = 0; i < n; i++)\n  sum += i;`,
+      csharp: `if (x > 0) Console.WriteLine("pos");\nelse       Console.WriteLine("non-pos");\n\nfor (int i = 0; i < n; i++)\n  sum += i;`,
+    },
+    pitfalls: [
+      { en: 'An <strong>off-by-one</strong> in the loop bound (<code>&lt;</code> vs <code>&lt;=</code>) either skips the last item or runs one step too far. The most common loop bug.',
+        de: 'Ein <strong>Off-by-One</strong> in der Schleifengrenze (<code>&lt;</code> vs <code>&lt;=</code>) ueberspringt das letzte Element oder laeuft einen Schritt zu weit. Der haeufigste Schleifenfehler.' },
+    ],
+  },
+
+  'functions': {
+    tldr: { en: 'A <strong>function</strong> packages a piece of logic behind a name and a parameter list, so it can be reused and tested in isolation. The key question is <strong>how arguments are passed</strong>: <strong>by value</strong> (a copy) or <strong>by reference</strong> (the original).', de: 'Eine <strong>Funktion</strong> verpackt Logik hinter Name und Parameterliste, sodass sie wiederverwendbar und isoliert testbar ist. Zentrale Frage: <strong>wie werden Argumente uebergeben</strong>: <strong>per Wert</strong> (eine Kopie) oder <strong>per Referenz</strong> (das Original).' },
+    intro: [
+      { en: '<strong>By value</strong> copies the argument, so the function cannot change the caller&#39;s variable. <strong>By reference</strong> passes the original, so changes are visible outside. C++ picks with <code>&amp;</code>; managed languages pass primitives by value and objects by reference automatically.',
+        de: '<strong>Per Wert</strong> kopiert das Argument, die Funktion kann die Variable des Aufrufers nicht aendern. <strong>Per Referenz</strong> uebergibt das Original, Aenderungen sind aussen sichtbar. C++ waehlt mit <code>&amp;</code>; verwaltete Sprachen uebergeben Primitive per Wert und Objekte per Referenz automatisch.' },
+    ],
+    how: [
+      { en: 'A function should do <strong>one</strong> thing, take what it needs as parameters, and return its result rather than reaching for global state.',
+        de: 'Eine Funktion sollte <strong>eine</strong> Sache tun, ihre Eingaben als Parameter nehmen und das Ergebnis zurueckgeben, statt auf globalen Zustand zuzugreifen.' },
+    ],
+    code: {
+      cpp: `int add(int a, int b) { return a + b; }\n\nvoid inc(int& x) { x++; }   // by reference: changes the caller`,
+      python: `def add(a, b):\n    return a + b\n\n# numbers are immutable, so a function cannot rebind the caller's int`,
+      js: `function add(a, b) { return a + b; }\n\n// primitives pass by value, objects by reference`,
+      java: `int add(int a, int b) { return a + b; }\n\n// primitives pass by value, object references by value`,
+      csharp: `int Add(int a, int b) => a + b;\n\nvoid Inc(ref int x) => x++;   // ref parameter, like C++ by-reference`,
+    },
+    pitfalls: [
+      { en: 'Passing a large object <strong>by value</strong> copies it every call. In C++ pass by <code>const&amp;</code> to avoid the copy without allowing changes.',
+        de: 'Ein grosses Objekt <strong>per Wert</strong> zu uebergeben kopiert es bei jedem Aufruf. In C++ per <code>const&amp;</code> uebergeben, um die Kopie ohne Aenderungsrecht zu vermeiden.' },
+    ],
+  },
+
+  'pointers': {
+    tldr: { en: 'A <strong>pointer</strong> is a variable that stores a <strong>memory address</strong>. Through it you read or change the value living at that address, and you walk the heap, arrays and linked structures. A <strong>reference</strong> is a safer alias for an existing variable. This is a C and C++ signature; managed languages hide it.', de: 'Ein <strong>Zeiger</strong> ist eine Variable, die eine <strong>Speicheradresse</strong> haelt. Ueber ihn liest oder aenderst du den Wert an dieser Adresse und durchlaeufst Heap, Felder und verkettete Strukturen. Eine <strong>Referenz</strong> ist ein sicherer Alias fuer eine bestehende Variable. Typisch fuer C und C++; verwaltete Sprachen verbergen es.' },
+    intro: [
+      { en: 'Memory splits into the <strong>stack</strong> (fast, automatic local variables) and the <strong>heap</strong> (manually managed, long-lived allocations). A pointer is how you reach a heap allocation: <code>new</code> gives you the address, <code>delete</code> frees it.',
+        de: 'Speicher teilt sich in <strong>Stack</strong> (schnelle, automatische lokale Variablen) und <strong>Heap</strong> (manuell verwaltete, langlebige Allokationen). Ein Zeiger erreicht eine Heap-Allokation: <code>new</code> liefert die Adresse, <code>delete</code> gibt sie frei.' },
+    ],
+    how: [
+      { en: '<code>&amp;x</code> takes the address of <code>x</code>; <code>*p</code> <strong>dereferences</strong> the pointer to reach the value; <code>p-&gt;field</code> is shorthand for <code>(*p).field</code>.',
+        de: '<code>&amp;x</code> nimmt die Adresse von <code>x</code>; <code>*p</code> <strong>dereferenziert</strong> den Zeiger zum Wert; <code>p-&gt;field</code> ist Kurzform fuer <code>(*p).field</code>.' },
+    ],
+    code: {
+      cpp: `int x = 5;\nint* p = &x;   // p holds the address of x\n*p = 10;       // change x through the pointer\nint& r = x;    // reference: an alias for x`,
+      python: { na: 'Python has no pointers. Every variable is a name bound to an object, and you never touch raw addresses. The closest idea is that two names can bind to the same object, so a change through one is seen through the other.' },
+      js: { na: 'JavaScript has no pointers. Primitives are copied by value and objects are handled through references, but memory addresses are never exposed.' },
+      java: { na: 'Java has no explicit pointers. Object variables are references managed by the JVM, and there is no address arithmetic or manual free.' },
+      csharp: `int x = 5;\nref int r = ref x;   // safe reference alias, like C++ int&\n// raw pointers exist only inside an unsafe block:\n// unsafe { int* p = &x; *p = 10; }`,
+    },
+    pitfalls: [
+      { en: 'A <strong>dangling pointer</strong> (pointing at freed memory) and a <strong>null dereference</strong> are the classic crashes. After <code>delete</code>, set the pointer to <code>nullptr</code>.',
+        de: 'Ein <strong>haengender Zeiger</strong> (auf freigegebenen Speicher) und eine <strong>Null-Dereferenzierung</strong> sind die klassischen Abstuerze. Nach <code>delete</code> den Zeiger auf <code>nullptr</code> setzen.' },
+      { en: 'Every <code>new</code> needs exactly one matching <code>delete</code>, or you leak memory. Modern C++ prefers smart pointers that free automatically.',
+        de: 'Jedes <code>new</code> braucht genau ein passendes <code>delete</code>, sonst leckt Speicher. Modernes C++ bevorzugt Smart Pointer, die automatisch freigeben.' },
+    ],
+  },
+
+  'recursion': {
+    tldr: { en: '<strong>Recursion</strong> is a function that calls itself on a smaller input, with a <strong>base case</strong> that stops the descent. Each call gets its own stack frame. It shines on self-similar problems: factorials, tree walks, divide-and-conquer.', de: '<strong>Rekursion</strong> ist eine Funktion, die sich mit kleinerer Eingabe selbst aufruft, mit einem <strong>Basisfall</strong>, der den Abstieg stoppt. Jeder Aufruf hat seinen eigenen Stapelrahmen. Sie glaenzt bei selbstaehnlichen Problemen: Fakultaeten, Baumdurchlaeufe, Teile-und-herrsche.' },
+    intro: [
+      { en: 'Two parts are mandatory: the <strong>base case</strong> (the smallest input, answered directly) and the <strong>recursive case</strong> (reduce the problem and call yourself). Miss the base case and the calls never stop, overflowing the stack.',
+        de: 'Zwei Teile sind Pflicht: der <strong>Basisfall</strong> (kleinste Eingabe, direkt beantwortet) und der <strong>Rekursionsfall</strong> (Problem verkleinern und sich selbst aufrufen). Fehlt der Basisfall, enden die Aufrufe nie und der Stapel laeuft ueber.' },
+    ],
+    how: [
+      { en: 'Every recursion has an equivalent <strong>iterative</strong> version using an explicit stack; recursion just lets the call stack do that bookkeeping for you.',
+        de: 'Jede Rekursion hat eine gleichwertige <strong>iterative</strong> Version mit explizitem Stapel; Rekursion laesst nur den Aufrufstapel diese Buchhaltung uebernehmen.' },
+    ],
+    code: {
+      cpp: `int fact(int n) {\n  if (n <= 1) return 1;      // base case\n  return n * fact(n - 1);    // recursive case\n}`,
+      python: `def fact(n):\n    if n <= 1:            # base case\n        return 1\n    return n * fact(n - 1)`,
+      js: `function fact(n) {\n  if (n <= 1) return 1;      // base case\n  return n * fact(n - 1);\n}`,
+      java: `int fact(int n) {\n  if (n <= 1) return 1;      // base case\n  return n * fact(n - 1);\n}`,
+      csharp: `int Fact(int n) =>\n  n <= 1 ? 1 : n * Fact(n - 1);`,
+    },
+    pitfalls: [
+      { en: 'Deep recursion can <strong>overflow the stack</strong>. Plain factorial or Fibonacci recursion also repeats work; memoise or go iterative for large inputs.',
+        de: 'Tiefe Rekursion kann den <strong>Stapel ueberlaufen</strong> lassen. Einfache Fakultaets- oder Fibonacci-Rekursion wiederholt zudem Arbeit; memoisiere oder iteriere bei grossen Eingaben.' },
+    ],
+  },
+}

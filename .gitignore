@@ -14,3 +14,7 @@ dist-ssr/
 .vscode/
 .DS_Store
 .vercel
+vendor/
+*.sqlite
+.claude/
+storage/*.key
