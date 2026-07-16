@@ -1,9 +1,8 @@
 # Algorithm Visualizer
 
 An interactive, bilingual (English / German) learning resource that animates the
-algorithms, data structures and core computer-science concepts taught in the
-**core computer science** - plus the
-universal CS foundation shared across programs like MIT, Cambridge, TU Graz and
+algorithms, data structures and concepts of **core computer science**, the
+universal foundation shared across programs like MIT, Cambridge, TU Graz and
 TU München.
 
 Built for the moment a concept finally clicks before an exam: every page leads
@@ -11,7 +10,7 @@ with a plain-language **TL;DR** of what the thing actually does and when to reac
 for it, then lets you **watch it run step by step** with a narrated explanation of
 every move.
 
-> **94 topics across 15 categories - 51 fully interactive visualizers, every page with a complexity table and exam-trap notes.**
+> **116 topics across 15 categories, 52 fully interactive visualizers, every page with a complexity table and exam-trap notes.**
 
 ## Quick start
 

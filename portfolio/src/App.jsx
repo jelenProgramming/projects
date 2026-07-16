@@ -58,7 +58,7 @@ const projects = [
     name: 'SQL Playground', featured: true,
     tags: ['TypeScript', 'React', 'WebAssembly', 'Vitest'],
     url: 'https://sql-playground-weld.vercel.app',
-    source: 'https://github.com/jelenProgramming/sql-playground',
+    source: 'https://github.com/jelenProgramming/projects/tree/main/projects/sql-playground',
     desc: {
       en: 'Write and run real SQL in the browser: SQLite compiled to WebAssembly, a live schema explorer, and 12 guided exercises checked against actual result sets, so any correct query passes. TypeScript throughout, 58 unit tests with Vitest.',
       de: 'Echtes SQL im Browser schreiben und ausführen: SQLite als WebAssembly, ein Schema-Explorer und 12 Übungen, die gegen echte Ergebnismengen geprüft werden, jede korrekte Abfrage zählt. Durchgehend TypeScript, 58 Unit-Tests mit Vitest.',
@@ -68,17 +68,17 @@ const projects = [
     name: 'CS Courses', featured: true,
     tags: ['React', 'Vite', 'KaTeX'],
     url: 'https://cs-courses.vercel.app',
-    source: 'https://github.com/jelenProgramming/cs-courses',
+    source: 'https://github.com/jelenProgramming/projects/tree/main/projects/cs-courses',
     desc: {
-      en: '97-topic interactive reference for core CS: algorithms, data structures, calculus, discrete math and more. 51 live visualizers, two study modes, KaTeX math, bilingual EN/DE.',
-      de: '97 Themen als interaktives Nachschlagewerk für die zentrale Informatik: Algorithmen, Datenstrukturen, Analysis, diskrete Mathematik und mehr. 51 Live-Visualisierungen, zwei Lernmodi, KaTeX für Formeln, zweisprachig EN/DE.',
+      en: '116-topic interactive reference for core CS: algorithms, data structures, calculus, discrete math and more. 52 live visualizers, two study modes, KaTeX math, bilingual EN/DE.',
+      de: '116 Themen als interaktives Nachschlagewerk für die zentrale Informatik: Algorithmen, Datenstrukturen, Analysis, diskrete Mathematik und mehr. 52 Live-Visualisierungen, zwei Lernmodi, KaTeX für Formeln, zweisprachig EN/DE.',
     },
   },
   {
     name: 'Link Shortener', featured: true,
     tags: ['React', 'Laravel', 'MySQL', 'REST API'],
     url: 'https://linkshort-web-six.vercel.app',
-    source: 'https://github.com/jelenProgramming/link-shortener',
+    source: 'https://github.com/jelenProgramming/projects/tree/main/projects/link-shortener',
     desc: {
       en: 'Create short URLs and track every click. Full-stack: a Laravel REST API with per-link analytics, clicks by day, top referrers, recent visits, and a React dashboard on Vercel.',
       de: 'Kurz-URLs erstellen und jeden Klick verfolgen. Full-Stack: eine Laravel-REST-API mit Statistiken pro Link, Klicks pro Tag, Top-Referrer, letzte Besuche, und ein React-Dashboard auf Vercel.',
@@ -88,7 +88,7 @@ const projects = [
     name: 'Job Tracker', featured: true,
     tags: ['React', 'Laravel', 'Sanctum', 'MySQL'],
     url: 'https://job-tracker-web-fawn.vercel.app',
-    source: 'https://github.com/jelenProgramming/job-tracker',
+    source: 'https://github.com/jelenProgramming/projects/tree/main/projects/job-tracker',
     desc: {
       en: 'Track job applications through every stage, from wishlist to offer. Auth with Laravel Sanctum, kanban-style status, company management, and an event timeline per application.',
       de: 'Bewerbungen durch jede Phase verfolgen, von der Wunschliste bis zum Angebot. Auth mit Laravel Sanctum, Status im Kanban-Stil, Firmenverwaltung und eine Ereignis-Timeline pro Bewerbung.',
@@ -108,7 +108,7 @@ const projects = [
     name: 'Konjugationstrainer', featured: false,
     tags: ['React', 'Vite'],
     url: 'https://deutsch-trainer-orcin.vercel.app',
-    source: 'https://github.com/jelenProgramming/deutsch-trainer',
+    source: 'https://github.com/jelenProgramming/projects/tree/main/projects/deutsch-trainer',
     desc: {
       en: 'German verb conjugation drill. Type the present-tense form, get instant feedback. Accepts umlauts and alternate spellings.',
       de: 'Deutsche Verben im Präsens üben: Form eintippen, sofort Feedback bekommen. Akzeptiert Umlaute und alternative Schreibweisen.',
@@ -118,7 +118,7 @@ const projects = [
     name: 'GitHub Dev Card', featured: false,
     tags: ['React', 'Vite', 'GitHub API'],
     url: 'https://github-dev-card-generator-gamma.vercel.app',
-    source: 'https://github.com/jelenProgramming/github-dev-card-generator',
+    source: 'https://github.com/jelenProgramming/projects/tree/main/projects/devcard',
     desc: {
       en: 'Enter any GitHub username and generate a shareable developer card with stats, top languages and repo count.',
       de: 'GitHub-Benutzernamen eingeben und eine teilbare Entwicklerkarte mit Statistiken, Top-Sprachen und Repo-Anzahl generieren.',
@@ -128,7 +128,7 @@ const projects = [
     name: 'Weather App', featured: false,
     tags: ['React', 'Vite', 'REST API'],
     url: 'https://weather-app-jelen.vercel.app',
-    source: 'https://github.com/jelenProgramming/projects',
+    source: 'https://github.com/jelenProgramming/projects/tree/main/projects/weather-app',
     desc: {
       en: 'Search weather by city, temperature, humidity, wind and conditions. Bilingual EN/DE.',
       de: 'Wetter nach Stadt suchen, Temperatur, Luftfeuchte, Wind und Bedingungen. Zweisprachig EN/DE.',
