@@ -51,6 +51,17 @@ function loadLang() {
   }
 }
 
+
+function WaveDivider() {
+  return (
+    <div className="divider" aria-hidden="true">
+      <svg viewBox="0 0 1440 64" preserveAspectRatio="none">
+        <path d="M0,32 C180,60 320,4 520,18 C720,32 860,58 1060,44 C1240,32 1340,10 1440,26 L1440,64 L0,64 Z" />
+      </svg>
+    </div>
+  )
+}
+
 export default function App() {
   const [lang, setLang] = useState(loadLang)
   const [data, setData] = useState(null)
@@ -116,6 +127,8 @@ export default function App() {
         <SearchBar onSearch={handleSearch} loading={loading} t={t} />
       </header>
 
+      <WaveDivider />
+
       {error && <div className="notice notice--error">{error}</div>}
 
       {!data && !error && !loading && (
@@ -131,6 +144,7 @@ export default function App() {
 
       {data && (
         <main className="result">
+          <div className="meshGlow" aria-hidden="true" />
           <ProfileCard user={data.user} t={t} />
           <StatGrid user={data.user} stars={sums.stars} forks={sums.forks} t={t} />
           <LanguageBars langs={langs} t={t} />

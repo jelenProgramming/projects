@@ -457,3 +457,31 @@ body { background: radial-gradient(900px 500px at 10% -8%, rgba(163, 113, 247, 0
 .search:focus-within { border-color: #58a6ff; box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.16); }
 .repo:hover { border-color: #58a6ff; box-shadow: 0 12px 28px rgba(88, 166, 255, 0.15); }
 .lang__track { background: #0f1420; }
+
+/* wave divider between the hero and the content */
+.divider { margin: 0 -20px 22px; opacity: 0.9; }
+.divider svg { display: block; width: 100%; height: 34px; }
+.divider path { fill: var(--surface); }
+
+/* mesh gradient glow behind the generated card */
+.result { position: relative; }
+.meshGlow {
+  position: absolute; inset: -60px -40px auto; height: 320px; z-index: -1;
+  pointer-events: none; filter: blur(64px); opacity: 0.5;
+  background:
+    radial-gradient(42% 60% at 24% 30%, #7da4f5 0%, transparent 70%),
+    radial-gradient(46% 64% at 74% 22%, #b07df5 0%, transparent 72%),
+    radial-gradient(50% 66% at 52% 78%, #4ade80 0%, transparent 74%);
+  animation: glowDrift 18s ease-in-out infinite alternate;
+}
+@keyframes glowDrift {
+  from { transform: translateX(-12px) scale(1); }
+  to { transform: translateX(16px) scale(1.08); }
+}
+@media (prefers-reduced-motion: reduce) { .meshGlow { animation: none; } }
+
+/* lucide sizing */
+.meta-ico { width: 13px; height: 13px; stroke-width: 2.2; vertical-align: -2px; margin-right: 2px; color: var(--subtle); }
+.stat__ico { width: 16px; height: 16px; stroke-width: 2.2; color: var(--link); margin-bottom: 4px; }
+.btn-ico { width: 14px; height: 14px; stroke-width: 2.4; vertical-align: -2px; margin-right: 4px; }
+.profile__meta li { display: inline-flex; align-items: center; gap: 4px; }

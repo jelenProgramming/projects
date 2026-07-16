@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Search } from 'lucide-react'
 
 export default function SearchBar({ onSearch, loading, t }) {
   const [value, setValue] = useState('')
@@ -21,7 +22,7 @@ export default function SearchBar({ onSearch, loading, t }) {
         spellCheck={false}
       />
       <button className="search__btn" type="submit" disabled={loading}>
-        {loading ? t.loading : t.lookUp}
+        {loading ? t.loading : <><Search className="btn-ico" aria-hidden="true" /> {t.lookUp}</>}
       </button>
     </form>
   )

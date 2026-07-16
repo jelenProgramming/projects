@@ -1,3 +1,5 @@
+import { MapPin, Building2, Link as LinkIcon, CalendarDays } from 'lucide-react'
+
 function fmtDate(iso, lang) {
   return new Date(iso).toLocaleDateString(lang === 'de' ? 'de-DE' : 'en-GB', {
     year: 'numeric',
@@ -17,17 +19,17 @@ export default function ProfileCard({ user, t }) {
         </a>
         {user.bio && <p className="profile__bio">{user.bio}</p>}
         <ul className="profile__meta">
-          {user.location && <li>◎ {user.location}</li>}
-          {user.company && <li>⌗ {user.company}</li>}
+          {user.location && <li><MapPin className="meta-ico" aria-hidden="true" /> {user.location}</li>}
+          {user.company && <li><Building2 className="meta-ico" aria-hidden="true" /> {user.company}</li>}
           {user.blog && (
             <li>
-              ↗{' '}
+              <LinkIcon className="meta-ico" aria-hidden="true" />{' '}
               <a href={user.blog.startsWith('http') ? user.blog : `https://${user.blog}`} target="_blank" rel="noreferrer">
                 {user.blog.replace(/^https?:\/\//, '')}
               </a>
             </li>
           )}
-          <li>◷ {t.joined} {fmtDate(user.created_at, lang)}</li>
+          <li><CalendarDays className="meta-ico" aria-hidden="true" /> {t.joined} {fmtDate(user.created_at, lang)}</li>
         </ul>
       </div>
     </section>
