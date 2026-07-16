@@ -1,4 +1,6 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
+import { animate } from 'motion'
+import { Check, ArrowRight } from 'lucide-react'
 import { VERBS, PRONOUNS, isCorrect } from './verbs'
 import Stats from './components/Stats'
 
@@ -23,7 +25,7 @@ function pickCard(group) {
 // small confetti burst on a correct answer, vanilla, no deps
 function burst() {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
-  const colors = ['#7c3aed', '#db2777', '#f59e0b', '#22c55e', '#38bdf8', '#ffffff']
+  const colors = ['#b9a5f5', '#ffc9d9', '#ffd98a', '#bdedd6', '#a8d8f5', '#ffffff']
   const cx = innerWidth / 2, cy = innerHeight * 0.42
   for (let i = 0; i < 26; i++) {
     const el = document.createElement('div')
@@ -64,11 +66,20 @@ export default function App() {
     setCorrect(false)
   }
 
+  const cardRef = useRef(null)
+
+  function feedbackMotion(ok) {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches || !cardRef.current) return
+    if (ok) animate(cardRef.current, { scale: [1, 1.035, 1] }, { duration: 0.45, type: 'spring', bounce: 0.55 })
+    else animate(cardRef.current, { x: [0, -11, 9, -6, 4, 0] }, { duration: 0.45 })
+  }
+
   function check() {
     if (!answer.trim()) return
     const ok = isCorrect(answer, expected)
     setChecked(true)
     setCorrect(ok)
+    feedbackMotion(ok)
     setSeen((s) => s + 1)
     if (ok) {
       burst()
@@ -116,7 +127,7 @@ export default function App() {
         ))}
       </div>
 
-      <main className={`card ${checked ? (correct ? 'card--ok' : 'card--no') : ''}`}>
+      <main ref={cardRef} className={`card ${checked ? (correct ? 'card--ok' : 'card--no') : ''}`}>
         <div className="prompt">
           <span className="prompt__pron">{pronoun}</span>
           <span className="prompt__blank">{'―'.repeat(Math.max(6, expected.length + 2))}</span>
@@ -142,8 +153,8 @@ export default function App() {
           />
           <button className="answer__btn" type="submit">
             {checked
-              ? <><span className="btn-de">Weiter</span><span className="btn-en">Next</span></>
-              : <><span className="btn-de">Prüfen</span><span className="btn-en">Check</span></>
+              ? <><ArrowRight className="btn-ico" aria-hidden="true" /><span className="btn-de">Weiter</span><span className="btn-en">Next</span></>
+              : <><Check className="btn-ico" aria-hidden="true" /><span className="btn-de">Prüfen</span><span className="btn-en">Check</span></>
             }
           </button>
         </form>
