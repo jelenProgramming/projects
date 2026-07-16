@@ -105,3 +105,30 @@ body {
 @media (max-width: 520px) {
   .now { gap: 14px; }
 }
+
+/* condition-tinted mesh gradient over the canvas sky */
+.mesh {
+  position: fixed; inset: -22%; z-index: 1; pointer-events: none;
+  mix-blend-mode: soft-light; opacity: 0.6;
+  background:
+    radial-gradient(38% 42% at 22% 28%, var(--m1) 0%, transparent 70%),
+    radial-gradient(46% 50% at 78% 16%, var(--m2) 0%, transparent 72%),
+    radial-gradient(54% 58% at 58% 84%, var(--m3) 0%, transparent 74%);
+  animation: meshDrift 26s ease-in-out infinite alternate;
+}
+@keyframes meshDrift {
+  from { transform: rotate(-2deg) scale(1); }
+  to { transform: rotate(2.5deg) scale(1.14); }
+}
+@media (prefers-reduced-motion: reduce) { .mesh { animation: none; } }
+
+.app { --m1: #9fb6cf; --m2: #5f7fa3; --m3: #31465e; }
+.app.day[data-cat="clear"] { --m1: #ffd97a; --m2: #7cc4ff; --m3: #ff9d5c; }
+.app.night[data-cat="clear"] { --m1: #4a5fb8; --m2: #22315e; --m3: #7a5fb8; }
+.app.day[data-cat="partly"] { --m1: #cfe3f5; --m2: #8fb4d6; --m3: #f5d78e; }
+.app.night[data-cat="partly"] { --m1: #38528c; --m2: #1d2c52; --m3: #54427e; }
+.app.day[data-cat="clouds"], .app.day[data-cat="fog"] { --m1: #c3ced9; --m2: #8494a6; --m3: #5c6b7d; }
+.app.night[data-cat="clouds"], .app.night[data-cat="fog"] { --m1: #2c3542; --m2: #1a212c; --m3: #3d4a5c; }
+.app[data-cat="drizzle"], .app[data-cat="rain"] { --m1: #7d93a8; --m2: #46586b; --m3: #2b3947; }
+.app[data-cat="snow"] { --m1: #dbe9f5; --m2: #9fbdd6; --m3: #6d8fab; }
+.app[data-cat="thunder"] { --m1: #5c5470; --m2: #2e2a3d; --m3: #82683a; }

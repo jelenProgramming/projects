@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { animate, stagger } from 'animejs'
 import Sky from './Sky.jsx'
 import { aggregate, geocode, conditionLabel, category } from './weather.js'
 
@@ -49,6 +50,29 @@ export default function App() {
 
   useEffect(() => { document.documentElement.lang = lang }, [lang])
 
+  const reduce = useRef(matchMedia('(prefers-reduced-motion: reduce)').matches).current
+  const [shownC, setShownC] = useState(null)
+
+  // count the big number up to the fresh consensus temperature
+  useEffect(() => {
+    if (!wx) return
+    if (reduce) { setShownC(wx.tempC); return }
+    const from = { v: shownC ?? wx.tempC - 6 }
+    const anim = animate(from, {
+      v: wx.tempC, duration: 900, ease: 'outCubic',
+      onUpdate: () => setShownC(from.v),
+    })
+    return () => anim.cancel()
+  }, [wx]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // staggered entrance for the card and its tiles
+  useEffect(() => {
+    if (status !== 'ok' || reduce) return
+    animate('.card', { opacity: [0, 1], translateY: [22, 0], duration: 550, ease: 'outCubic' })
+    animate('.grid > div', { opacity: [0, 1], translateY: [12, 0], delay: stagger(55, { start: 120 }), duration: 450, ease: 'outCubic' })
+    animate('.days .day', { opacity: [0, 1], scale: [0.86, 1], delay: stagger(38, { start: 220 }), duration: 420, ease: 'outBack' })
+  }, [status, wx]) // eslint-disable-line react-hooks/exhaustive-deps
+
   async function load(lat, lon, label) {
     setStatus('loading'); setResults([])
     try {
@@ -89,6 +113,7 @@ export default function App() {
   return (
     <div className={`app ${day ? 'day' : 'night'}`} data-cat={cat} data-mode={mode}>
       <Sky weather={wx} mode={mode} />
+      <div className="mesh" aria-hidden="true" />
       <div className="scrim" />
       <div className="ui">
         <header className="top">
@@ -130,7 +155,7 @@ export default function App() {
           <main className="card">
             <div className="place">{place}</div>
             <div className="now">
-              <div className="temp">{toTemp(wx.tempC, unit)}<span className="deg">°</span></div>
+              <div className="temp">{toTemp(shownC ?? wx.tempC, unit)}<span className="deg">°</span></div>
               <div className="cond">
                 <div className="condName">{conditionLabel(cat, lang)}</div>
                 <div className="feels">{t.feels} {toTemp(wx.feelsC, unit)}°</div>
