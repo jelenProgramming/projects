@@ -468,3 +468,21 @@
   .contactInner { flex-direction: column; align-items: flex-start; }
   .navLink { display: none; }
 }
+
+
+/* ink shimmer on the italic half of the hero title */
+.heroTitle em {
+  background: linear-gradient(100deg, var(--text) 0%, var(--text) 42%, #8a7a5c 50%, var(--text) 58%, var(--text) 100%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: inkShimmer 7s ease-in-out infinite;
+}
+@keyframes inkShimmer {
+  0%, 55% { background-position: 120% 0; }
+  85%, 100% { background-position: -60% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .heroTitle em { animation: none; -webkit-text-fill-color: currentColor; background: none; }
+}

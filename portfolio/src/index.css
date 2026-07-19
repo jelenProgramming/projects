@@ -98,3 +98,32 @@ a {
   ::view-transition-old(root),
   ::view-transition-new(root) { animation: none; }
 }
+
+/* wow layer: progress hairline, cursor spotlight, card sheen, title shimmer */
+.fx-progress {
+  position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 60; pointer-events: none;
+}
+.fx-progress span {
+  display: block; height: 100%; background: var(--accent);
+  transform: scaleX(0); transform-origin: 0 50%;
+}
+.fx-spotlight {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(340px 340px at var(--spot-x, 50vw) var(--spot-y, 30vh), rgba(255, 236, 200, 0.35), transparent 70%);
+  mix-blend-mode: multiply;
+}
+@media (pointer: coarse), (prefers-reduced-motion: reduce) { .fx-spotlight { display: none; } }
+[data-tilt] {
+  position: relative; transform-style: preserve-3d; will-change: transform;
+  transition: transform 0.18s ease-out;
+}
+[data-tilt]::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(240px 240px at var(--sheen-x, 50%) var(--sheen-y, 50%), rgba(255, 255, 255, 0.5), transparent 65%);
+  opacity: 0; transition: opacity 0.25s;
+}
+[data-tilt]:hover::after { opacity: 1; }
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  [data-tilt] { transform: none !important; }
+  [data-tilt]::after { display: none; }
+}

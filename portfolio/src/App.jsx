@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import styles from './App.module.css'
 import ConstellationHero from './ConstellationHero.jsx'
+import Enhance from './Enhance.jsx'
 
 const reduceMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches
 
@@ -70,8 +71,8 @@ const projects = [
     url: 'https://cs-courses.vercel.app',
     source: 'https://github.com/jelenProgramming/projects/tree/main/projects/cs-courses',
     desc: {
-      en: '116-topic interactive reference for core CS: algorithms, data structures, calculus, discrete math and more. 52 live visualizers, two study modes, KaTeX math, bilingual EN/DE.',
-      de: '116 Themen als interaktives Nachschlagewerk für die zentrale Informatik: Algorithmen, Datenstrukturen, Analysis, diskrete Mathematik und mehr. 52 Live-Visualisierungen, zwei Lernmodi, KaTeX für Formeln, zweisprachig EN/DE.',
+      en: '118-topic interactive reference for core CS: algorithms, data structures, calculus, discrete math and more. 52 live visualizers, two study modes, KaTeX math, bilingual EN/DE.',
+      de: '118 Themen als interaktives Nachschlagewerk für die zentrale Informatik: Algorithmen, Datenstrukturen, Analysis, diskrete Mathematik und mehr. 52 Live-Visualisierungen, zwei Lernmodi, KaTeX für Formeln, zweisprachig EN/DE.',
     },
   },
   {
@@ -201,6 +202,7 @@ export default function App() {
 
   return (
     <div className={styles.page}>
+      <Enhance />
       <header className={styles.header}>
         <div className={styles.headerInner}>
           <span className={styles.logo}>DJ</span>
@@ -258,7 +260,7 @@ export default function App() {
                 ))}
               </ul>
 
-              <article className={styles.detail} key={current.name}>
+              <article className={styles.detail} key={current.name} data-tilt>
                 <h3 className={styles.detailName}>{current.name}</h3>
                 <div className={styles.detailTags}>
                   {current.tags.map(tag => <span key={tag} className={styles.tag}>{tag}</span>)}
@@ -295,7 +297,7 @@ export default function App() {
               <div className={styles.stats} data-reveal>
                 {t.stats.map(s => (
                   <div key={s.l} className={styles.stat}>
-                    <span className={styles.statNum}>{s.n}</span>
+                    <span className={styles.statNum} data-count={s.n}>{s.n}</span>
                     <span className={styles.statLabel}>{s.l}</span>
                   </div>
                 ))}
