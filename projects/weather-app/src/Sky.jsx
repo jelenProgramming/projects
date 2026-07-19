@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { drawMinifigs } from './Minifigs.js'
 
 // always-animated canvas sky driven by the calculated (averaged) condition.
 // vanilla canvas, no libs. real + toon palettes, intensity precip, lightning,
@@ -99,6 +100,8 @@ export default function Sky({ weather, mode = 'real' }) {
         if (nextBolt <= 0) { flash = 1; bolt = mkBolt(W, H); nextBolt = 2.5 + Math.random() * 5 }
         if (flash > 0) { ctx.fillStyle = toon ? `rgba(255,214,40,${flash * 0.4})` : `rgba(255,255,255,${flash * 0.5})`; ctx.fillRect(0, 0, W, H); if (bolt && flash > 0.5) { ctx.strokeStyle = toon ? '#ffd21a' : 'rgba(220,232,255,0.95)'; ctx.lineWidth = toon ? 5 : 2.4; ctx.shadowBlur = toon ? 18 : 10; ctx.shadowColor = toon ? '#ffd21a' : '#dfeaff'; ctx.beginPath(); ctx.moveTo(bolt[0][0], bolt[0][1]); for (const pt of bolt) ctx.lineTo(pt[0], pt[1]); ctx.stroke(); ctx.shadowBlur = 0 } flash -= 0.05 }
       } else flash = 0
+
+      drawMinifigs(ctx, W, H, p, t, flash, reduce)
 
       if (!toon) { const v = ctx.createRadialGradient(W / 2, H / 2, H * 0.3, W / 2, H / 2, H * 0.95); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,0.26)'); ctx.fillStyle = v; ctx.fillRect(0, 0, W, H) }
       raf = requestAnimationFrame(draw)
