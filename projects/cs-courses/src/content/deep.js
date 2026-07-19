@@ -13,8 +13,8 @@ export const deepContent = {
     intro: [
       { en: 'A <strong>hash function</strong> turns a key into a bucket index. Two keys landing in the same bucket is a <strong>collision</strong>, resolved either by <strong>chaining</strong> (each bucket holds a list) or <strong>open addressing</strong> (probe on to another slot in the same array).',
         de: 'Eine <strong>Hashfunktion</strong> macht aus einem Schluessel einen Behaelterindex. Landen zwei Schluessel im selben Behaelter, ist das eine <strong>Kollision</strong>, geloest durch <strong>Verkettung</strong> (Liste pro Behaelter) oder <strong>offene Adressierung</strong> (weiter zu einem anderen Platz im selben Feld sondieren).' },
-      { en: 'The <strong>load factor</strong> $\\alpha = n/m$ (items over buckets) governs speed. Keep it well below 1 for open addressing; when it grows, allocate a bigger table and <strong>rehash</strong> every key.',
-        de: 'Der <strong>Fuellgrad</strong> $\\alpha = n/m$ (Elemente durch Behaelter) bestimmt das Tempo. Halte ihn bei offener Adressierung deutlich unter 1; waechst er, ein groesseres Feld anlegen und jeden Schluessel <strong>neu hashen</strong>.' },
+      { en: 'The <strong>load factor</strong> $\\alpha = \\tfrac{n}{m}$ (items over buckets) governs speed. Keep it well below 1 for open addressing; when it grows, allocate a bigger table and <strong>rehash</strong> every key.',
+        de: 'Der <strong>Fuellgrad</strong> $\\alpha = \\tfrac{n}{m}$ (Elemente durch Behaelter) bestimmt das Tempo. Halte ihn bei offener Adressierung deutlich unter 1; waechst er, ein groesseres Feld anlegen und jeden Schluessel <strong>neu hashen</strong>.' },
     ],
     how: [
       { en: 'To build a probe sequence by hand: compute the base slot with the auxiliary hash $h&#39;(k)$, then apply the probing formula for $i = 0, 1, 2, \\dots$ until a free slot appears, taking every result $\\bmod\\ m$.',

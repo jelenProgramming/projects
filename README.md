@@ -8,7 +8,7 @@ Live web apps by David Jelen. React and Vite on the front, Laravel on the back.
 
 | App | Live | What it is |
 | --- | --- | --- |
-| CS Courses | https://cs-courses.vercel.app | Interactive reference for core computer science. 116 topics, 52 visualizers, KaTeX math, EN/DE. |
+| CS Courses | https://cs-courses.vercel.app | Interactive reference for core computer science. 118 topics, 52 visualizers, KaTeX math, EN/DE. |
 | SQL Playground | https://sql-playground-weld.vercel.app | Run real SQL in the browser. SQLite via WebAssembly, 58 tests. |
 | Invoicer | https://invoicer-web-five.vercel.app | Invoices with PDF export and token auth. React web + Laravel API. |
 | Job Tracker | https://job-tracker-web-fawn.vercel.app | Applications kanban with auth and a per-application timeline. |

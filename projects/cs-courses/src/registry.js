@@ -130,6 +130,8 @@ export const ALGORITHMS = [
   r('operator-overloading','Operator Overloading', 'programming', 'P2', { tagline: { en: 'Give + == << meaning for your types', de: 'Gib + == << Bedeutung fuer deine Typen' } }),
   r('multiple-inheritance','Multiple Inheritance', 'programming', 'P2', { tagline: { en: 'Many bases, and the diamond problem', de: 'Viele Basen und das Diamantproblem' } }),
   r('move-semantics',      'Move Semantics (C++11)', 'programming', 'P2', { tagline: { en: 'Rvalue references, move not copy', de: 'Rvalue-Referenzen, verschieben statt kopieren' } }),
+  r('header-source-split', 'Headers & Separate Compilation', 'programming', 'P2', { tagline: { en: 'Declarations in .h, definitions in .cpp', de: 'Deklarationen in .h, Definitionen in .cpp' } }),
+  r('bit-manipulation',    'Bit Manipulation', 'programming', 'P2', { tagline: { en: 'Masks, shifts and bitwise operators', de: 'Masken, Shifts und Bitoperatoren' } }),
 
   r('relational-model','Relational Model',    'databases', 'PB', { tagline: { en: 'Tables, rows, relational algebra', de: 'Tabellen, Zeilen, relationale Algebra' } }),
   v('sql-joins',      'SQL Joins',            'databases', 'PB', { tagline: { en: 'INNER, LEFT, RIGHT, FULL, visualized', de: 'INNER, LEFT, RIGHT, FULL, visualisiert' }, star: true }),

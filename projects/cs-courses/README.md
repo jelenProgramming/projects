@@ -10,7 +10,7 @@ with a plain-language **TL;DR** of what the thing actually does and when to reac
 for it, then lets you **watch it run step by step** with a narrated explanation of
 every move.
 
-> **116 topics across 15 categories, 52 fully interactive visualizers, every page with a complexity table and exam-trap notes.**
+> **118 topics across 15 categories, 52 fully interactive visualizers, every page with a complexity table and exam-trap notes.**
 
 ## Quick start
 
@@ -133,9 +133,9 @@ runtime errors.
 
 ## References
 
-The standard algorithms are described in many textbooks; these are the works the
-corresponding reference works, listed for further reading (the
-explanations and code here are original):
+The standard algorithms are described in many textbooks; these are the
+corresponding reference works, listed for further reading (the explanations
+and code here are original):
 
 - Cormen, Leiserson, Rivest, Stein - *Introduction to Algorithms* (MIT Press)
 - Stroustrup - *A Tour of C++* (Addison-Wesley)

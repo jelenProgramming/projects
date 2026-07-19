@@ -1,3 +1,4 @@
+import { mathify } from './Math.jsx'
 import { useLang } from '../i18n.jsx'
 
 /**
@@ -12,7 +13,7 @@ export default function StatusBar({ player }) {
   return (
     <div className="status-bar">
       <span className="step-num">{index + 1} / {total}</span>
-      <span className="desc" dangerouslySetInnerHTML={{ __html: msg }} />
+      <span className="desc" dangerouslySetInnerHTML={{ __html: mathify(msg) }} />
     </div>
   )
 }

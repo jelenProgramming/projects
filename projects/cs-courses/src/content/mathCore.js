@@ -196,12 +196,12 @@ export const mathCoreContent = {
     ],
     when: { en: 'Rates of change: velocity, growth, slopes, optimization (max/min where f\'=0). The single most-used tool in applied math, physics and ML.', de: 'Aenderungsraten: Geschwindigkeit, Wachstum, Steigungen, Optimierung (Max/Min bei f\'=0).' },
     how: [
-      { en: 'The secant line through (x, f(x)) and (x+h, f(x+h)) has slope [f(x+h)-f(x)]/h.', de: 'Die Sekante durch (x, f(x)) und (x+h, f(x+h)) hat die Steigung [f(x+h)-f(x)]/h.' },
+      { en: 'The secant line through $(x, f(x))$ and $(x+h, f(x+h))$ has slope $\\tfrac{f(x+h)-f(x)}{h}$.', de: 'Die Sekante durch $(x, f(x))$ und $(x+h, f(x+h))$ hat die Steigung $\\tfrac{f(x+h)-f(x)}{h}$.' },
       { en: 'As h → 0 the secant becomes the tangent; its slope is the derivative f\'(x).', de: 'Fuer h → 0 wird die Sekante zur Tangente; ihre Steigung ist die Ableitung f\'(x).' },
       { en: 'The derivative is itself a function: the slope of f at every point.', de: 'Die Ableitung ist selbst eine Funktion: die Steigung von f an jedem Punkt.' },
     ],
     complexity: [
-      { case: { en: 'Definition', de: 'Definition' }, time: '-', space: '-', cls: 'best', note: { en: 'f\'(x) = lim(h→0) [f(x+h)-f(x)]/h. A function is differentiable only where this limit exists (smooth, no corners).', de: 'f\'(x) = lim(h→0) [f(x+h)-f(x)]/h. Differenzierbar nur, wo dieser Grenzwert existiert.' } },
+      { case: { en: 'Definition', de: 'Definition' }, time: '-', space: '-', cls: 'best', note: { en: '$f\'(x) = \\lim_{h \\to 0} \\tfrac{f(x+h)-f(x)}{h}$. A function is differentiable only where this limit exists (smooth, no corners).', de: '$f\'(x) = \\lim_{h \\to 0} \\tfrac{f(x+h)-f(x)}{h}$. Differenzierbar nur, wo dieser Grenzwert existiert.' } },
     ],
     pitfalls: [
       { en: 'Differentiable ⟹ continuous, but not the reverse (|x| is continuous at 0 but has no derivative there).', de: 'Differenzierbar ⟹ stetig, aber nicht umgekehrt (|x| ist bei 0 stetig, aber nicht differenzierbar).' },
@@ -381,7 +381,7 @@ export const mathCoreContent = {
     ],
   },
   'master-theorem': {
-    tldr: { en: 'A formula that instantly gives the Big-O of most divide-and-conquer recurrences $T(n)=a\\cdot T(n/b)+f(n)$, by comparing $f(n)$ against $n^{\\log_b a}$. Skips solving the recurrence by hand.', de: 'Eine Formel, die sofort die Big-O der meisten Teile-und-herrsche-Rekurrenzen $T(n)=a\\cdot T(n/b)+f(n)$ liefert.' },
+    tldr: { en: 'A formula that instantly gives the Big-O of most divide-and-conquer recurrences $T(n)=a\\cdot T(\\tfrac{n}{b})+f(n)$, by comparing $f(n)$ against $n^{\\log_b a}$. Skips solving the recurrence by hand.', de: 'Eine Formel, die sofort die Big-O der meisten Teile-und-herrsche-Rekurrenzen $T(n)=a\\cdot T(\\tfrac{n}{b})+f(n)$ liefert.' },
     when: { en: 'Analyzing any recursive divide-and-conquer algorithm: merge sort, binary search, Strassen, Karatsuba. The fastest way to a complexity answer on an exam.', de: 'Analyse jedes rekursiven Teile-und-herrsche-Algorithmus: Merge Sort, binaere Suche, Strassen, Karatsuba.' },
     how: [
       { en: 'Write the recurrence as T(n) = a∗T(n/b) + f(n): a subproblems of size n/b, plus f(n) work to combine.', de: 'Rekurrenz als T(n) = a∗T(n/b) + f(n) schreiben.' },

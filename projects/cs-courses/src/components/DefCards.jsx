@@ -15,7 +15,7 @@ function Formal({ formal }) {
     return <span className="formal formal-tex"
       dangerouslySetInnerHTML={{ __html: renderTex(formal.tex, { display: true }) }} />
   }
-  return <span className="formal" dangerouslySetInnerHTML={{ __html: formal }} />
+  return <span className="formal" dangerouslySetInnerHTML={{ __html: mathify(formal) }} />
 }
 
 export default function DefCards({ defs }) {

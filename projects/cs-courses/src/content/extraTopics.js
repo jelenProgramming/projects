@@ -88,8 +88,8 @@ export const extraTopicsContent = {
         de: 'Bestimme $A$ und $B$ durch Einsetzen der Anfangsglieder (bei Fibonacci $a_0$ und $a_1$).' },
     ],
     pitfalls: [
-      { en: 'This method is for <strong>linear</strong> recurrences with constant coefficients. Divide-and-conquer running times like $T(n) = a\\,T(n/b) + f(n)$ use the Master Theorem instead.',
-        de: 'Diese Methode gilt fuer <strong>lineare</strong> Rekurrenzen mit konstanten Koeffizienten. Laufzeiten von Teile-und-herrsche wie $T(n) = a\\,T(n/b) + f(n)$ nutzen stattdessen das Mastertheorem.' },
+      { en: 'This method is for <strong>linear</strong> recurrences with constant coefficients. Divide-and-conquer running times like $T(n) = a\\,T(\\tfrac{n}{b}) + f(n)$ use the Master Theorem instead.',
+        de: 'Diese Methode gilt fuer <strong>lineare</strong> Rekurrenzen mit konstanten Koeffizienten. Laufzeiten von Teile-und-herrsche wie $T(n) = a\\,T(\\tfrac{n}{b}) + f(n)$ nutzen stattdessen das Mastertheorem.' },
     ],
   },
 
@@ -192,8 +192,8 @@ export const extraTopicsContent = {
         de: 'Die rationalen Zahlen haben Loecher: kein Bruch hat das Quadrat $2$. Die reellen fuellen jedes solche Loch und geben eine luechenlose, stetige Gerade, in der die rationalen dennoch <strong>dicht</strong> liegen (eine rationale Zahl liegt beliebig nah an jeder reellen).' },
     ],
     how: [
-      { en: 'The <strong>supremum</strong> (least upper bound) and <strong>infimum</strong> (greatest lower bound) generalise max and min to sets that never attain their bound, like the supremum $1$ of $\\{1 - 1/n\\}$.',
-        de: 'Das <strong>Supremum</strong> (kleinste obere Schranke) und <strong>Infimum</strong> (groesste untere Schranke) verallgemeinern Max und Min auf Mengen, die ihre Schranke nie erreichen, etwa das Supremum $1$ von $\\{1 - 1/n\\}$.' },
+      { en: 'The <strong>supremum</strong> (least upper bound) and <strong>infimum</strong> (greatest lower bound) generalise max and min to sets that never attain their bound, like the supremum $1$ of $\\{1 - \\tfrac{1}{n}\\}$.',
+        de: 'Das <strong>Supremum</strong> (kleinste obere Schranke) und <strong>Infimum</strong> (groesste untere Schranke) verallgemeinern Max und Min auf Mengen, die ihre Schranke nie erreichen, etwa das Supremum $1$ von $\\{1 - \\tfrac{1}{n}\\}$.' },
       { en: 'The <strong>absolute value</strong> $|x|$ measures distance from zero and satisfies the triangle inequality $|a + b| \\le |a| + |b|$, the workhorse of every limit proof.',
         de: 'Der <strong>Betrag</strong> $|x|$ misst den Abstand zu null und erfuellt die Dreiecksungleichung $|a + b| \\le |a| + |b|$, das Arbeitspferd jedes Grenzwertbeweises.' },
     ],
