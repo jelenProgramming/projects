@@ -13,6 +13,8 @@ COPY . .
 RUN composer install --no-dev --optimize-autoloader --no-interaction \
     && cp -n .env.example .env \
     && touch database/database.sqlite \
+    && mkdir -p storage/framework/views storage/framework/cache/data storage/framework/sessions bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache \
     && php artisan key:generate --force
 
 ENV APP_ENV=production
