@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { animate, stagger } from 'animejs'
 import Sky from './Sky.jsx'
+import WeatherIcon from './WeatherIcon.jsx'
 import { aggregate, geocode, conditionLabel, category } from './weather.js'
 
 const KEY = import.meta.env.VITE_API_KEY
@@ -10,21 +11,23 @@ const T = {
   en: {
     title: 'Consensus Weather', tagline: 'one forecast, averaged from many models',
     search: 'Search a city', feels: 'Feels like', range: 'model range',
-    humidity: 'Humidity', wind: 'Wind', precip: 'Precipitation', cloud: 'Cloud cover',
-    confidence: 'Confidence', averagedFrom: 'averaged from', models: 'sources', rawModels: 'raw models',
+    humidity: 'Humidity', wind: 'Wind', gusts: 'Gusts', precip: 'Precipitation', cloud: 'Cloud cover',
+    pressure: 'Pressure', dew: 'Dew point', uv: 'UV index', visibility: 'Visibility',
+    sunrise: 'Sunrise', sunset: 'Sunset', hourly: 'Next 24 hours', now: 'Now',
+    confidence: 'Confidence', models: 'sources',
     outlook: '7-day outlook', showSources: 'Show sources', hideSources: 'Hide sources',
     loading: 'Reading the models', error: 'Could not load weather', retry: 'Retry',
-    real: 'Real', toon: 'Toon',
     days: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], today: 'Today',
   },
   de: {
     title: 'Konsens-Wetter', tagline: 'eine Vorhersage, gemittelt aus vielen Modellen',
     search: 'Stadt suchen', feels: 'Gefühlt', range: 'Modellspanne',
-    humidity: 'Luftfeuchte', wind: 'Wind', precip: 'Niederschlag', cloud: 'Bewölkung',
-    confidence: 'Konfidenz', averagedFrom: 'gemittelt aus', models: 'Quellen', rawModels: 'Rohmodelle',
+    humidity: 'Luftfeuchte', wind: 'Wind', gusts: 'Böen', precip: 'Niederschlag', cloud: 'Bewölkung',
+    pressure: 'Luftdruck', dew: 'Taupunkt', uv: 'UV-Index', visibility: 'Sicht',
+    sunrise: 'Sonnenaufgang', sunset: 'Sonnenuntergang', hourly: 'Nächste 24 Stunden', now: 'Jetzt',
+    confidence: 'Konfidenz', models: 'Quellen',
     outlook: '7-Tage-Ausblick', showSources: 'Quellen zeigen', hideSources: 'Quellen verbergen',
     loading: 'Modelle werden gelesen', error: 'Wetter nicht ladbar', retry: 'Erneut',
-    real: 'Real', toon: 'Comic',
     days: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'], today: 'Heute',
   },
 }
@@ -33,19 +36,20 @@ const get = (k, d) => { try { return localStorage.getItem(k) || d } catch { retu
 const put = (k, v) => { try { localStorage.setItem(k, v) } catch { /* storage blocked */ } }
 const toTemp = (c, u) => Math.round(u === 'f' ? c * 9 / 5 + 32 : c)
 const toWind = (kph, u) => Math.round(u === 'f' ? kph / 1.609 : kph)
-const ICON = { clear: '☀', partly: '⛅', clouds: '☁', fog: '🌫', drizzle: '🌦', rain: '🌧', snow: '❄', thunder: '⛈' }
-const icon = cat => ICON[cat] || '☁'
+const COMPASS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']
+const compass = deg => (typeof deg === 'number' ? COMPASS[Math.round((deg % 360) / 45) % 8] : '')
+const clock = iso => (iso ? iso.slice(11, 16) : '')
 
 export default function App() {
   const [lang, setLang] = useState(() => (get('wx:lang', 'en') === 'de' ? 'de' : 'en'))
   const [unit, setUnit] = useState(() => (get('wx:unit', 'c') === 'f' ? 'f' : 'c'))
-  const [mode, setMode] = useState(() => (get('wx:mode', 'real') === 'toon' ? 'toon' : 'real'))
   const [wx, setWx] = useState(null)
   const [place, setPlace] = useState('')
   const [status, setStatus] = useState('loading')
   const [query, setQuery] = useState('')
   const [results, setResults] = useState([])
   const [openSources, setOpenSources] = useState(false)
+  const [openPred, setOpenPred] = useState(-1)
   const t = T[lang]
 
   useEffect(() => { document.documentElement.lang = lang }, [lang])
@@ -69,12 +73,14 @@ export default function App() {
   useEffect(() => {
     if (status !== 'ok' || reduce) return
     animate('.card', { opacity: [0, 1], translateY: [22, 0], duration: 550, ease: 'outCubic' })
-    animate('.grid > div', { opacity: [0, 1], translateY: [12, 0], delay: stagger(55, { start: 120 }), duration: 450, ease: 'outCubic' })
-    animate('.days .day', { opacity: [0, 1], scale: [0.86, 1], delay: stagger(38, { start: 220 }), duration: 420, ease: 'outBack' })
+    animate('.pred', { opacity: [0, 1], translateY: [-8, 0], delay: stagger(60), duration: 400, ease: 'outCubic' })
+    animate('.grid > div', { opacity: [0, 1], translateY: [12, 0], delay: stagger(45, { start: 100 }), duration: 420, ease: 'outCubic' })
+    animate('.hours .hour', { opacity: [0, 1], translateX: [14, 0], delay: stagger(24, { start: 120 }), duration: 360, ease: 'outCubic' })
+    animate('.days .day', { opacity: [0, 1], scale: [0.86, 1], delay: stagger(38, { start: 200 }), duration: 420, ease: 'outBack' })
   }, [status, wx]) // eslint-disable-line react-hooks/exhaustive-deps
 
   async function load(lat, lon, label) {
-    setStatus('loading'); setResults([])
+    setStatus('loading'); setResults([]); setOpenPred(-1)
     try {
       const r = await aggregate(lat, lon, KEY)
       setWx(r); setPlace(label); setStatus('ok')
@@ -105,24 +111,20 @@ export default function App() {
   function pick(h) { setQuery(''); setResults([]); load(h.lat, h.lon, label(h)) }
   const switchLang = l => { setLang(l); put('wx:lang', l) }
   const switchUnit = u => { setUnit(u); put('wx:unit', u) }
-  const switchMode = m => { setMode(m); put('wx:mode', m) }
 
   const cat = wx?.category || 'clouds'
   const day = wx?.isDay ?? true
+  const windUnit = unit === 'f' ? 'mph' : 'km/h'
 
   return (
-    <div className={`app ${day ? 'day' : 'night'}`} data-cat={cat} data-mode={mode}>
-      <Sky weather={wx} mode={mode} />
+    <div className={`app ${day ? 'day' : 'night'}`} data-cat={cat}>
+      <Sky weather={wx} mode="real" />
       <div className="mesh" aria-hidden="true" />
       <div className="scrim" />
       <div className="ui">
         <header className="top">
-          <span className="brand">{icon(cat)} {t.title}</span>
+          <span className="brand"><WeatherIcon cat={cat} day={day} size={26} /> {t.title}</span>
           <div className="toggles">
-            <div className="seg">
-              <button type="button" className={mode === 'real' ? 'on' : ''} onClick={() => switchMode('real')}>{t.real}</button>
-              <button type="button" className={mode === 'toon' ? 'on' : ''} onClick={() => switchMode('toon')}>{t.toon}</button>
-            </div>
             <div className="seg">
               <button type="button" className={unit === 'c' ? 'on' : ''} onClick={() => switchUnit('c')}>°C</button>
               <button type="button" className={unit === 'f' ? 'on' : ''} onClick={() => switchUnit('f')}>°F</button>
@@ -146,6 +148,25 @@ export default function App() {
           </ul>
         )}
 
+        {status === 'ok' && wx?.predictions?.length > 0 && (
+          <div className="preds">
+            {wx.predictions.map((p, i) => (
+              <button
+                key={i}
+                type="button"
+                className={`pred ${openPred === i ? 'pred--open' : ''}`}
+                aria-expanded={openPred === i}
+                onClick={() => setOpenPred(openPred === i ? -1 : i)}
+              >
+                <WeatherIcon cat={p.cat} day={day} size={22} />
+                <span className="pred__txt">{p[lang]}</span>
+                <span className="pred__chev">{openPred === i ? '▾' : '▸'}</span>
+                {openPred === i && <span className="pred__detail">{p.detail[lang]}</span>}
+              </button>
+            ))}
+          </div>
+        )}
+
         {status === 'loading' && <div className="state">{t.loading}...</div>}
         {status === 'error' && (
           <div className="state">{t.error}. <button type="button" className="link" onClick={() => load(DEFAULT.lat, DEFAULT.lon, DEFAULT.name)}>{t.retry}</button></div>
@@ -155,6 +176,7 @@ export default function App() {
           <main className="card">
             <div className="place">{place}</div>
             <div className="now">
+              <WeatherIcon cat={cat} day={day} size={92} />
               <div className="temp">{toTemp(shownC ?? wx.tempC, unit)}<span className="deg">°</span></div>
               <div className="cond">
                 <div className="condName">{conditionLabel(cat, lang)}</div>
@@ -165,15 +187,40 @@ export default function App() {
 
             <div className="conf">
               <div className="confBar"><span style={{ width: `${wx.confidence}%` }} /></div>
-              <div className="confLabel">{t.confidence} {wx.confidence}%</div>
+              <div className="confLabel">{t.confidence} {wx.confidence}% · {t.models} {wx.count}</div>
             </div>
+
+            {wx.hourly?.length > 1 && (
+              <div className="hours">
+                {wx.hourly.slice(0, 24).map((h, i) => (
+                  <div key={h.time} className="hour">
+                    <span className="hName">{i === 0 ? t.now : String(h.hour).padStart(2, '0')}</span>
+                    <WeatherIcon cat={category(h.code)} day={h.isDay} size={30} />
+                    <span className="hTemp">{toTemp(h.tempC, unit)}°</span>
+                    <span className="hPop">{h.pop > 5 ? `${h.pop}%` : ''}</span>
+                  </div>
+                ))}
+              </div>
+            )}
 
             <div className="grid">
               <div><span>{t.humidity}</span><b>{wx.humidity}%</b></div>
-              <div><span>{t.wind}</span><b>{toWind(wx.windKph, unit)} {unit === 'f' ? 'mph' : 'km/h'}</b></div>
+              <div><span>{t.wind}</span><b>{toWind(wx.windKph, unit)} {windUnit} {compass(wx.windDir)}</b></div>
+              <div><span>{t.gusts}</span><b>{wx.gustKph ? `${toWind(wx.gustKph, unit)} ${windUnit}` : '—'}</b></div>
               <div><span>{t.precip}</span><b>{(wx.precip || 0).toFixed(1)} mm</b></div>
               <div><span>{t.cloud}</span><b>{wx.cloud}%</b></div>
+              <div><span>{t.pressure}</span><b>{wx.pressure ? `${wx.pressure} hPa` : '—'}</b></div>
+              <div><span>{t.dew}</span><b>{typeof wx.dewC === 'number' ? `${toTemp(wx.dewC, unit)}°` : '—'}</b></div>
+              <div><span>{t.uv}</span><b>{typeof wx.uv === 'number' ? Math.round(wx.uv) : '—'}</b></div>
+              <div><span>{t.visibility}</span><b>{typeof wx.visibility === 'number' ? `${Math.round(wx.visibility / 1000)} km` : '—'}</b></div>
             </div>
+
+            {wx.sun?.sunrise && (
+              <div className="sun">
+                <span>☀ {t.sunrise} {clock(wx.sun.sunrise)}</span>
+                <span>{t.sunset} {clock(wx.sun.sunset)} ☾</span>
+              </div>
+            )}
 
             {wx.daily?.length > 0 && (
               <div className="outlook">
@@ -182,7 +229,8 @@ export default function App() {
                   {wx.daily.map((d, i) => (
                     <div key={d.date} className="day">
                       <span className="dName">{i === 0 ? t.today : t.days[new Date(d.date).getDay()]}</span>
-                      <span className="dIcon">{icon(category(d.code))}</span>
+                      <WeatherIcon cat={category(d.code)} day size={28} />
+                      {d.pop > 5 && <span className="dPop">{d.pop}%</span>}
                       <span className="dTemp">{toTemp(d.max, unit)}°<i>{toTemp(d.min, unit)}°</i></span>
                     </div>
                   ))}
@@ -197,7 +245,7 @@ export default function App() {
               <ul className="srcList">
                 {wx.sources.map(s => (
                   <li key={s.id}>
-                    <span className="sName">{icon(s.cat)} {s.label}</span>
+                    <span className="sName"><WeatherIcon cat={s.cat} day size={18} /> {s.label}</span>
                     <span className="sProv">{s.provider}</span>
                     <span className="sTemp">{toTemp(s.tempC, unit)}°</span>
                   </li>
@@ -213,4 +261,4 @@ export default function App() {
   )
 }
 
-// weather app, consensus of 15+ forecast models, see MY-INFO for direction
+// weather app, consensus of 18 forecast models, colorful icons, hourly + predictions

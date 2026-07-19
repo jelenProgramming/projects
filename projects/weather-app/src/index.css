@@ -33,7 +33,8 @@ body {
 }
 
 .top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
-.brand { font-size: 1.05rem; font-weight: 600; letter-spacing: -0.01em; text-shadow: 0 1px 16px rgba(0, 0, 0, 0.28); }
+.brand { display: inline-flex; align-items: center; gap: 8px; font-size: 1.05rem; font-weight: 600; letter-spacing: -0.01em; text-shadow: 0 1px 16px rgba(0, 0, 0, 0.28); }
+.brand svg { flex: none; filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.25)); }
 .toggles { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
 
 .seg { display: flex; gap: 2px; background: var(--glass); border: 1px solid var(--brd); border-radius: 999px; padding: 3px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
@@ -68,7 +69,8 @@ body {
 
 .place { font-size: 1.1rem; font-weight: 600; opacity: 0.96; }
 
-.now { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+.now { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.now > svg { flex: none; filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.25)); }
 .temp { font-size: clamp(4.5rem, 16vw, 7rem); font-weight: 200; line-height: 0.85; letter-spacing: -0.045em; }
 .temp .deg { font-weight: 200; opacity: 0.6; }
 .cond { display: flex; flex-direction: column; gap: 5px; }
@@ -80,10 +82,47 @@ body {
 .confBar span { display: block; height: 100%; background: rgba(255, 255, 255, 0.92); border-radius: 99px; transition: width 0.6s ease; }
 .confLabel { font-size: 0.78rem; opacity: 0.86; }
 
-.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--brd); border: 1px solid var(--brd); border-radius: 16px; overflow: hidden; }
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--brd); border: 1px solid var(--brd); border-radius: 16px; overflow: hidden; }
 .grid > div { background: rgba(255, 255, 255, 0.07); padding: 15px 17px; display: flex; flex-direction: column; gap: 5px; }
 .grid span { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.72; }
-.grid b { font-size: 1.15rem; font-weight: 600; }
+.grid b { font-size: 1.05rem; font-weight: 600; }
+
+/* upcoming-event prediction chips */
+.preds { display: flex; flex-direction: column; gap: 8px; }
+.pred {
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px;
+  text-align: left; width: 100%; cursor: pointer;
+  background: var(--glass); border: 1px solid var(--brd); border-radius: 14px;
+  padding: 9px 13px; color: #fff; font: inherit;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  transition: background 0.15s, transform 0.1s;
+}
+.pred svg { flex: none; grid-row: span 1; }
+.pred:hover { background: var(--glass-strong); }
+.pred:active { transform: scale(0.99); }
+.pred__txt { font-size: 0.92rem; font-weight: 600; }
+.pred__chev { font-size: 0.7rem; opacity: 0.7; }
+.pred__detail { grid-column: 1 / -1; font-size: 0.82rem; font-weight: 400; opacity: 0.86; line-height: 1.5; margin-top: 2px; }
+
+/* hourly strip, horizontal scroll */
+.hours {
+  display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px;
+  scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
+}
+.hours::-webkit-scrollbar { height: 6px; }
+.hours::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.35); border-radius: 99px; }
+.hour {
+  flex: 0 0 auto; width: 56px; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 10px 4px; background: rgba(255, 255, 255, 0.07); border-radius: 13px;
+}
+.hName { font-size: 0.7rem; opacity: 0.82; }
+.hTemp { font-size: 0.9rem; font-weight: 600; }
+.hPop { font-size: 0.66rem; color: #9fd2ff; min-height: 0.8em; font-weight: 600; }
+
+/* sunrise / sunset row */
+.sun { display: flex; justify-content: space-between; font-size: 0.82rem; opacity: 0.9; padding: 0 2px; }
+
+.dPop { font-size: 0.6rem; color: #9fd2ff; font-weight: 600; margin-top: -3px; }
 
 .outlook { display: flex; flex-direction: column; gap: 11px; }
 .outlookLabel { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.72; }
@@ -104,6 +143,10 @@ body {
 
 @media (max-width: 520px) {
   .now { gap: 14px; }
+  .now .temp { font-size: clamp(3.6rem, 20vw, 5rem); }
+}
+@media (max-width: 430px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 /* condition-tinted mesh gradient over the canvas sky */
