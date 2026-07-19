@@ -2,23 +2,7 @@
 // backbone: 15 national-service models via open-meteo, each an independent forecast
 // plus openweathermap as a 16th provider when a key is present
 
-const OM_MODELS = [
-  'ecmwf_ifs025', 'ecmwf_aifs025', 'gfs_seamless', 'gfs_graphcast025', 'icon_seamless',
-  'gem_seamless', 'meteofrance_seamless', 'jma_seamless', 'metno_seamless', 'ukmo_seamless',
-  'knmi_seamless', 'dmi_seamless', 'bom_access_global', 'cma_grapes_global', 'italia_meteo_arpae_icon_2i',
-  // high-res regional runs, add extra independent samples where they cover the spot
-  'icon_eu', 'knmi_harmonie_arome_europe', 'dmi_harmonie_arome_europe',
-]
-
-// pretty names + the weather service behind each model
-const OM_LABELS = {
-  ecmwf_ifs025: 'ECMWF IFS', ecmwf_aifs025: 'ECMWF AIFS', gfs_seamless: 'NOAA GFS',
-  gfs_graphcast025: 'GraphCast', icon_seamless: 'DWD ICON', gem_seamless: 'ECCC GEM',
-  meteofrance_seamless: 'Meteo-France', jma_seamless: 'JMA', metno_seamless: 'MET Norway',
-  ukmo_seamless: 'UK Met Office', knmi_seamless: 'KNMI', dmi_seamless: 'DMI',
-  bom_access_global: 'BOM ACCESS', cma_grapes_global: 'CMA GRAPES', italia_meteo_arpae_icon_2i: 'ItaliaMeteo',
-  icon_eu: 'DWD ICON-EU', knmi_harmonie_arome_europe: 'KNMI HARMONIE', dmi_harmonie_arome_europe: 'DMI HARMONIE',
-}
+import { OM_MODELS, OM_LABELS } from './models.js'
 
 const CUR = ['temperature_2m', 'apparent_temperature', 'relative_humidity_2m', 'precipitation',
   'weather_code', 'cloud_cover', 'wind_speed_10m', 'wind_direction_10m', 'is_day',
@@ -174,9 +158,65 @@ async function fetchHourly(lat, lon) {
   } catch { return [] }
 }
 
+// per-model hourly precip + weather code, for a model-averaged onset time.
+// returns { hours:[iso...], perModel:{ id:{precip,code} } } from the current hour.
+async function fetchModelHourly(lat, lon) {
+  try {
+    const u = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+      `&hourly=precipitation,weather_code&models=${OM_MODELS.join(',')}&current=temperature_2m&forecast_hours=18&timezone=auto`
+    const r = await fetch(u)
+    if (!r.ok) return null
+    const j = await r.json()
+    const h = j.hourly || {}
+    const times = h.time || []
+    const ref = (j.current?.time || '').slice(0, 13)
+    let start = times.findIndex(t => t.slice(0, 13) >= ref)
+    if (start < 0) start = 0
+    const hours = times.slice(start)
+    const perModel = {}
+    for (const m of OM_MODELS) {
+      const precip = h[`precipitation_${m}`]
+      const code = h[`weather_code_${m}`]
+      if (!Array.isArray(precip) && !Array.isArray(code)) continue
+      perModel[m] = { precip: precip ? precip.slice(start) : null, code: code ? code.slice(start) : null }
+    }
+    return { hours, perModel }
+  } catch { return null }
+}
+
+// across the models, when does the event first appear? average those onset
+// times and take the spread as the error. returns { agree, whenMin, sdMin } where
+// whenMin is minutes from the first future hour, or null if too few models agree.
+function onsetStats(modelHourly, wantCats) {
+  if (!modelHourly) return null
+  const { hours, perModel } = modelHourly
+  if (!hours || hours.length < 2) return null
+  const onsets = []
+  for (const id in perModel) {
+    const { precip, code } = perModel[id]
+    for (let k = 1; k < hours.length; k++) {
+      const c = code && code[k] != null ? category(code[k]) : null
+      const wet = (c && wantCats.has(c)) || (precip && precip[k] >= 0.2)
+      if (wet) { onsets.push(k * 60); break } // minutes from the first future hour
+    }
+  }
+  if (onsets.length < 3) return null
+  const m = mean(onsets)
+  const sd = std(onsets)
+  return { agree: onsets.length, whenMin: m, sdMin: sd }
+}
+
+// add mean minutes to a base "YYYY-MM-DDTHH:MM" string, return "HH:MM" (rounded to 5)
+function clockPlus(baseIso, addMin) {
+  const base = Number(baseIso.slice(11, 13)) * 60 + Number(baseIso.slice(14, 16))
+  let mins = Math.round((base + addMin) / 5) * 5
+  mins = ((mins % 1440) + 1440) % 1440
+  return `${String(Math.floor(mins / 60)).padStart(2, '0')}:${String(mins % 60).padStart(2, '0')}`
+}
+
 // scan the next hours for plausible, worth-mentioning changes.
 // returns [{ kind, cat, hoursAway, en, de, detail:{en,de} }]
-export function predictEvents(hourly, nowCat) {
+export function predictEvents(hourly, nowCat, modelHourly) {
   if (!hourly || hourly.length < 2) return []
   const out = []
   const wetCats = new Set(['rain', 'drizzle', 'thunder'])
@@ -187,14 +227,26 @@ export function predictEvents(hourly, nowCat) {
   if (!nowWet && firstWet > 0 && firstWet <= 12) {
     const h = hourly[firstWet], c = category(h.code)
     const noun = { rain: ['Rain', 'Regen'], drizzle: ['Drizzle', 'Nieselregen'], thunder: ['A storm', 'Ein Gewitter'] }[c] || ['Rain', 'Regen']
-    out.push({
-      kind: 'precip-start', cat: c, hoursAway: firstWet,
-      en: `${noun[0]} likely in ${firstWet}h`, de: `${noun[1]} wahrscheinlich in ${firstWet} Std`,
-      detail: {
+    const wantCats = c === 'thunder' ? new Set(['thunder']) : new Set(['rain', 'drizzle', 'thunder'])
+    const os = onsetStats(modelHourly, wantCats)
+    const base = modelHourly?.hours?.[0] || hourly[0]?.time
+    let chip, det
+    if (os && base) {
+      const at = clockPlus(base, os.whenMin)
+      const err = Math.max(5, Math.round(os.sdMin / 5) * 5)
+      chip = { en: `${noun[0]} likely around ${at}`, de: `${noun[1]} wahrscheinlich gegen ${at}` }
+      det = {
+        en: `${os.agree} models put ${noun[0].toLowerCase()} near ${at}, give or take ${err} min${h.pop != null ? `, ${h.pop}% chance` : ''}. Worth an umbrella.`,
+        de: `${os.agree} Modelle sehen ${noun[1].toLowerCase()} gegen ${at}, ±${err} Min${h.pop != null ? `, ${h.pop}% Wahrscheinlichkeit` : ''}. Schirm einpacken.`,
+      }
+    } else {
+      chip = { en: `${noun[0]} likely in ${firstWet}h`, de: `${noun[1]} wahrscheinlich in ${firstWet} Std` }
+      det = {
         en: `Models point to ${noun[0].toLowerCase()} starting around ${labelHour(h.time)}${h.pop != null ? `, ${h.pop}% chance` : ''}. Worth an umbrella.`,
         de: `Modelle deuten auf ${noun[1].toLowerCase()} ab etwa ${labelHour(h.time)}${h.pop != null ? `, ${h.pop}% Wahrscheinlichkeit` : ''}. Schirm einpacken.`,
-      },
-    })
+      }
+    }
+    out.push({ kind: 'precip-start', cat: c, hoursAway: firstWet, en: chip.en, de: chip.de, detail: det })
   }
   if (nowWet) {
     const firstDry = hourly.findIndex((h, i) => i > 0 && !wetCats.has(category(h.code)))
@@ -260,8 +312,8 @@ const blendField = (rawVals, apiVals) => {
 
 // fetch everything in parallel, then average raw data with api data
 export async function aggregate(lat, lon, owmKey) {
-  const [om, owm, dailyRes, hourly] = await Promise.all([
-    fetchOpenMeteo(lat, lon), fetchOWM(lat, lon, owmKey), fetchDaily(lat, lon), fetchHourly(lat, lon),
+  const [om, owm, dailyRes, hourly, modelHourly] = await Promise.all([
+    fetchOpenMeteo(lat, lon), fetchOWM(lat, lon, owmKey), fetchDaily(lat, lon), fetchHourly(lat, lon), fetchModelHourly(lat, lon),
   ])
   const daily = dailyRes.days || []
   const sun = dailyRes.sun || null
@@ -279,7 +331,7 @@ export async function aggregate(lat, lon, owmKey) {
   const confidence = Math.round(Math.max(0, Math.min(1, 0.6 * agree + 0.4 * (1 - Math.min(spread / 4, 1)))) * 100)
 
   const nowCat = cat
-  const predictions = predictEvents(hourly, nowCat)
+  const predictions = predictEvents(hourly, nowCat, modelHourly)
 
   return {
     count: sources.length, rawCount: raw.length, apiCount: api.length,
