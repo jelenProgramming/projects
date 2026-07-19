@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Scissors } from 'lucide-react'
 
 export default function CreateForm({ onCreate, t }) {
   const [url, setUrl] = useState('')
@@ -33,7 +34,7 @@ export default function CreateForm({ onCreate, t }) {
           spellCheck={false}
         />
         <button className="create__btn" type="submit" disabled={busy}>
-          {busy ? t.shortening : t.shorten}
+          {busy ? t.shortening : <><Scissors className="btn-ico" aria-hidden="true" /> {t.shorten}</>}
         </button>
       </div>
       <div className="create__row create__row--slug">

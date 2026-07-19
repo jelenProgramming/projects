@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Copy, Check, Trash2 } from 'lucide-react'
 
 function timeAgo(iso, t) {
   const d = (Date.now() - new Date(iso)) / 1000
@@ -25,6 +26,7 @@ export default function LinkRow({ link, active, onSelect, onDelete, t }) {
         <div className="row__short">
           <span className="row__slug">/{link.slug}</span>
           <button className={`row__copy ${copied ? 'row__copy--done' : ''}`} onClick={copy}>
+            {copied ? <Check className="row-ico" aria-hidden="true" /> : <Copy className="row-ico" aria-hidden="true" />}
             {copied ? t.copied : t.copy}
           </button>
         </div>
@@ -44,7 +46,7 @@ export default function LinkRow({ link, active, onSelect, onDelete, t }) {
           }}
           title={t.deleteTitle}
         >
-          ×
+          <Trash2 className="row-ico" aria-hidden="true" />
         </button>
       </div>
     </div>
