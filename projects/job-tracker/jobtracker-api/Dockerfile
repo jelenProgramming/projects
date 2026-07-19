@@ -1,23 +1,24 @@
 FROM php:8.3-cli
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    git curl zip unzip libpng-dev libonig-dev libxml2-dev \
-    && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+# reliable extension installer: pulls all system deps automatically
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+RUN chmod +x /usr/local/bin/install-php-extensions \
+    && install-php-extensions pdo_sqlite mbstring bcmath exif zip
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www
-
+WORKDIR /app
 COPY . .
 
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader --no-interaction \
+    && cp -n .env.example .env \
+    && touch database/database.sqlite \
+    && mkdir -p storage/framework/views storage/framework/cache/data storage/framework/sessions bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache \
+    && php artisan key:generate --force
 
-RUN mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache/data storage/logs bootstrap/cache \
-    && chmod -R 775 storage bootstrap/cache
+ENV APP_ENV=production
+ENV APP_DEBUG=false
 
-EXPOSE 8000
-
-CMD php artisan config:clear && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}
+EXPOSE 8080
+CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8080}
