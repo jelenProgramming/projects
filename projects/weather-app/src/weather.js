@@ -1,6 +1,7 @@
 // multi-source forecast aggregation, keyless-first
-// backbone: 15 national-service models via open-meteo, each an independent forecast
-// plus openweathermap as a 16th provider when a key is present
+// backbone: the reputable national-service models in models.js via open-meteo,
+// each an independent forecast, deduplicated so every center votes once
+// plus openweathermap as an extra provider when a key is present
 
 import { OM_MODELS, OM_LABELS } from './models.js'
 
@@ -231,7 +232,9 @@ export function predictEvents(hourly, nowCat, modelHourly) {
     const os = onsetStats(modelHourly, wantCats)
     const base = modelHourly?.hours?.[0] || hourly[0]?.time
     let chip, det
-    if (os && base) {
+    // only claim a precise time when the models actually cluster (spread within
+    // ~90 min); otherwise the timing is genuinely uncertain, so stay vague.
+    if (os && base && os.sdMin <= 90) {
       const at = clockPlus(base, os.whenMin)
       const err = Math.max(5, Math.round(os.sdMin / 5) * 5)
       chip = { en: `${noun[0]} likely around ${at}`, de: `${noun[1]} wahrscheinlich gegen ${at}` }

@@ -18,34 +18,28 @@ export const MODEL_GROUPS = [
   ] },
   { org: 'NOAA', region: 'United States / global', models: [
     ['gfs_seamless', 'NOAA GFS'],
-    ['gfs_global', 'NOAA GFS Global'],
     ['gfs_graphcast025', 'NOAA GraphCast'], // DeepMind/NOAA AI
   ] },
   { org: 'DWD', region: 'Germany / Europe', models: [
     ['icon_seamless', 'DWD ICON'],
-    ['icon_global', 'DWD ICON Global'],
     ['icon_eu', 'DWD ICON-EU'],            // high-res Europe
     ['icon_d2', 'DWD ICON-D2'],            // very high-res central Europe
   ] },
   { org: 'ECCC', region: 'Canada / global', models: [
     ['gem_seamless', 'ECCC GEM'],
-    ['gem_global', 'ECCC GEM Global'],
   ] },
   { org: 'Meteo-France', region: 'France / Europe', models: [
     ['meteofrance_seamless', 'Meteo-France'],
-    ['meteofrance_arpege_seamless', 'MF ARPEGE'],
     ['meteofrance_arome_france_hd', 'MF AROME HD'], // high-res France
   ] },
   { org: 'JMA', region: 'Japan / global', models: [
     ['jma_seamless', 'JMA'],
-    ['jma_gsm', 'JMA GSM'],
   ] },
   { org: 'MET Norway', region: 'Nordics', models: [
     ['metno_seamless', 'MET Norway'],
   ] },
   { org: 'UK Met Office', region: 'UK / global', models: [
     ['ukmo_seamless', 'UK Met Office'],
-    ['ukmo_global_deterministic_10km', 'UKMO Global 10km'],
   ] },
   { org: 'KNMI', region: 'Netherlands / Europe', models: [
     ['knmi_seamless', 'KNMI'],
@@ -64,7 +58,6 @@ export const MODEL_GROUPS = [
   ] },
   { org: 'KMA', region: 'Korea / global', models: [
     ['kma_seamless', 'KMA'],
-    ['kma_gdps', 'KMA GDPS'],
   ] },
   { org: 'BOM', region: 'Australia / global', models: [
     ['bom_access_global', 'BOM ACCESS'],
