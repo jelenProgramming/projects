@@ -269,7 +269,7 @@ export default function App() {
           </main>
         )}
 
-        <footer className="foot">{t.tagline}</footer>
+        <footer className="foot"><span>{t.tagline}</span><span className="copy">© 2026 David Jelen</span></footer>
       </div>
     </div>
   )

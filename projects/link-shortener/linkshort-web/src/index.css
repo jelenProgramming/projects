@@ -331,3 +331,7 @@ body { background: radial-gradient(1100px 560px at 88% -12%, rgba(52, 211, 153, 
 .row { transition: border-color 0.15s, transform 0.12s; }
 .row:hover { transform: translateY(-1px); }
 .stats__label { display: flex; align-items: center; }
+
+/* copyright / rights line in footer */
+.footer__rights { display: block; margin-top: 6px; font-size: 0.8rem; opacity: 0.65; }
+.footer__rights a { color: inherit; text-decoration: underline; }

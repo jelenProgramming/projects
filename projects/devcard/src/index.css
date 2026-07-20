@@ -485,3 +485,7 @@ body { background: radial-gradient(900px 500px at 10% -8%, rgba(163, 113, 247, 0
 .stat__ico { width: 16px; height: 16px; stroke-width: 2.2; color: var(--link); margin-bottom: 4px; }
 .btn-ico { width: 14px; height: 14px; stroke-width: 2.4; vertical-align: -2px; margin-right: 4px; }
 .profile__meta li { display: inline-flex; align-items: center; gap: 4px; }
+
+/* conventional footer: build note on one line, rights + credit beneath */
+.footer__rights { display: block; margin-top: 6px; font-size: 0.8rem; opacity: 0.7; }
+.footer__rights a { color: inherit; text-decoration: underline; }

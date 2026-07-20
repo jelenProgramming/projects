@@ -171,6 +171,7 @@ export default function App() {
       </main>
 
       <Stats streak={streak} best={best} seen={seen} accuracy={accuracy} />
+      <footer className="site-foot">© 2026 David Jelen · <a href="https://github.com/jelenProgramming" target="_blank" rel="noopener noreferrer">jelenProgramming</a></footer>
     </div>
   )
 }

@@ -191,3 +191,7 @@ body::after {
   body::before, body::after { animation: none; }
   .card { animation: none; }
 }
+
+/* site footer: copyright + credit */
+.site-foot { text-align: center; padding: 20px 16px; font-size: 0.82rem; opacity: 0.65; }
+.site-foot a { color: inherit; }

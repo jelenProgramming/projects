@@ -147,6 +147,13 @@ export default function App() {
       >
         DE
       </button>
+      <button
+        type="button"
+        className={lang === 'sl' ? 'langToggle__btn langToggle__btn--on' : 'langToggle__btn'}
+        onClick={() => switchLang('sl')}
+      >
+        SL
+      </button>
     </div>
   )
 
@@ -261,6 +268,7 @@ export default function App() {
         <a href="https://github.com/jelenProgramming" target="_blank" rel="noopener noreferrer">
           GitHub
         </a>
+        <span className="footer__rights">© 2026 David Jelen</span>
       </footer>
     </div>
   )

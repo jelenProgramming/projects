@@ -60,6 +60,10 @@ export default function App() {
           </Suspense>
         </div>
       </main>
+      <footer className="site-foot">
+        <span>© 2026 David Jelen</span>
+        <a href="https://github.com/jelenProgramming" target="_blank" rel="noopener noreferrer">jelenProgramming</a>
+      </footer>
     </div>
   )
 }

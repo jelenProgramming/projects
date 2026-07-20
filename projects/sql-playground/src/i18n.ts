@@ -1,4 +1,4 @@
-export type Lang = 'en' | 'de'
+export type Lang = 'en' | 'de' | 'sl'
 
 export interface Localized {
   en: string
@@ -109,11 +109,48 @@ export const UI: Record<Lang, UIStrings> = {
       'Gebaut von David Jelen. React, TypeScript, sql.js. Die Datenbank läuft komplett in deinem Browser, nichts wird an einen Server geschickt.',
     diffLabels: { 1: 'leicht', 2: 'mittel', 3: 'schwer' },
   },
+  sl: {
+    brandSub: 'SQLite v vašem brskalniku',
+    tabPlayground: 'Peskovnik',
+    tabExercises: 'Vaje',
+    queryLabel: 'Poizvedba',
+    editorHintRuns: 'zažene',
+    runQuery: 'Zaženi poizvedbo',
+    resetDb: 'Ponastavi bazo',
+    placeholderResult: 'Zaženite poizvedbo za prikaz rezultatov.',
+    rows: 'vrstic',
+    columns: 'stolpcev',
+    execution: 'izvajanje',
+    writeOk: (n, ms) => `V redu. Spremenjenih vrstic: ${n} (${ms}).`,
+    sqlError: 'Napaka SQL',
+    truncNote: (max, total) => `Prikazanih prvih ${max} od ${total} vrstic.`,
+    historyTitle: 'Nedavne poizvedbe',
+    sidebarNote:
+      'Kliknite število vrstic za poizvedbo po tabeli. Podatki so v pomnilniku in se ob ponovnem nalaganju znova ustvarijo.',
+    rowsBadge: n => `${n} vrstic`,
+    exProgress: (solved, total) =>
+      `Rešenih ${solved} od ${total}. Odgovori se preverjajo glede na dejansko množico rezultatov, zato velja vsaka pravilna poizvedba, ne le vzorčna.`,
+    hint: 'Namig',
+    yourQuery: 'Vaša poizvedba',
+    run: 'Zaženi',
+    checkAnswer: 'Preveri odgovor',
+    showSolution: 'Pokaži rešitev',
+    hideSolution: 'Skrij rešitev',
+    solved: '✓ rešeno',
+    correct: 'Pravilno. Vaš rezultat se ujema s pričakovanim.',
+    bootLoading: 'Nalaganje SQLite (WebAssembly)...',
+    bootFailed:
+      'Modula SQLite WASM ni bilo mogoče naložiti. Preverite povezavo in znova naložite stran.',
+    footer:
+      'Zgradil David Jelen. React, TypeScript, sql.js. Baza teče v celoti v vašem brskalniku, nič se ne pošlje na strežnik.',
+    diffLabels: { 1: 'lahko', 2: 'srednje', 3: 'težko' },
+  },
 }
 
 export function loadStoredLang(key: string): Lang {
   try {
-    return window.localStorage.getItem(key) === 'de' ? 'de' : 'en'
+    const v = window.localStorage.getItem(key)
+    return v === 'de' || v === 'sl' ? v : 'en'
   } catch {
     return 'en'
   }

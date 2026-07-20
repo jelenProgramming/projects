@@ -198,3 +198,6 @@ body {
 .app[data-cat="drizzle"], .app[data-cat="rain"] { --m1: #7d93a8; --m2: #46586b; --m3: #2b3947; }
 .app[data-cat="snow"] { --m1: #dbe9f5; --m2: #9fbdd6; --m3: #6d8fab; }
 .app[data-cat="thunder"] { --m1: #5c5470; --m2: #2e2a3d; --m3: #82683a; }
+
+.foot { display: flex; flex-direction: column; gap: 4px; }
+.foot .copy { font-size: 0.72rem; opacity: 0.7; }

@@ -41,11 +41,28 @@ const STRINGS = {
     statForks: 'Forks',
     statFollowers: 'Follower',
   },
+  sl: {
+    tagline: 'Katero koli uporabniško ime GitHub spremeni v profil na prvi pogled.',
+    tryPrefix: 'Poskusi uporabniško ime, kot je',
+    orOwn: 'ali svoje.',
+    mostStarred: 'Repozitoriji z največ zvezdicami',
+    topLanguages: 'Glavni jeziki',
+    joined: 'član od',
+    noDescription: 'Ni opisa.',
+    lookUp: 'Poišči',
+    loading: 'Nalaganje...',
+    usernamePlaceholder: 'uporabniško ime',
+    footer: 'Zgrajeno z React + Vite | podatki z javnega API-ja GitHub',
+    statRepos: 'Repozitoriji',
+    statStars: 'Zvezdice',
+    statForks: 'Razvejitve',
+    statFollowers: 'Sledilci',
+  },
 }
 
 function loadLang() {
   try {
-    return window.localStorage.getItem('devcard:lang') === 'de' ? 'de' : 'en'
+    const v = window.localStorage.getItem('devcard:lang'); return v === 'de' || v === 'sl' ? v : 'en'
   } catch {
     return 'en'
   }
@@ -121,6 +138,13 @@ export default function App() {
             >
               DE
             </button>
+            <button
+              type="button"
+              className={lang === 'sl' ? 'langToggle__btn langToggle__btn--on' : 'langToggle__btn'}
+              onClick={() => switchLang('sl')}
+            >
+              SL
+            </button>
           </div>
         </div>
         <p className="tagline">{t.tagline}</p>
@@ -161,7 +185,10 @@ export default function App() {
         </main>
       )}
 
-      <footer className="footer">{t.footer}</footer>
+      <footer className="footer">
+        <span>{t.footer}</span>
+        <span className="footer__rights">© 2026 David Jelen · <a href="https://github.com/jelenProgramming" target="_blank" rel="noopener noreferrer">jelenProgramming</a></span>
+      </footer>
     </div>
   )
 }

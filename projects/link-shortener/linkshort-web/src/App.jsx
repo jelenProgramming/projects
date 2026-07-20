@@ -61,11 +61,39 @@ const STRINGS = {
     hourAgo: ' h',
     dayAgo: ' T',
   },
+  sl: {
+    tagline: 'Skrajšajte URL in glejte, kako se nabirajo kliki.',
+    yourLinks: 'Vaše povezave',
+    noLinks: 'Še ni povezav. Zgoraj skrajšajte eno.',
+    pickLink: 'Izberite povezavo za prikaz statistike.',
+    footer: 'Laravel API + React | kratke povezave se preusmerijo na gostitelju API',
+    apiError: 'API ni dosegljiv. Ali strežnik Laravel teče?',
+    shorten: 'Skrajšaj',
+    shortening: 'Krajšanje...',
+    urlPlaceholder: 'https://vasa-dolga-povezava.si/gre/sem',
+    slugHint: 'neobvezna oznaka po meri',
+    slugPlaceholder: 'moja-povezava',
+    copy: 'kopiraj',
+    copied: 'kopirano',
+    clicks: 'klikov',
+    deleteTitle: 'Izbriši',
+    loadingStats: 'Nalaganje statistike...',
+    totalClicks: 'skupno klikov',
+    last30: 'Kliki | zadnjih 30 dni',
+    topReferrers: 'Glavni viri',
+    recentClicks: 'Nedavni kliki',
+    nothingYet: 'Še nič.',
+    noClicks30: 'V zadnjih 30 dneh še ni klikov.',
+    justNow: 'pravkar',
+    minAgo: ' min',
+    hourAgo: ' h',
+    dayAgo: ' d',
+  },
 }
 
 function loadLang() {
   try {
-    return window.localStorage.getItem('linkshort:lang') === 'de' ? 'de' : 'en'
+    const v = window.localStorage.getItem('linkshort:lang'); return v === 'de' || v === 'sl' ? v : 'en'
   } catch {
     return 'en'
   }
@@ -156,6 +184,13 @@ export default function App() {
             >
               DE
             </button>
+            <button
+              type="button"
+              className={lang === 'sl' ? 'langToggle__btn langToggle__btn--on' : 'langToggle__btn'}
+              onClick={() => switchLang('sl')}
+            >
+              SL
+            </button>
           </div>
         </div>
         <p className="tagline">{t.tagline}</p>
@@ -192,7 +227,10 @@ export default function App() {
         </section>
       </div>
 
-      <footer className="footer">{t.footer}</footer>
+      <footer className="footer">
+        <span>{t.footer}</span>
+        <span className="footer__rights">© 2026 David Jelen · <a href="https://github.com/jelenProgramming" target="_blank" rel="noopener noreferrer">jelenProgramming</a></span>
+      </footer>
     </div>
   )
 }
