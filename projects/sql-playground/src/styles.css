@@ -809,3 +809,6 @@ a:hover { border-bottom-color: var(--jewel); color: var(--jewel); }
 .results tbody tr:hover td { background: var(--jewel-soft); }
 .checkPass { border-color: var(--jewel); color: var(--jewel); }
 .exDone { color: var(--jewel); }
+
+/* copyright / rights line in the footer */
+.footer__rights { opacity: 0.6; font-size: 0.8rem; }
