@@ -210,3 +210,6 @@ body {
 
 .foot { display: flex; flex-direction: column; gap: 4px; }
 .foot .copy { font-size: 0.72rem; opacity: 0.7; }
+
+/* confidence shown up with the forecast */
+.cconf { font-size: 0.85rem; opacity: 0.82; margin-top: 2px; font-weight: 600; }

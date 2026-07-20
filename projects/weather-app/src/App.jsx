@@ -11,7 +11,7 @@ const DEFAULT = { name: 'London', country: 'United Kingdom', lat: 51.5074, lon: 
 const T = {
   en: {
     title: 'Consensus Weather', tagline: 'one forecast, averaged from many models',
-    search: 'Search a city', feels: 'Feels like', range: 'model range',
+    search: 'Search a city', feels: 'Feels like', range: 'Deviation',
     humidity: 'Humidity', wind: 'Wind', gusts: 'Gusts', precip: 'Precipitation', cloud: 'Cloud cover',
     pressure: 'Pressure', dew: 'Dew point', uv: 'UV index', visibility: 'Visibility',
     sunrise: 'Sunrise', sunset: 'Sunset', hourly: 'Next 24 hours', now: 'Now',
@@ -22,7 +22,7 @@ const T = {
   },
   de: {
     title: 'Konsens-Wetter', tagline: 'eine Vorhersage, gemittelt aus vielen Modellen',
-    search: 'Stadt suchen', feels: 'Gefühlt', range: 'Modellspanne',
+    search: 'Stadt suchen', feels: 'Gefühlt', range: 'Abweichung',
     humidity: 'Luftfeuchte', wind: 'Wind', gusts: 'Böen', precip: 'Niederschlag', cloud: 'Bewölkung',
     pressure: 'Luftdruck', dew: 'Taupunkt', uv: 'UV-Index', visibility: 'Sicht',
     sunrise: 'Sonnenaufgang', sunset: 'Sonnenuntergang', hourly: 'Nächste 24 Stunden', now: 'Jetzt',
@@ -33,7 +33,7 @@ const T = {
   },
   sl: {
     title: 'Soglasno vreme', tagline: 'ena napoved, povprečena iz več modelov',
-    search: 'Poišči mesto', feels: 'Občuti se kot', range: 'razpon modelov',
+    search: 'Poišči mesto', feels: 'Občuti se kot', range: 'Odstopanje',
     humidity: 'Vlažnost', wind: 'Veter', gusts: 'Sunki', precip: 'Padavine', cloud: 'Oblačnost',
     pressure: 'Zračni tlak', dew: 'Rosišče', uv: 'UV-indeks', visibility: 'Vidljivost',
     sunrise: 'Sončni vzhod', sunset: 'Sončni zahod', hourly: 'Naslednjih 24 ur', now: 'Zdaj',
@@ -136,7 +136,7 @@ export default function App() {
       <div className="scrim" />
       <div className="ui">
         <header className="top">
-          <span className="brand"><WeatherIcon cat={cat} day={day} size={26} /> {t.title}</span>
+          <span className="brand">{t.title}</span>
           <div className="toggles">
             <div className="seg">
               <button type="button" className={unit === 'c' ? 'on' : ''} onClick={() => switchUnit('c')}>°C</button>
@@ -195,13 +195,9 @@ export default function App() {
               <div className="cond">
                 <div className="condName">{conditionLabel(cat, lang)}</div>
                 <div className="feels">{t.feels} {toTemp(wx.feelsC, unit)}°</div>
-                <div className="range">{t.range} {toTemp(wx.tempMin, unit)}° to {toTemp(wx.tempMax, unit)}°</div>
+                <div className="range">{t.range} ±{(unit === 'f' ? wx.spread * 1.8 : wx.spread).toFixed(1)}°</div>
+                <div className="cconf">{t.confidence} {wx.confidence}%</div>
               </div>
-            </div>
-
-            <div className="conf">
-              <div className="confBar"><span style={{ width: `${wx.confidence}%` }} /></div>
-              <div className="confLabel">{t.confidence} {wx.confidence}% · {t.models} {wx.count}</div>
             </div>
 
             {wx.hourly?.length > 1 && (
@@ -220,13 +216,13 @@ export default function App() {
             <div className="grid">
               <div><span>{t.humidity}</span><b>{wx.humidity}%</b></div>
               <div><span>{t.wind}</span><b>{toWind(wx.windKph, unit)} {windUnit} {compass(wx.windDir)}</b></div>
-              <div><span>{t.gusts}</span><b>{wx.gustKph ? `${toWind(wx.gustKph, unit)} ${windUnit}` : '—'}</b></div>
+              <div><span>{t.gusts}</span><b>{wx.gustKph ? `${toWind(wx.gustKph, unit)} ${windUnit}` : 'n/a'}</b></div>
               <div><span>{t.precip}</span><b>{(wx.precip || 0).toFixed(1)} mm</b></div>
               <div><span>{t.cloud}</span><b>{wx.cloud}%</b></div>
-              <div><span>{t.pressure}</span><b>{wx.pressure ? `${wx.pressure} hPa` : '—'}</b></div>
-              <div><span>{t.dew}</span><b>{typeof wx.dewC === 'number' ? `${toTemp(wx.dewC, unit)}°` : '—'}</b></div>
-              <div><span>{t.uv}</span><b>{typeof wx.uv === 'number' ? Math.round(wx.uv) : '—'}</b></div>
-              <div><span>{t.visibility}</span><b>{typeof wx.visibility === 'number' ? `${Math.round(wx.visibility / 1000)} km` : '—'}</b></div>
+              <div><span>{t.pressure}</span><b>{wx.pressure ? `${wx.pressure} hPa` : 'n/a'}</b></div>
+              <div><span>{t.dew}</span><b>{typeof wx.dewC === 'number' ? `${toTemp(wx.dewC, unit)}°` : 'n/a'}</b></div>
+              <div><span>{t.uv}</span><b>{typeof wx.uv === 'number' ? Math.round(wx.uv) : 'n/a'}</b></div>
+              <div><span>{t.visibility}</span><b>{typeof wx.visibility === 'number' ? `${Math.round(wx.visibility / 1000)} km` : 'n/a'}</b></div>
             </div>
 
             {wx.sun?.sunrise && (
@@ -269,7 +265,7 @@ export default function App() {
           </main>
         )}
 
-        <footer className="foot"><span>{t.tagline}</span><span className="copy">© 2026 David Jelen</span></footer>
+        <footer className="foot"><span className="copy">© 2026 David Jelen</span></footer>
       </div>
     </div>
   )

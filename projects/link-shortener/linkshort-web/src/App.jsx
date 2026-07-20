@@ -229,7 +229,7 @@ export default function App() {
 
       <footer className="footer">
         <span>{t.footer}</span>
-        <span className="footer__rights">© 2026 David Jelen · <a href="https://github.com/jelenProgramming" target="_blank" rel="noopener noreferrer">jelenProgramming</a></span>
+        <span className="footer__rights">© 2026 David Jelen | <a href="https://github.com/jelenProgramming" target="_blank" rel="noopener noreferrer">jelenProgramming</a></span>
       </footer>
     </div>
   )

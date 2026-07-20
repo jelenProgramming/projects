@@ -1,194 +1,142 @@
-// Two collectible-style chibi figurines on display bases, hand-built as SVG.
-// They are the app's mascots: PIA is always prepared, MODEL is caught out. Their
-// outfit and expression react to the calculated weather. Premium-resin feel comes
-// from layered gradients (form shading), a soft rim highlight, an occlusion shadow
-// under each base, and a glossy pedestal. No external art, all primitives.
-//
-// Techniques are hand-rolled from researched tutorials (see AGENT-MEMORY.md):
-// vertical form gradients for volume, a radial hotspot for the rim light, and a
-// blurred offset ellipse for the contact shadow.
+// Two collectible-style figurines on display bases, hand-built as SVG. They are
+// modelled on the two leads of Bloodhounds: GUN (Kim Gun-woo) the stoic, clean-cut
+// heavy-hitter in a charcoal hoodie, and JIN (Hong Woo-jin) the talkative, street
+// -smart one in an olive bomber and cap. All fills are fully opaque (solid resin
+// look, never see-through); only the weather-reactive expression and a small prop
+// change with the sky. Premium feel from form gradients, a rim highlight and a
+// blurred contact shadow. No external art, all primitives.
 
 const WET = new Set(['rain', 'drizzle', 'thunder'])
 
-// per-condition styling for the two figures. p = prepared, c = caught-out.
-function styleFor(cat, day) {
-  if (WET.has(cat)) return {
-    p: { mood: 'smug', umbrella: true, coat: '#f6c945', boots: true },
-    c: { mood: 'soggy', umbrella: false, coat: '#8aa0b4', drips: true },
-    caption: 'rain',
-  }
-  if (cat === 'snow') return {
-    p: { mood: 'happy', hat: true, scarf: '#e5556b', coat: '#6ea8df', boots: true },
-    c: { mood: 'cold', coat: '#9fb2c4', shiver: true },
-    caption: 'snow',
-  }
-  if ((cat === 'clear' || cat === 'partly') && day) return {
-    p: { mood: 'cool', shades: true, sunhat: true, coat: '#57c4b4' },
-    c: { mood: 'hot', coat: '#e28f6d', sweat: true },
-    caption: 'sun',
-  }
-  if (!day && (cat === 'clear' || cat === 'partly')) return {
-    p: { mood: 'calm', coat: '#7c6cc4' },
-    c: { mood: 'calm', coat: '#5f6f8c' },
-    caption: 'night',
-  }
-  return { // clouds / fog default
-    p: { mood: 'calm', coat: '#7f9ab0' },
-    c: { mood: 'meh', coat: '#8a97a4' },
-    caption: 'clouds',
-  }
+// mood + prop per condition. gun is the prepared one, jin gets caught out.
+function moods(cat, day) {
+  if (WET.has(cat)) return { gun: { face: 'calm', umbrella: true }, jin: { face: 'annoyed', wet: true } }
+  if (cat === 'snow') return { gun: { face: 'calm', beanie: true }, jin: { face: 'cold', cold: true } }
+  if ((cat === 'clear' || cat === 'partly') && day) return { gun: { face: 'cool', shades: true }, jin: { face: 'cool', shades: true, cap: true } }
+  if (!day && (cat === 'clear' || cat === 'partly')) return { gun: { face: 'calm' }, jin: { face: 'calm' } }
+  return { gun: { face: 'calm' }, jin: { face: 'meh' } }
 }
 
-// one figurine. cx is the horizontal centre; s selects skin/hair identity.
-function Figure({ cx, cfg, id, skin, hair }) {
-  const mood = cfg.mood
-  // brow + mouth per mood
-  const brow = mood === 'soggy' || mood === 'cold' || mood === 'meh' || mood === 'hot'
-  const frown = mood === 'soggy' || mood === 'cold' || mood === 'hot'
-  const smile = mood === 'smug' || mood === 'happy' || mood === 'cool' || mood === 'calm'
+function Face({ mood, skin }) {
+  const brow = mood === 'annoyed' || mood === 'cold' || mood === 'meh'
+  const frown = mood === 'annoyed' || mood === 'cold'
+  const smirk = mood === 'cool'
   return (
-    <g transform={`translate(${cx} 0)`} filter="url(#figSoft)">
-      {/* contact shadow */}
-      <ellipse cx="0" cy="176" rx="34" ry="8" fill="#000" opacity="0.28" filter="url(#figBlur)" />
-      {/* pedestal */}
-      <ellipse cx="0" cy="170" rx="32" ry="10" fill={`url(#baseGrad-${id})`} />
-      <ellipse cx="0" cy="167" rx="32" ry="9" fill="none" stroke="#ffffff" strokeOpacity="0.5" strokeWidth="1" />
-      <ellipse cx="-9" cy="165" rx="10" ry="2.4" fill="#ffffff" opacity="0.35" />
-
-      {/* legs */}
-      <rect x="-13" y="140" width="10" height="26" rx="5" fill={`url(#legGrad-${id})`} />
-      <rect x="3" y="140" width="10" height="26" rx="5" fill={`url(#legGrad-${id})`} />
-      {cfg.boots && <>
-        <rect x="-14" y="158" width="12" height="12" rx="4" fill="#37414d" />
-        <rect x="2" y="158" width="12" height="12" rx="4" fill="#37414d" />
+    <g>
+      {mood === 'cold' && <>
+        <circle cx="-12" cy="70" r="4.5" fill="#8fd0ff" /><circle cx="12" cy="70" r="4.5" fill="#8fd0ff" />
       </>}
+      {/* eyes / shades handled by caller overlay */}
+      <g fill="#20242c">
+        <ellipse cx="-10" cy="63" rx="2.8" ry={mood === 'cool' ? 2 : 3.2} />
+        <ellipse cx="10" cy="63" rx="2.8" ry={mood === 'cool' ? 2 : 3.2} />
+      </g>
+      {brow && <g stroke="#20242c" strokeWidth="2.4" strokeLinecap="round">
+        <line x1="-16" y1="55" x2="-5" y2="58" /><line x1="16" y1="55" x2="5" y2="58" />
+      </g>}
+      {frown
+        ? <path d="M -7 78 Q 0 72 7 78" fill="none" stroke="#20242c" strokeWidth="2.4" strokeLinecap="round" />
+        : smirk
+          ? <path d="M -7 74 Q 2 79 8 73" fill="none" stroke="#20242c" strokeWidth="2.4" strokeLinecap="round" />
+          : <path d="M -6 75 Q 0 79 6 75" fill="none" stroke="#20242c" strokeWidth="2.4" strokeLinecap="round" />}
+    </g>
+  )
+}
 
-      {/* torso / coat */}
-      <path d="M -22 96 Q -24 138 -16 146 L 16 146 Q 24 138 22 96 Q 14 84 0 84 Q -14 84 -22 96 Z" fill={`url(#coatGrad-${id})`} />
-      <path d="M -22 96 Q 0 106 22 96 L 22 104 Q 0 114 -22 104 Z" fill="#000" opacity="0.08" />
-      {/* rim light on the coat */}
-      <path d="M 14 88 Q 23 100 20 132" fill="none" stroke="#ffffff" strokeOpacity="0.5" strokeWidth="2.4" strokeLinecap="round" />
+// one figurine. id drives the gradient set; opts carry outfit + mood.
+function Figure({ cx, id, skin, hair, m }) {
+  return (
+    <g transform={`translate(${cx} 0)`}>
+      {/* contact shadow (solid, blurred) */}
+      <ellipse cx="0" cy="176" rx="34" ry="8" fill="#0b1020" opacity="0.35" filter="url(#figBlur)" />
+      {/* pedestal, fully opaque */}
+      <ellipse cx="0" cy="170" rx="32" ry="10" fill={`url(#base-${id})`} />
+      <ellipse cx="-9" cy="166" rx="11" ry="2.6" fill="#ffffff" opacity="0.5" />
+
+      {/* legs (dark trousers) */}
+      <rect x="-13" y="139" width="10" height="28" rx="5" fill={`url(#leg-${id})`} />
+      <rect x="3" y="139" width="10" height="28" rx="5" fill={`url(#leg-${id})`} />
+      {/* shoes */}
+      <path d="M -15 163 h 12 v 6 a 3 3 0 0 1 -3 3 h -9 z" fill="#e9edf2" />
+      <path d="M 3 163 h 12 v 6 a 3 3 0 0 1 -3 3 h -9 z" fill="#e9edf2" />
+
+      {/* torso: jacket/hoodie, opaque form gradient */}
+      <path d="M -23 95 Q -25 138 -16 147 L 16 147 Q 25 138 23 95 Q 14 82 0 82 Q -14 82 -23 95 Z" fill={`url(#jacket-${id})`} />
+      {/* inner tee / zip line */}
+      {id === 'jin'
+        ? <path d="M 0 84 L 0 147" stroke="#eef1f5" strokeWidth="7" strokeLinecap="round" />
+        : <path d="M 0 86 L 0 120" stroke="#1b2027" strokeWidth="2.4" />}
+      {/* hood (gun) or collar (jin) */}
+      {id === 'gun'
+        ? <path d="M -20 92 Q 0 104 20 92 Q 16 84 0 84 Q -16 84 -20 92 Z" fill={`url(#jacketDark-${id})`} />
+        : <path d="M -18 86 L -6 96 L -18 100 Z M 18 86 L 6 96 L 18 100 Z" fill={`url(#jacketDark-${id})`} />}
+      {/* rim light */}
+      <path d="M 15 88 Q 24 104 20 134" fill="none" stroke="#ffffff" strokeOpacity="0.45" strokeWidth="2.2" strokeLinecap="round" />
 
       {/* arms */}
-      <rect x="-27" y="98" width="9" height="34" rx="4.5" fill={`url(#coatGrad-${id})`} transform={cfg.umbrella ? 'rotate(-16 -22 100)' : ''} />
-      <rect x="18" y="98" width="9" height="34" rx="4.5" fill={`url(#coatGrad-${id})`} />
-      {/* hands */}
-      <circle cx={cfg.umbrella ? -30 : -22} cy={cfg.umbrella ? 96 : 132} r="5" fill={skin} />
-      <circle cx="22" cy="132" r="5" fill={skin} />
+      <rect x="-28" y="96" width="10" height="36" rx="5" fill={`url(#jacket-${id})`} transform={m.umbrella ? 'rotate(-18 -23 100)' : ''} />
+      <rect x="18" y="96" width="10" height="36" rx="5" fill={`url(#jacket-${id})`} />
+      {/* hands (wrapped, boxer nod) */}
+      <circle cx={m.umbrella ? -31 : -23} cy={m.umbrella ? 94 : 132} r="5.2" fill={skin} />
+      <circle cx="23" cy="132" r="5.2" fill={skin} />
 
-      {/* scarf */}
-      {cfg.scarf && <path d="M -14 92 Q 0 100 14 92 L 12 100 Q 0 108 -12 100 Z" fill={cfg.scarf} />}
+      {/* neck + head */}
+      <rect x="-6" y="78" width="12" height="10" fill={skin} />
+      <ellipse cx="0" cy="62" rx="25" ry="25" fill={`url(#skin-${id})`} />
+      {/* hair: short crop */}
+      <path d="M -25 58 Q -24 34 0 33 Q 24 34 25 58 Q 22 44 12 42 Q 6 46 0 45 Q -6 46 -12 42 Q -22 44 -25 58 Z" fill={hair} />
+      <path d="M 17 42 Q 25 50 23 62" fill="none" stroke="#ffffff" strokeOpacity="0.22" strokeWidth="2" strokeLinecap="round" />
 
-      {/* head */}
-      <g>
-        <ellipse cx="0" cy="64" rx="26" ry="25" fill={`url(#headGrad-${id})`} />
-        {/* hair cap */}
-        <path d="M -26 60 Q -24 36 0 34 Q 24 36 26 60 Q 18 46 0 46 Q -18 46 -26 60 Z" fill={hair} />
-        <path d="M 18 44 Q 26 52 24 64" fill="none" stroke="#ffffff" strokeOpacity="0.28" strokeWidth="2" strokeLinecap="round" />
-        {/* cheeks */}
-        {(mood === 'hot') && <>
-          <circle cx="-13" cy="70" r="5" fill="#ff7a7a" opacity="0.55" />
-          <circle cx="13" cy="70" r="5" fill="#ff7a7a" opacity="0.55" />
-        </>}
-        {(mood === 'cold') && <>
-          <circle cx="-13" cy="70" r="5" fill="#8fd0ff" opacity="0.6" />
-          <circle cx="13" cy="70" r="5" fill="#8fd0ff" opacity="0.6" />
-        </>}
-        {/* eyes */}
-        {cfg.shades ? (
-          <g>
-            <rect x="-18" y="58" width="15" height="9" rx="4" fill="#20242c" />
-            <rect x="3" y="58" width="15" height="9" rx="4" fill="#20242c" />
-            <rect x="-3" y="61" width="6" height="2.4" fill="#20242c" />
-            <rect x="-16" y="60" width="5" height="2.4" rx="1" fill="#5a6472" />
-          </g>
-        ) : (
-          <g fill="#232830">
-            <ellipse cx="-10" cy="63" rx={mood === 'smug' ? 3.4 : 3} ry={mood === 'smug' ? 2 : 3.4} />
-            <ellipse cx="10" cy="63" rx={mood === 'smug' ? 3.4 : 3} ry={mood === 'smug' ? 2 : 3.4} />
-            <circle cx="-9" cy="62" r="1.1" fill="#fff" />
-            <circle cx="11" cy="62" r="1.1" fill="#fff" />
-          </g>
-        )}
-        {/* brows */}
-        {brow && <g stroke="#2a2f38" strokeWidth="2.2" strokeLinecap="round">
-          <line x1="-16" y1="54" x2="-6" y2="57" />
-          <line x1="16" y1="54" x2="6" y2="57" />
-        </g>}
-        {/* mouth */}
-        {smile
-          ? <path d="M -7 74 Q 0 80 7 74" fill="none" stroke="#2a2f38" strokeWidth="2.2" strokeLinecap="round" />
-          : frown
-            ? <path d="M -7 78 Q 0 72 7 78" fill="none" stroke="#2a2f38" strokeWidth="2.2" strokeLinecap="round" />
-            : <line x1="-6" y1="76" x2="6" y2="76" stroke="#2a2f38" strokeWidth="2.2" strokeLinecap="round" />}
-      </g>
+      <Face mood={m.face} skin={skin} />
 
-      {/* headwear */}
-      {cfg.sunhat && <path d="M -30 42 Q 0 30 30 42 Q 0 50 -30 42 Z M -16 42 Q -14 24 0 24 Q 14 24 16 42 Z" fill="#f2d489" />}
-      {cfg.hat && <path d="M -20 40 Q 0 20 20 40 L 18 44 Q 0 30 -18 44 Z" fill="#e5556b" />}
-
-      {/* umbrella held by prepared figure */}
-      {cfg.umbrella && (
-        <g>
-          <line x1="-30" y1="96" x2="-30" y2="30" stroke="#3a2f2a" strokeWidth="2.6" strokeLinecap="round" />
-          <path d="M -58 30 Q -30 6 -2 30 Q -30 22 -58 30 Z" fill="url(#umbGrad)" />
-          <path d="M -58 30 Q -44 24 -30 30 M -30 30 Q -16 24 -2 30" fill="none" stroke="#ffffff" strokeOpacity="0.4" strokeWidth="1" />
-          <circle cx="-30" cy="8" r="2.4" fill="#3a2f2a" />
-        </g>
-      )}
-
-      {/* drips / sweat / shiver marks */}
-      {cfg.drips && <g fill="#bfe0ff" opacity="0.85">
-        <ellipse cx="-20" cy="100" rx="1.6" ry="3.4" />
-        <ellipse cx="20" cy="112" rx="1.6" ry="3.4" />
-        <ellipse cx="0" cy="150" rx="1.6" ry="3.4" />
+      {/* shades overlay */}
+      {m.shades && <g>
+        <rect x="-18" y="57" width="15" height="9" rx="4" fill="#15181e" />
+        <rect x="3" y="57" width="15" height="9" rx="4" fill="#15181e" />
+        <rect x="-3" y="60" width="6" height="2.2" fill="#15181e" />
       </g>}
-      {cfg.sweat && <ellipse cx="18" cy="56" rx="2" ry="4" fill="#bfe0ff" opacity="0.9" />}
-      {cfg.shiver && <g stroke="#8fd0ff" strokeWidth="1.6" strokeLinecap="round" opacity="0.8">
-        <path d="M 30 60 q 3 -3 0 -6" fill="none" /><path d="M 34 66 q 3 -3 0 -6" fill="none" />
+      {/* beanie / cap */}
+      {m.beanie && <path d="M -26 46 Q 0 26 26 46 L 26 40 Q 0 22 -26 40 Z" fill="#d7443f" />}
+      {m.cap && <><path d="M -24 44 Q 0 26 24 44 Z" fill="#1f2933" /><path d="M 18 44 q 16 2 20 8 l -2 4 q -12 -6 -20 -6 z" fill="#1f2933" /></>}
+
+      {/* cheeks when cold */}
+      {m.face === 'cold' && <g fill="#8fd0ff" opacity="0.7"><circle cx="-13" cy="70" r="4" /><circle cx="13" cy="70" r="4" /></g>}
+
+      {/* umbrella (gun, prepared) */}
+      {m.umbrella && <g>
+        <line x1="-31" y1="94" x2="-31" y2="28" stroke="#2a2320" strokeWidth="2.8" strokeLinecap="round" />
+        <path d="M -60 28 Q -31 4 -2 28 Q -31 20 -60 28 Z" fill={`url(#umb)`} />
+        <path d="M -60 28 Q -46 22 -31 28 M -31 28 Q -16 22 -2 28" fill="none" stroke="#ffffff" strokeOpacity="0.4" strokeWidth="1" />
+        <circle cx="-31" cy="6" r="2.4" fill="#2a2320" />
       </g>}
+      {/* rain drips on jin */}
+      {m.wet && <g fill="#bfe0ff"><ellipse cx="-20" cy="102" rx="1.7" ry="3.6" /><ellipse cx="21" cy="116" rx="1.7" ry="3.6" /><ellipse cx="4" cy="150" rx="1.7" ry="3.6" /></g>}
     </g>
   )
 }
 
 export default function Figures({ cat = 'clouds', day = true, className = '' }) {
-  const st = styleFor(cat, day)
+  const m = moods(cat, day)
   return (
     <svg className={className} viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Weather mascots">
       <defs>
-        {/* soft form shadow for the whole figure */}
-        <filter id="figSoft" x="-30%" y="-30%" width="160%" height="160%">
-          <feDropShadow dx="0" dy="3" stdDeviation="3" floodColor="#0b1020" floodOpacity="0.28" />
-        </filter>
-        <filter id="figBlur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.2" /></filter>
-
-        {/* prepared figure (id p) gradients */}
-        <linearGradient id="coatGrad-p" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor={st.p.coat} stopOpacity="1" />
-          <stop offset="1" stopColor={st.p.coat} stopOpacity="0.62" />
-        </linearGradient>
-        <linearGradient id="headGrad-p" x1="0" y1="0" x2="0.3" y2="1">
-          <stop offset="0" stopColor="#ffe0c2" /><stop offset="1" stopColor="#e8b48c" />
-        </linearGradient>
-        <linearGradient id="legGrad-p" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#4a5560" /><stop offset="1" stopColor="#333c46" /></linearGradient>
-        <radialGradient id="baseGrad-p" cx="0.4" cy="0.3" r="0.9"><stop offset="0" stopColor="#e9eef5" /><stop offset="1" stopColor="#9fb0c2" /></radialGradient>
-
-        {/* caught-out figure (id c) gradients */}
-        <linearGradient id="coatGrad-c" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor={st.c.coat} stopOpacity="1" />
-          <stop offset="1" stopColor={st.c.coat} stopOpacity="0.62" />
-        </linearGradient>
-        <linearGradient id="headGrad-c" x1="0" y1="0" x2="0.3" y2="1">
-          <stop offset="0" stopColor="#f6d3b0" /><stop offset="1" stopColor="#d99f78" />
-        </linearGradient>
-        <linearGradient id="legGrad-c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#4a5560" /><stop offset="1" stopColor="#333c46" /></linearGradient>
-        <radialGradient id="baseGrad-c" cx="0.4" cy="0.3" r="0.9"><stop offset="0" stopColor="#e9eef5" /><stop offset="1" stopColor="#9fb0c2" /></radialGradient>
-
-        <linearGradient id="umbGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#ff8fa3" /><stop offset="1" stopColor="#e05a76" /></linearGradient>
+        <filter id="figBlur" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.4" /></filter>
+        {/* GUN: charcoal hoodie */}
+        <linearGradient id="jacket-gun" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#3a424e" /><stop offset="1" stopColor="#262c35" /></linearGradient>
+        <linearGradient id="jacketDark-gun" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#2b323c" /><stop offset="1" stopColor="#1d222a" /></linearGradient>
+        <linearGradient id="leg-gun" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#3b4048" /><stop offset="1" stopColor="#2a2e35" /></linearGradient>
+        <linearGradient id="skin-gun" x1="0" y1="0" x2="0.3" y2="1"><stop offset="0" stopColor="#f4d4b2" /><stop offset="1" stopColor="#dcae86" /></linearGradient>
+        <radialGradient id="base-gun" cx="0.4" cy="0.3" r="0.9"><stop offset="0" stopColor="#e7ecf3" /><stop offset="1" stopColor="#9aa9ba" /></radialGradient>
+        {/* JIN: olive bomber */}
+        <linearGradient id="jacket-jin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#6d7a45" /><stop offset="1" stopColor="#505b31" /></linearGradient>
+        <linearGradient id="jacketDark-jin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#57632f" /><stop offset="1" stopColor="#414a26" /></linearGradient>
+        <linearGradient id="leg-jin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#39434f" /><stop offset="1" stopColor="#28303a" /></linearGradient>
+        <linearGradient id="skin-jin" x1="0" y1="0" x2="0.3" y2="1"><stop offset="0" stopColor="#f6d7b6" /><stop offset="1" stopColor="#e0b184" /></linearGradient>
+        <radialGradient id="base-jin" cx="0.4" cy="0.3" r="0.9"><stop offset="0" stopColor="#e7ecf3" /><stop offset="1" stopColor="#9aa9ba" /></radialGradient>
+        <linearGradient id="umb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#c9433f" /><stop offset="1" stopColor="#9e2f2c" /></linearGradient>
       </defs>
-
-      <Figure cx="62" cfg={st.p} id="p" skin="#f0c19a" hair="#3a2f2a" />
-      <Figure cx="178" cfg={st.c} id="c" skin="#ecbf98" hair="#5a4632" />
+      <Figure cx="62" id="gun" skin="#eecba6" hair="#161616" m={m.gun} />
+      <Figure cx="178" id="jin" skin="#f0cfa8" hair="#3b2a20" m={m.jin} />
     </svg>
   )
 }
