@@ -53,7 +53,7 @@ export default function ReadPage({ intro = [], defs = [], how = [], paper = [], 
     <div className="cols">
       <div>
         {calm && anyOpen && (
-          <button className="cram-reset" onClick={resetAll}>↺ {t({ en: 'Reset to condensed', de: 'Auf kompakt zuruecksetzen' })}</button>
+          <button className="cram-reset" onClick={resetAll}>↺ {t({ en: 'Reset to condensed', de: 'Auf kompakt zurücksetzen' })}</button>
         )}
         {defs.length > 0 && <DefCards defs={defs} />}
         {introEl && <Expandable calm={calm} open={isOpen('intro')} onToggle={() => toggle('intro')} label={t({ en: 'full description', de: 'volle Beschreibung' })}>{introEl}</Expandable>}

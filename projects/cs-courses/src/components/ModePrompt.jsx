@@ -12,7 +12,7 @@ export default function ModePrompt() {
   return (
     <div className="mode-prompt-backdrop">
       <div className="mode-prompt">
-        <h2>{t({ en: 'Do you have time to learn, or do you need to cram as much as possible, as fast as possible?', de: 'Hast du Zeit zu lernen, oder musst du so viel wie moeglich, so schnell wie moeglich pauken?' })}</h2>
+        <h2>{t({ en: 'Do you have time to learn, or do you need to cram as much as possible, as fast as possible?', de: 'Hast du Zeit zu lernen, oder musst du so viel wie möglich, so schnell wie möglich pauken?' })}</h2>
         <p>{t({ en: 'You can switch any time in the top bar.', de: 'Du kannst oben jederzeit wechseln.' })}</p>
         <div className="mode-prompt-options">
           <button className="mode-card" onClick={() => setMode('calm')}>
@@ -23,7 +23,7 @@ export default function ModePrompt() {
           <button className="mode-card explore" onClick={() => setMode('explore')}>
             <span className="mode-card-emoji">🧭</span>
             <span className="mode-card-title">{t({ en: "I've got time to learn", de: 'Ich habe Zeit zu lernen' })}</span>
-            <span className="mode-card-sub">{t({ en: 'Full explanations, animations, things to play with.', de: 'Volle Erklaerungen, Animationen, zum Ausprobieren.' })}</span>
+            <span className="mode-card-sub">{t({ en: 'Full explanations, animations, things to play with.', de: 'Volle Erklärungen, Animationen, zum Ausprobieren.' })}</span>
           </button>
         </div>
       </div>

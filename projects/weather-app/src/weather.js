@@ -259,9 +259,9 @@ export function predictEvents(hourly, nowCat, modelHourly) {
         sl: precise ? `${noun.sl} ${noun.slAdj} okoli ${at}` : `${noun.sl} ${noun.slAdj} čez ${firstWet} h`,
       }
       const det = {
-        en: `${os.agree} of ${os.total} models agree (${chance}% chance)${precise ? `, ${noun.en.toLowerCase()} near ${at} give or take ${err} min` : `, ${noun.en.toLowerCase()} around ${at}`}. Worth an umbrella.`,
-        de: `${os.agree} von ${os.total} Modellen stimmen überein (${chance}%)${precise ? `, ${noun.de.toLowerCase()} gegen ${at} ±${err} Min` : `, ${noun.de.toLowerCase()} gegen ${at}`}. Schirm einpacken.`,
-        sl: `${os.agree} od ${os.total} modelov se ujema (verjetnost ${chance} %)${precise ? `, ${noun.slAcc} okoli ${at} ±${err} min` : `, ${noun.slAcc} okoli ${at}`}. Splača se vzeti dežnik.`,
+        en: `${os.agree} of ${os.total} models agree (${chance}% chance)${precise ? `, ${noun.en.toLowerCase()} near ${at}, ±${err} min` : `, ${noun.en.toLowerCase()} around ${at}`}. Worth an umbrella.`,
+        de: `${os.agree} von ${os.total} Modellen stimmen überein (${chance}% Wahrscheinlichkeit)${precise ? `, ${noun.de.toLowerCase()} gegen ${at}, ±${err} Min` : `, ${noun.de.toLowerCase()} gegen ${at}`}. Schirm einpacken.`,
+        sl: `${os.agree} od ${os.total} modelov se ujema (${chance} % verjetnost)${precise ? `, ${noun.slAcc} okoli ${at}, ±${err} min` : `, ${noun.slAcc} okoli ${at}`}. Splača se vzeti dežnik.`,
       }
       out.push({ kind: 'precip-start', cat: c, hoursAway: firstWet, chance, en: chip.en, de: chip.de, sl: chip.sl, detail: det })
     }
@@ -271,10 +271,10 @@ export function predictEvents(hourly, nowCat, modelHourly) {
     if (firstDry > 0 && firstDry <= 12) {
       out.push({
         kind: 'precip-stop', cat: 'partly', hoursAway: firstDry,
-        en: `Drying up in ${firstDry}h`, de: `Trocken in ${firstDry} Std`, sl: `Suho čez ${firstDry} h`,
+        en: `Drying up in ${firstDry}h`, de: `Wird trocken in ${firstDry} Std`, sl: `Postane suho čez ${firstDry} h`,
         detail: {
-          en: `The wet spell should ease around ${labelHour(hourly[firstDry].time)}.`,
-          de: `Der Niederschlag laesst gegen ${labelHour(hourly[firstDry].time)} nach.`,
+          en: `Precipitation should ease around ${labelHour(hourly[firstDry].time)}.`,
+          de: `Der Niederschlag lässt gegen ${labelHour(hourly[firstDry].time)} nach.`,
           sl: `Padavine naj bi ponehale okoli ${labelHour(hourly[firstDry].time)}.`,
         },
       })
@@ -289,14 +289,14 @@ export function predictEvents(hourly, nowCat, modelHourly) {
     if (delta <= -5) {
       out.push({
         kind: 'temp-drop', cat: nowCat, hoursAway: window.length - 1,
-        en: `Turning colder, ${Math.round(delta)}°`, de: `Kaelter, ${Math.round(delta)}°`, sl: `Hladneje, ${Math.round(delta)}°`,
-        detail: { en: `Temperature falls about ${Math.abs(Math.round(delta))}° over the next few hours.`, de: `Die Temperatur faellt in den naechsten Stunden um etwa ${Math.abs(Math.round(delta))}°.`, sl: `Temperatura v naslednjih urah pade za približno ${Math.abs(Math.round(delta))}°.` },
+        en: `Getting colder ${Math.round(delta)}°`, de: `Wird kälter ${Math.round(delta)}°`, sl: `Postaja hladneje ${Math.round(delta)}°`,
+        detail: { en: `Temperature falls about ${Math.abs(Math.round(delta))}° over the next few hours.`, de: `Die Temperatur fällt in den nächsten Stunden um etwa ${Math.abs(Math.round(delta))}°.`, sl: `Temperatura v naslednjih urah pade za približno ${Math.abs(Math.round(delta))}°.` },
       })
     } else if (delta >= 5) {
       out.push({
         kind: 'temp-rise', cat: nowCat, hoursAway: window.length - 1,
-        en: `Warming up, +${Math.round(delta)}°`, de: `Waermer, +${Math.round(delta)}°`, sl: `Topleje, +${Math.round(delta)}°`,
-        detail: { en: `Temperature climbs about ${Math.round(delta)}° over the next few hours.`, de: `Die Temperatur steigt in den naechsten Stunden um etwa ${Math.round(delta)}°.`, sl: `Temperatura v naslednjih urah naraste za približno ${Math.round(delta)}°.` },
+        en: `Getting warmer +${Math.round(delta)}°`, de: `Wird wärmer +${Math.round(delta)}°`, sl: `Postaja topleje +${Math.round(delta)}°`,
+        detail: { en: `Temperature climbs about ${Math.round(delta)}° over the next few hours.`, de: `Die Temperatur steigt in den nächsten Stunden um etwa ${Math.round(delta)}°.`, sl: `Temperatura v naslednjih urah naraste za približno ${Math.round(delta)}°.` },
       })
     }
   }
@@ -306,8 +306,8 @@ export function predictEvents(hourly, nowCat, modelHourly) {
   if (gustPeak.v >= 45) {
     out.push({
       kind: 'wind', cat: nowCat, hoursAway: 0,
-      en: `Gusts up to ${Math.round(gustPeak.v)} km/h`, de: `Boeen bis ${Math.round(gustPeak.v)} km/h`, sl: `Sunki do ${Math.round(gustPeak.v)} km/h`,
-      detail: { en: `Wind gusts peak near ${Math.round(gustPeak.v)} km/h around ${labelHour(gustPeak.h.time)}.`, de: `Windboeen erreichen etwa ${Math.round(gustPeak.v)} km/h gegen ${labelHour(gustPeak.h.time)}.`, sl: `Sunki vetra dosežejo približno ${Math.round(gustPeak.v)} km/h okoli ${labelHour(gustPeak.h.time)}.` },
+      en: `Gusts up to ${Math.round(gustPeak.v)} km/h`, de: `Böen bis ${Math.round(gustPeak.v)} km/h`, sl: `Sunki do ${Math.round(gustPeak.v)} km/h`,
+      detail: { en: `Wind gusts peak near ${Math.round(gustPeak.v)} km/h around ${labelHour(gustPeak.h.time)}.`, de: `Windböen erreichen etwa ${Math.round(gustPeak.v)} km/h gegen ${labelHour(gustPeak.h.time)}.`, sl: `Sunki vetra dosežejo približno ${Math.round(gustPeak.v)} km/h okoli ${labelHour(gustPeak.h.time)}.` },
     })
   }
 

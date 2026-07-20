@@ -18,7 +18,7 @@ export function nQueens(n = 6) {
     return true
   }
   function solve(row) {
-    if (row === n) { snap({ solved: true }, { en: 'All queens placed safely - solution found!', de: 'Alle Damen sicher gesetzt - Loesung gefunden!' }); return true }
+    if (row === n) { snap({ solved: true }, { en: 'All queens placed safely - solution found!', de: 'Alle Damen sicher gesetzt - Lösung gefunden!' }); return true }
     for (let col = 0; col < n; col++) {
       snap({ trying: [row, col] }, { en: `Try a queen at row ${row}, column ${col}.`, de: `Dame bei Zeile ${row}, Spalte ${col} versuchen.` })
       if (safe(row, col)) {
@@ -54,7 +54,7 @@ export function graphColoring(k = 3) {
 
   function ok(node, c) { return adj[node].every((nb) => color[nb] !== c) }
   function solve(node) {
-    if (node === n) { snap({ solved: true }, { en: 'Every node colored with no conflicts - solution found!', de: 'Jeder Knoten konfliktfrei gefaerbt - Loesung gefunden!' }); return true }
+    if (node === n) { snap({ solved: true }, { en: 'Every node colored with no conflicts - solution found!', de: 'Jeder Knoten konfliktfrei gefärbt - Lösung gefunden!' }); return true }
     for (let c = 1; c <= k; c++) {
       snap({ trying: node, tryColor: c }, { en: `Try color ${c} on node ${node}.`, de: `Farbe ${c} an Knoten ${node} versuchen.` })
       if (ok(node, c)) {
@@ -85,7 +85,7 @@ export function sudoku() {
   const given = PUZZLE.map((r) => r.map((v) => v !== 0))
   let count = 0
   const snap = (extra, message) => { if (count++ > 1400) return; steps.push({ board: b.map((r) => r.slice()), given, ...extra, message }) }
-  snap({}, { en: 'Fill the grid so every row, column and 3x3 box has 1-9. Try a digit, backtrack if it leads nowhere.', de: 'Fuelle das Gitter, sodass jede Zeile, Spalte und 3x3-Box 1-9 enthaelt. Ziffer versuchen, bei Sackgasse zurueck.' })
+  snap({}, { en: 'Fill the grid so every row, column and 3x3 box has 1-9. Try a digit, backtrack if it leads nowhere.', de: 'Fülle das Gitter, sodass jede Zeile, Spalte und 3x3-Box 1-9 enthält. Ziffer versuchen, bei Sackgasse zurück.' })
   function ok(r, c, v) {
     for (let i = 0; i < 9; i++) { if (b[r][i] === v || b[i][c] === v) return false }
     const br = Math.floor(r / 3) * 3, bc = Math.floor(c / 3) * 3
@@ -107,7 +107,7 @@ export function sudoku() {
         return false
       }
     }
-    snap({ solved: true }, { en: 'Solved!', de: 'Geloest!' })
+    snap({ solved: true }, { en: 'Solved!', de: 'Gelöst!' })
     return true
   }
   solve()

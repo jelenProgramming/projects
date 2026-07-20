@@ -7,10 +7,10 @@ import AlgoDetail from '../../components/AlgoDetail.jsx'
 function handshakeSteps() {
   return [
     { phase: 0, message: { en: 'A TCP connection starts with a three-way handshake before any data flows.', de: 'Eine TCP-Verbindung beginnt mit einem Drei-Wege-Handshake, bevor Daten fliessen.' } },
-    { phase: 1, arrow: 'rtl', label: 'SYN', message: { en: 'Client → Server: SYN (can we talk? here is my sequence number).', de: 'Client → Server: SYN (koennen wir reden? hier meine Sequenznummer).' } },
+    { phase: 1, arrow: 'rtl', label: 'SYN', message: { en: 'Client → Server: SYN (can we talk? here is my sequence number).', de: 'Client → Server: SYN (können wir reden? hier meine Sequenznummer).' } },
     { phase: 2, arrow: 'ltr', label: 'SYN-ACK', message: { en: 'Server → Client: SYN-ACK (yes, and here is mine).', de: 'Server → Client: SYN-ACK (ja, und hier meine).' } },
-    { phase: 3, arrow: 'rtl', label: 'ACK', message: { en: 'Client → Server: ACK (got it). Connection established - now data can flow.', de: 'Client → Server: ACK (erhalten). Verbindung steht - jetzt koennen Daten fliessen.' } },
-    { phase: 4, done: true, message: { en: 'Established. This handshake is why TCP is reliable but has initial latency.', de: 'Aufgebaut. Dieser Handshake macht TCP zuverlaessig, kostet aber Anfangslatenz.' } },
+    { phase: 3, arrow: 'rtl', label: 'ACK', message: { en: 'Client → Server: ACK (got it). Connection established - now data can flow.', de: 'Client → Server: ACK (erhalten). Verbindung steht - jetzt können Daten fliessen.' } },
+    { phase: 4, done: true, message: { en: 'Established. This handshake is why TCP is reliable but has initial latency.', de: 'Aufgebaut. Dieser Handshake macht TCP zuverlässig, kostet aber Anfangslatenz.' } },
   ]
 }
 export default function Page({ content }) {

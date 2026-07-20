@@ -2,7 +2,7 @@ import { useState } from 'react'
 import AlgoDetail from '../../components/AlgoDetail.jsx'
 import { useLang } from '../../i18n.jsx'
 
-const METHODS = { GET: { en: 'read data', de: 'Daten lesen' }, POST: { en: 'create data', de: 'Daten erstellen' }, PUT: { en: 'replace data', de: 'Daten ersetzen' }, DELETE: { en: 'remove data', de: 'Daten loeschen' } }
+const METHODS = { GET: { en: 'read data', de: 'Daten lesen' }, POST: { en: 'create data', de: 'Daten erstellen' }, PUT: { en: 'replace data', de: 'Daten ersetzen' }, DELETE: { en: 'remove data', de: 'Daten löschen' } }
 const STATUS = [{ c: 200, t: 'OK', g: 'var(--done)' }, { c: 301, t: 'Moved', g: 'var(--accent-3)' }, { c: 404, t: 'Not Found', g: 'var(--compare)' }, { c: 500, t: 'Server Error', g: 'var(--accent-4)' }]
 export default function Page({ content }) {
   const { t } = useLang()

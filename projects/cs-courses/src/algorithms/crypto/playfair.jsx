@@ -17,7 +17,7 @@ export default function Page({ content }) {
     <div>
       <div className="panel">
         <div className="viz-stage" style={{ minHeight: 280, alignItems: 'center', flexDirection: 'column', gap: 16 }}>
-          <div className="field-label">{t({ en: '5×5 key matrix (J merged into I)', de: '5×5-Schluesselmatrix (J mit I verschmolzen)' })}</div>
+          <div className="field-label">{t({ en: '5×5 key matrix (J merged into I)', de: '5×5-Schlüsselmatrix (J mit I verschmolzen)' })}</div>
           <table className="grid-table" style={{ fontSize: 18 }}>
             <tbody>
               {m.map((row, i) => <tr key={i}>{row.map((c, j) => <td key={j} style={{ width: 46, height: 46, color: 'var(--accent)', fontWeight: 700 }}>{c}</td>)}</tr>)}
@@ -27,7 +27,7 @@ export default function Page({ content }) {
         <div className="controls" style={{ marginTop: 16 }}>
           <div style={{ flex: 1, minWidth: 200 }}><label className="field-label">{tk('key')}</label><input type="text" value={key} onChange={(e) => setKey(e.target.value.toUpperCase())} style={{ width: '100%' }} /></div>
         </div>
-        <div className="note" style={{ marginTop: 12 }}>{t({ en: 'Playfair encrypts letter pairs using their positions in this 5×5 grid: same row → shift right, same column → shift down, otherwise → rectangle swap. Encrypting pairs (not single letters) hides letter frequencies.', de: 'Playfair verschluesselt Buchstabenpaare ueber ihre Position im 5×5-Gitter: gleiche Zeile → nach rechts, gleiche Spalte → nach unten, sonst → Rechteck-Tausch.' })}</div>
+        <div className="note" style={{ marginTop: 12 }}>{t({ en: 'Playfair encrypts letter pairs using their positions in this 5×5 grid: same row → shift right, same column → shift down, otherwise → rectangle swap. Encrypting pairs (not single letters) hides letter frequencies.', de: 'Playfair verschlüsselt Buchstabenpaare über ihre Position im 5×5-Gitter: gleiche Zeile → nach rechts, gleiche Spalte → nach unten, sonst → Rechteck-Tausch.' })}</div>
       </div>
       <AlgoDetail content={content} />
     </div>

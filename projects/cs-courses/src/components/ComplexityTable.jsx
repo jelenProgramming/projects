@@ -35,7 +35,7 @@ export default function ComplexityTable({ rows = [] }) {
         <tbody>
           {groups.map((g, i) => {
             const label = allMerged
-              ? { en: 'All cases', de: 'Alle Faelle' }
+              ? { en: 'All cases', de: 'Alle Fälle' }
               : g.cases.length > 1
                 ? g.cases  // multiple labels merged but not all -> join
                 : g.cases[0]

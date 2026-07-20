@@ -86,7 +86,7 @@ export default function GraphEditor({ graph, onChange }) {
         <button className="btn" onClick={addEdge}>+ {tk('addEdge')}</button>
       </div>
       <div className="note" style={{ marginTop: 10 }}>
-        {t({ en: 'Pick endpoints from the dropdowns and type the weight - no typing node names, so no typos. The graph is undirected; self-loops are ignored.', de: 'Endpunkte aus den Dropdowns waehlen und Gewicht eingeben - keine Tippfehler. Der Graph ist ungerichtet; Schleifen werden ignoriert.' })}
+        {t({ en: 'Pick endpoints from the dropdowns and type the weight - no typing node names, so no typos. The graph is undirected; self-loops are ignored.', de: 'Endpunkte aus den Dropdowns wählen und Gewicht eingeben - keine Tippfehler. Der Graph ist ungerichtet; Schleifen werden ignoriert.' })}
       </div>
     </div>
   )

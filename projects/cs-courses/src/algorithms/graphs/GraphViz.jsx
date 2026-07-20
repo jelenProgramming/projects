@@ -65,7 +65,7 @@ export default function GraphViz({ slug }) {
         <PlayerControls player={player} />
 
         <div className="legend">
-          <span className="legend-item"><span className="legend-swatch" style={{ background: 'var(--compare)' }} /> {t({ en: 'Current / examining', de: 'Aktuell / wird geprueft' })}</span>
+          <span className="legend-item"><span className="legend-swatch" style={{ background: 'var(--compare)' }} /> {t({ en: 'Current / examining', de: 'Aktuell / wird geprüft' })}</span>
           {(slug === 'bfs' || slug === 'dfs') && <span className="legend-item"><span className="legend-swatch" style={{ background: 'var(--visit)' }} /> {tk('visited')}</span>}
           {(slug === 'bfs' || slug === 'dfs') && <span className="legend-item"><span className="legend-swatch" style={{ background: 'var(--frontier)' }} /> {t({ en: 'In queue / stack', de: 'In Warteschlange / Stapel' })}</span>}
           {slug === 'dijkstra' && <span className="legend-item"><span className="legend-swatch" style={{ background: 'var(--done)' }} /> {t({ en: 'Finalized', de: 'Finalisiert' })}</span>}
@@ -75,12 +75,12 @@ export default function GraphViz({ slug }) {
 
       {showArrays && (
         <div className="panel">
-          <h3 className="section">{t({ en: 'The arrays you trace on an exam', de: 'Die Arrays, die du in der Pruefung nachtraegst' })}</h3>
+          <h3 className="section">{t({ en: 'The arrays you trace on an exam', de: 'Die Arrays, die du in der Prüfung nachträgst' })}</h3>
           <ArrayPanel label={tk('distanceArray')} values={step.dist.map(fmt)} changed={step.changedArr} probe={step.probe} done={step.done} />
           <div style={{ height: 10 }} />
           <ArrayPanel label={tk('predecessorArray')} values={step.pred.map(lbl)} changed={step.changedArr} probe={step.probe} done={step.done} />
           <div className="note" style={{ marginTop: 14 }}>
-            {t({ en: 'Watch dist[] drop from infinity to a number the instant an edge relaxes - that is the whole algorithm.', de: 'Beobachte, wie dist[] in dem Moment von unendlich auf eine Zahl faellt, in dem eine Kante relaxiert wird.' })}
+            {t({ en: 'Watch dist[] drop from infinity to a number the instant an edge relaxes - that is the whole algorithm.', de: 'Beobachte, wie dist[] in dem Moment von unendlich auf eine Zahl fällt, in dem eine Kante relaxiert wird.' })}
           </div>
         </div>
       )}
@@ -93,7 +93,7 @@ export default function GraphViz({ slug }) {
             <MatrixPanel title={tk('predMatrix')} M={step.P} hlRow={step.k} hlCol={step.k} changed={step.changed} isPred />
           </div>
           <div className="note" style={{ marginTop: 14 }}>
-            {t({ en: 'The highlighted row and column are the current intermediate node k. A cell can only change using values from row k and column k.', de: 'Die hervorgehobene Zeile und Spalte sind der aktuelle Zwischenknoten k. Eine Zelle kann sich nur mit Werten aus Zeile k und Spalte k aendern.' })}
+            {t({ en: 'The highlighted row and column are the current intermediate node k. A cell can only change using values from row k and column k.', de: 'Die hervorgehobene Zeile und Spalte sind der aktuelle Zwischenknoten k. Eine Zelle kann sich nur mit Werten aus Zeile k und Spalte k ändern.' })}
           </div>
         </div>
       )}

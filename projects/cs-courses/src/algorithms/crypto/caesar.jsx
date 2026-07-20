@@ -38,7 +38,7 @@ export default function Page({ content }) {
             <span style={{ fontFamily: 'var(--mono)', minWidth: 24 }}>{k}</span>
           </div>
         </div>
-        <div className="note" style={{ marginTop: 12 }}>{t({ en: 'ROT13 is just Caesar with shift 13. With only 25 possible shifts, brute force breaks it instantly.', de: 'ROT13 ist Caesar mit Verschiebung 13. Mit nur 25 moeglichen Verschiebungen knackt Brute Force es sofort.' })}</div>
+        <div className="note" style={{ marginTop: 12 }}>{t({ en: 'ROT13 is just Caesar with shift 13. With only 25 possible shifts, brute force breaks it instantly.', de: 'ROT13 ist Caesar mit Verschiebung 13. Mit nur 25 möglichen Verschiebungen knackt Brute Force es sofort.' })}</div>
       </div>
       <AlgoDetail content={content} />
     </div>

@@ -3,7 +3,7 @@
 export function rle(input) {
   const steps = []; const out = []
   const snap = (extra, msg) => steps.push({ input, out: out.slice(), ...extra, message: msg })
-  snap({}, { en: 'Run-Length Encoding replaces a run of identical symbols with (count, symbol).', de: 'Lauflaengenkodierung ersetzt einen Lauf gleicher Symbole durch (Anzahl, Symbol).' })
+  snap({}, { en: 'Run-Length Encoding replaces a run of identical symbols with (count, symbol).', de: 'Lauflängenkodierung ersetzt einen Lauf gleicher Symbole durch (Anzahl, Symbol).' })
   let i = 0
   while (i < input.length) {
     let run = 1
@@ -25,7 +25,7 @@ export function huffman(input) {
   let nodes = Object.entries(freq).map(([ch, f]) => ({ id: id++, ch, f, left: null, right: null }))
   const snapForest = (extra, msg) => steps.push({ forest: nodes.map(serialize), freq, ...extra, message: msg })
   function serialize(n) { return { id: n.id, ch: n.ch, f: n.f, left: n.left ? n.left.id : null, right: n.right ? n.right.id : null, _node: n } }
-  snapForest({}, { en: 'Huffman: count frequencies, then repeatedly merge the two least-frequent nodes into a subtree.', de: 'Huffman: Haeufigkeiten zaehlen, dann wiederholt die zwei seltensten Knoten zu einem Teilbaum verschmelzen.' })
+  snapForest({}, { en: 'Huffman: count frequencies, then repeatedly merge the two least-frequent nodes into a subtree.', de: 'Huffman: Häufigkeiten zählen, dann wiederholt die zwei seltensten Knoten zu einem Teilbaum verschmelzen.' })
   while (nodes.length > 1) {
     nodes.sort((a, b) => a.f - b.f)
     const [x, y] = [nodes[0], nodes[1]]
@@ -51,7 +51,7 @@ export function lzw(input) {
   const out = []
   const dictView = () => Object.entries(dict).filter(([k]) => k.length > 1).map(([k, v]) => ({ k, v }))
   const snap = (extra, msg) => steps.push({ input, out: out.slice(), dict: dictView(), ...extra, message: msg })
-  snap({}, { en: 'LZW starts with single characters in the dictionary (codes 0-255). It outputs codes and adds new multi-char entries as it goes.', de: 'LZW startet mit Einzelzeichen im Woerterbuch (Codes 0-255). Es gibt Codes aus und fuegt neue Mehrzeichen-Eintraege hinzu.' })
+  snap({}, { en: 'LZW starts with single characters in the dictionary (codes 0-255). It outputs codes and adds new multi-char entries as it goes.', de: 'LZW startet mit Einzelzeichen im Wörterbuch (Codes 0-255). Es gibt Codes aus und fügt neue Mehrzeichen-Einträge hinzu.' })
   let w = ''
   for (let idx = 0; idx < input.length; idx++) {
     const c = input[idx]

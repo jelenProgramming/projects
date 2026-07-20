@@ -14,7 +14,7 @@ function warshallSteps() {
   for (const [u, v] of EDGES) R[u][v] = 1
   const steps = []
   const snap = (extra, msg) => steps.push({ R: R.map((r) => r.slice()), ...extra, message: msg })
-  snap({ k: -1 }, { en: 'Start from the direct-edge matrix. Warshall asks: can i reach j, possibly through intermediate nodes?', de: 'Mit der Direktkanten-Matrix starten. Warshall fragt: kann i j erreichen, evtl. ueber Zwischenknoten?' })
+  snap({ k: -1 }, { en: 'Start from the direct-edge matrix. Warshall asks: can i reach j, possibly through intermediate nodes?', de: 'Mit der Direktkanten-Matrix starten. Warshall fragt: kann i j erreichen, evtl. über Zwischenknoten?' })
   for (let k = 0; k < n; k++) {
     snap({ k }, { en: `Round k = ${L[k]}: allow paths that pass through ${L[k]}.`, de: `Runde k = ${L[k]}: Pfade ueber ${L[k]} erlauben.` })
     for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
@@ -24,7 +24,7 @@ function warshallSteps() {
       }
     }
   }
-  snap({ k: n, done: true }, { en: 'Done. R[i][j]=1 means j is reachable from i. This is the transitive closure.', de: 'Fertig. R[i][j]=1 heisst j ist von i erreichbar. Das ist die transitive Huelle.' })
+  snap({ k: n, done: true }, { en: 'Done. R[i][j]=1 means j is reachable from i. This is the transitive closure.', de: 'Fertig. R[i][j]=1 heisst j ist von i erreichbar. Das ist die transitive Hülle.' })
   return steps
 }
 export default function Page({ content }) {
@@ -55,7 +55,7 @@ export default function Page({ content }) {
         </div>
         <StatusBar player={player} />
         <PlayerControls player={player} />
-        <div className="note" style={{ marginTop: 12 }}>{t({ en: 'Same triple-loop structure as Floyd-Warshall, but with booleans (reachable / not) instead of distances. k is always the outer loop.', de: 'Gleiche Dreifachschleife wie Floyd-Warshall, aber mit Booleschen Werten (erreichbar / nicht) statt Distanzen. k ist stets die aeussere Schleife.' })}</div>
+        <div className="note" style={{ marginTop: 12 }}>{t({ en: 'Same triple-loop structure as Floyd-Warshall, but with booleans (reachable / not) instead of distances. k is always the outer loop.', de: 'Gleiche Dreifachschleife wie Floyd-Warshall, aber mit Booleschen Werten (erreichbar / nicht) statt Distanzen. k ist stets die äussere Schleife.' })}</div>
       </div>
       <AlgoDetail content={content} />
     </div>

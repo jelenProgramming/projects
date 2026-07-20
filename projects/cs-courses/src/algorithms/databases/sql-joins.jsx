@@ -51,7 +51,7 @@ export default function Page({ content }) {
             </tbody></table>
           </div>
         </div>
-        <div className="note" style={{ marginTop: 14 }}>{t({ en: 'INNER keeps only matching rows. LEFT keeps all users (NULLs where no city). RIGHT keeps all cities. FULL keeps everything. NULLs (pink) show where a side had no match.', de: 'INNER behaelt nur passende Zeilen. LEFT behaelt alle users (NULL ohne Stadt). RIGHT behaelt alle cities. FULL behaelt alles. NULL (pink) zeigt fehlende Treffer.' })}</div>
+        <div className="note" style={{ marginTop: 14 }}>{t({ en: 'INNER keeps only matching rows. LEFT keeps all users (NULLs where no city). RIGHT keeps all cities. FULL keeps everything. NULLs (pink) show where a side had no match.', de: 'INNER behält nur passende Zeilen. LEFT behält alle users (NULL ohne Stadt). RIGHT behält alle cities. FULL behält alles. NULL (pink) zeigt fehlende Treffer.' })}</div>
       </div>
       <AlgoDetail content={content} />
     </div>

@@ -27,7 +27,7 @@ export function kmpMatch(text, pattern) {
   const steps = []; const n = text.length, m = pattern.length
   // build failure function (prefix function)
   const f = new Array(m).fill(0)
-  steps.push(snap(text, pattern, 0, -1, { phase: 'build' }, { en: 'KMP first builds a failure table: longest proper prefix that is also a suffix, for each position.', de: 'KMP baut zuerst eine Fehlertabelle: laengstes echtes Praefix, das auch Suffix ist, je Position.' }))
+  steps.push(snap(text, pattern, 0, -1, { phase: 'build' }, { en: 'KMP first builds a failure table: longest proper prefix that is also a suffix, for each position.', de: 'KMP baut zürst eine Fehlertabelle: längstes echtes Präfix, das auch Suffix ist, je Position.' }))
   let k = 0
   for (let i = 1; i < m; i++) {
     while (k > 0 && pattern[i] !== pattern[k]) k = f[k - 1]

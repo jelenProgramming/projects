@@ -38,9 +38,9 @@ export default function Page({ content }) {
         </div>
         <div className="legend">
           <span className="legend-item"><span className="legend-swatch" style={{ background: 'var(--accent)' }} /> sin(x)</span>
-          <span className="legend-item"><span className="legend-swatch" style={{ background: 'var(--compare)' }} /> {t({ en: 'Taylor approximation', de: 'Taylor-Naeherung' })}</span>
+          <span className="legend-item"><span className="legend-swatch" style={{ background: 'var(--compare)' }} /> {t({ en: 'Taylor approximation', de: 'Taylor-Näherung' })}</span>
         </div>
-        <div className="note" style={{ marginTop: 12 }}>{t({ en: 'With more terms the polynomial hugs the true curve over a wider range. Near x=0 even a few terms are near-perfect; far out you need more.', de: 'Mit mehr Termen schmiegt sich das Polynom ueber einen groesseren Bereich an die echte Kurve. Nahe x=0 reichen wenige Terme; weit draussen braucht man mehr.' })}</div>
+        <div className="note" style={{ marginTop: 12 }}>{t({ en: 'With more terms the polynomial hugs the true curve over a wider range. Near x=0 even a few terms are near-perfect; far out you need more.', de: 'Mit mehr Termen schmiegt sich das Polynom über einen grösseren Bereich an die echte Kurve. Nahe x=0 reichen wenige Terme; weit draussen braucht man mehr.' })}</div>
       </div>
       <AlgoDetail content={content} />
     </div>

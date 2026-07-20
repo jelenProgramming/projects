@@ -13,7 +13,7 @@ function tmSteps() {
   let state = 'right'
   const steps = []
   const snap = (msg) => steps.push({ cells: cells.slice(), head, state, message: msg })
-  snap({ en: 'A Turing machine: an infinite tape, a head that reads/writes one cell, and a state. This one adds 1 to a binary number.', de: 'Eine Turingmaschine: ein unendliches Band, ein Kopf, der eine Zelle liest/schreibt, und ein Zustand. Diese addiert 1 zu einer Binaerzahl.' })
+  snap({ en: 'A Turing machine: an infinite tape, a head that reads/writes one cell, and a state. This one adds 1 to a binary number.', de: 'Eine Turingmaschine: ein unendliches Band, ein Kopf, der eine Zelle liest/schreibt, und ein Zustand. Diese addiert 1 zu einer Binärzahl.' })
   // move to rightmost digit then add with carry
   state = 'carry'
   while (head >= 0) {

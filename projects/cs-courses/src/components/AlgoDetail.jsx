@@ -46,7 +46,7 @@ export default function AlgoDetail({ content }) {
   return (
     <>
       {calm && anyOpen && (
-        <button className="cram-reset" onClick={resetAll}>↺ {t({ en: 'Reset to condensed', de: 'Auf kompakt zuruecksetzen' })}</button>
+        <button className="cram-reset" onClick={resetAll}>↺ {t({ en: 'Reset to condensed', de: 'Auf kompakt zurücksetzen' })}</button>
       )}
       {defs.length > 0 && <DefCards defs={defs} />}
       {whenEl && <Expandable calm={calm} open={isOpen('when')} onToggle={() => toggle('when')} label={t({ en: 'when to use it', de: 'wann einsetzen' })}>{whenEl}</Expandable>}

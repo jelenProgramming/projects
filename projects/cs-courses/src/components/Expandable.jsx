@@ -20,7 +20,7 @@ export default function Expandable({ calm, open, onToggle, label, children }) {
   }
   return (
     <button className="explain-toggle" onClick={onToggle}>
-      {t({ en: 'Explain more', de: 'Mehr erklaeren' })}: {t(label)} ↓
+      {t({ en: 'Explain more', de: 'Mehr erklären' })}: {t(label)} ↓
     </button>
   )
 }

@@ -66,7 +66,7 @@ export default function StringMatchViz({ slug }) {
         )}
         {s.shiftChar != null && (
           <div className="note" style={{ marginTop: 12 }}>
-            <strong>shift char</strong> {t({ en: '(ringed): the character this algorithm inspects to decide how far to jump. Horspool uses the window-end char; Sunday uses the char one past the window.', de: '(umrandet): das Zeichen, das dieser Algorithmus prueft, um die Sprungweite zu bestimmen. Horspool nutzt das Fensterend-Zeichen; Sunday das Zeichen eins hinter dem Fenster.' })}
+            <strong>shift char</strong> {t({ en: '(ringed): the character this algorithm inspects to decide how far to jump. Horspool uses the window-end char; Sunday uses the char one past the window.', de: '(umrandet): das Zeichen, das dieser Algorithmus prüft, um die Sprungweite zu bestimmen. Horspool nutzt das Fensterend-Zeichen; Sunday das Zeichen eins hinter dem Fenster.' })}
           </div>
         )}
         {(s.patHash != null) && (

@@ -39,7 +39,7 @@ export default function Page({ content }) {
         <h3 className="section">{tk('input')}</h3>
         <div className="controls" style={{ marginTop: 4 }}>
           <div style={{ flex: 1, minWidth: 220 }}>
-            <label className="field-label">{t({ en: 'Values to insert (in order)', de: 'Einzufuegende Werte (der Reihe nach)' })}</label>
+            <label className="field-label">{t({ en: 'Values to insert (in order)', de: 'Einzufügende Werte (der Reihe nach)' })}</label>
             <input type="text" value={valInput} onChange={(e) => setValInput(e.target.value)} style={{ width: '100%' }} />
           </div>
           <div>

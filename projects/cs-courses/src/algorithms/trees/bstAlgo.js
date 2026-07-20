@@ -61,7 +61,7 @@ export function buildBST(values, search) {
     }
   }
 
-  steps.push({ nodes: [], maxY: 1, message: { en: 'Start with an empty binary search tree. Left child < parent < right child, always.', de: 'Beginne mit einem leeren binaeren Suchbaum. Linkes Kind < Elter < rechtes Kind, immer.' } })
+  steps.push({ nodes: [], maxY: 1, message: { en: 'Start with an empty binary search tree. Left child < parent < right child, always.', de: 'Beginne mit einem leeren binären Suchbaum. Linkes Kind < Elter < rechtes Kind, immer.' } })
   for (const val of values) insert(val)
   steps.push(snapshot(root, {}, { en: 'Tree built. Now search for a value.', de: 'Baum gebaut. Jetzt einen Wert suchen.' }))
 

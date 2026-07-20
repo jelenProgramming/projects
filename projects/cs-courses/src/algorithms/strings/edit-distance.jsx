@@ -11,7 +11,7 @@ function editSteps(a, b) {
   const snap = (extra, msg) => steps.push({ D: D.map((r) => r.slice()), a, b, ...extra, message: msg })
   for (let i = 0; i <= n; i++) D[i][0] = i
   for (let j = 0; j <= m; j++) D[0][j] = j
-  snap({}, { en: 'Initialize: row 0 and column 0 are the cost of turning a string into the empty string (pure deletions/insertions).', de: 'Initialisieren: Zeile 0 und Spalte 0 sind die Kosten, eine Zeichenkette in die leere zu verwandeln (nur Loeschen/Einfuegen).' })
+  snap({}, { en: 'Initialize: row 0 and column 0 are the cost of turning a string into the empty string (pure deletions/insertions).', de: 'Initialisieren: Zeile 0 und Spalte 0 sind die Kosten, eine Zeichenkette in die leere zu verwandeln (nur Löschen/Einfügen).' })
   for (let i = 1; i <= n; i++) {
     for (let j = 1; j <= m; j++) {
       const cost = a[i - 1] === b[j - 1] ? 0 : 1

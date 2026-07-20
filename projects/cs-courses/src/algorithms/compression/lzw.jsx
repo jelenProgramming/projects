@@ -31,7 +31,7 @@ export default function Page({ content }) {
             <div style={{ fontFamily: 'var(--mono)', fontSize: 15, color: 'var(--accent)' }}>[{(s.out || []).join(', ')}]</div>
           </div>
           <div style={{ width: '100%' }}>
-            <div className="field-label">{t({ en: 'Dictionary (new multi-char entries)', de: 'Woerterbuch (neue Mehrzeichen-Eintraege)' })}</div>
+            <div className="field-label">{t({ en: 'Dictionary (new multi-char entries)', de: 'Wörterbuch (neue Mehrzeichen-Einträge)' })}</div>
             <div className="sorted-edge-list">
               {(s.dict || []).map((e) => (
                 <span key={e.v} className={'se' + (s.added === e.k ? ' cur' : '')}>{e.k} = {e.v}</span>

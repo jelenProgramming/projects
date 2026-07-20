@@ -100,7 +100,7 @@ export const sortingGraphsContent = {
     ],
     pitfalls: [
       { en: 'The extra O(n) memory is the standard exam answer for "why not always use merge sort?"', de: 'Der zusätzliche O(n)-Speicher ist die Standardantwort auf „Warum nicht immer Merge Sort?"' },
-      { en: 'Stable if you break merge ties by taking from the left half first.', de: 'Stabil, wenn man beim Mischen Gleichstände zuerst aus der linken Hälfte nimmt.' },
+      { en: 'Stable if you break merge ties by taking from the left half first.', de: 'Stabil, wenn man beim Mischen Gleichstände zürst aus der linken Hälfte nimmt.' },
     ],
   },
 
@@ -220,7 +220,7 @@ void quickSort(int* a, int lo, int hi) {
   'bfs': {
     tldr: {
       en: 'Explores a graph <strong>level by level</strong> from a start node using a queue. On an unweighted graph it finds the <strong>shortest path in number of edges</strong>. Contrast DFS, which dives deep first.',
-      de: 'Erkundet einen Graphen <strong>Ebene für Ebene</strong> vom Startknoten mit einer Warteschlange. In einem ungewichteten Graphen findet es den <strong>kürzesten Weg in Kantenzahl</strong>. Gegensatz zu DFS, das zuerst in die Tiefe geht.',
+      de: 'Erkundet einen Graphen <strong>Ebene für Ebene</strong> vom Startknoten mit einer Warteschlange. In einem ungewichteten Graphen findet es den <strong>kürzesten Weg in Kantenzahl</strong>. Gegensatz zu DFS, das zürst in die Tiefe geht.',
     },
     when: {
       en: 'Shortest path in an unweighted graph, finding all nodes within k steps, level-order traversal, or testing bipartiteness. Use a queue (FIFO).',
@@ -281,7 +281,7 @@ void quickSort(int* a, int lo, int hi) {
       { en: 'Repeat until every node is finalized.', de: 'Wiederhole, bis jeder Knoten finalisiert ist.' },
     ],
     cpp: {
-      caption: { en: 'The relaxation step is the core (dist = distance, pred = predecessor, INF = infinity):', de: 'Der Relaxationsschritt ist der Kern (dist = Distanz, pred = Vorgaenger, INF = unendlich):' },
+      caption: { en: 'The relaxation step is the core (dist = distance, pred = predecessor, INF = infinity):', de: 'Der Relaxationsschritt ist der Kern (dist = Distanz, pred = Vorgänger, INF = unendlich):' },
       code: `// relax edge u -> v with weight C[u][v]
 if (dist[u] != INF && dist[u] + C[u][v] < dist[v]) {
     dist[v] = dist[u] + C[u][v];
@@ -309,7 +309,7 @@ for (int iter = 0; iter < n; iter++) {
     ],
     pitfalls: [
       { en: '<strong>Negative edge weights break Dijkstra</strong> - once a node is finalized it is never reconsidered. This is the #1 exam question. Use Bellman-Ford for negative edges.', de: '<strong>Negative Kantengewichte zerstören Dijkstra</strong> - ein finalisierter Knoten wird nie neu betrachtet. Die Prüfungsfrage Nr. 1. Bei negativen Kanten Bellman-Ford.' },
-      { en: '<strong>Bellman-Ford</strong> uses the same relaxation but applies it to all edges n times, in any order. That different order is what lets it tolerate negative weights and detect negative cycles, at O(V∗E). Dijkstra is faster but cannot handle negatives.', de: '<strong>Bellman-Ford</strong> nutzt dieselbe Relaxation, wendet sie aber n-mal auf alle Kanten an, in beliebiger Reihenfolge. Diese andere Reihenfolge erlaubt negative Gewichte und erkennt negative Zyklen, in O(V∗E). Dijkstra ist schneller, vertraegt aber keine negativen Werte.' },
+      { en: '<strong>Bellman-Ford</strong> uses the same relaxation but applies it to all edges n times, in any order. That different order is what lets it tolerate negative weights and detect negative cycles, at O(V∗E). Dijkstra is faster but cannot handle negatives.', de: '<strong>Bellman-Ford</strong> nutzt dieselbe Relaxation, wendet sie aber n-mal auf alle Kanten an, in beliebiger Reihenfolge. Diese andere Reihenfolge erlaubt negative Gewichte und erkennt negative Zyklen, in O(V∗E). Dijkstra ist schneller, verträgt aber keine negativen Werte.' },
     ],
   },
 
@@ -452,7 +452,7 @@ for (int i = 0; i < edgeCount; i++) {
     ],
     pitfalls: [
       { en: 'The per-digit sort <strong>must be stable</strong> or the whole thing breaks - the #1 exam point.', de: 'Die Ziffernsortierung <strong>muss stabil sein</strong>, sonst bricht alles zusammen - der wichtigste Prüfungspunkt.' },
-      { en: 'LSD (least-significant-digit) goes right-to-left; MSD goes left-to-right. Know which you are using.', de: 'LSD (niederwertigste Ziffer zuerst) läuft rechts-nach-links; MSD links-nach-rechts. Wisse, welche du nutzt.' },
+      { en: 'LSD (least-significant-digit) goes right-to-left; MSD goes left-to-right. Know which you are using.', de: 'LSD (niederwertigste Ziffer zürst) läuft rechts-nach-links; MSD links-nach-rechts. Wisse, welche du nutzt.' },
     ],
   },
 

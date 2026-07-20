@@ -38,7 +38,7 @@ export default function Page({ content }) {
         </div>
         <div className="controls" style={{ marginTop: 14 }}>
           <div className="control-group" style={{ flex: 1 }}>
-            <span>{t({ en: 'Look up key', de: 'Schluessel suchen' })}</span>
+            <span>{t({ en: 'Look up key', de: 'Schlüssel suchen' })}</span>
             <input type="range" min="10" max="90" step="10" value={target} onChange={(e) => setTarget(+e.target.value)} />
             <span style={{ fontFamily: 'var(--mono)' }}>{target}</span>
           </div>
