@@ -28,9 +28,21 @@ const T = {
     confidence: 'Konfidenz', models: 'Quellen',
     outlook: '7-Tage-Ausblick', showSources: 'Quellen zeigen', hideSources: 'Quellen verbergen',
     loading: 'Modelle werden gelesen', error: 'Wetter nicht ladbar', retry: 'Erneut',
-    days: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'], today: 'Heute',
+    days: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'], today: 'Heute', myLocation: 'Mein Standort',
+  },
+  sl: {
+    title: 'Soglasno vreme', tagline: 'ena napoved, povprečena iz več modelov',
+    search: 'Poišči mesto', feels: 'Občuti se kot', range: 'razpon modelov',
+    humidity: 'Vlažnost', wind: 'Veter', gusts: 'Sunki', precip: 'Padavine', cloud: 'Oblačnost',
+    pressure: 'Zračni tlak', dew: 'Rosišče', uv: 'UV-indeks', visibility: 'Vidljivost',
+    sunrise: 'Sončni vzhod', sunset: 'Sončni zahod', hourly: 'Naslednjih 24 ur', now: 'Zdaj',
+    confidence: 'Zanesljivost', models: 'virov',
+    outlook: '7-dnevna napoved', showSources: 'Prikaži vire', hideSources: 'Skrij vire',
+    loading: 'Berem modele', error: 'Vremena ni bilo mogoče naložiti', retry: 'Poskusi znova',
+    days: ['Ned', 'Pon', 'Tor', 'Sre', 'Čet', 'Pet', 'Sob'], today: 'Danes', myLocation: 'Moja lokacija',
   },
 }
+T.en.myLocation = 'My location'
 
 const get = (k, d) => { try { return localStorage.getItem(k) || d } catch { return d } }
 const put = (k, v) => { try { localStorage.setItem(k, v) } catch { /* storage blocked */ } }
@@ -41,7 +53,7 @@ const compass = deg => (typeof deg === 'number' ? COMPASS[Math.round((deg % 360)
 const clock = iso => (iso ? iso.slice(11, 16) : '')
 
 export default function App() {
-  const [lang, setLang] = useState(() => (get('wx:lang', 'en') === 'de' ? 'de' : 'en'))
+  const [lang, setLang] = useState(() => { const s = get('wx:lang', 'en'); return s === 'de' || s === 'sl' ? s : 'en' })
   const [unit, setUnit] = useState(() => (get('wx:unit', 'c') === 'f' ? 'f' : 'c'))
   const [wx, setWx] = useState(null)
   const [place, setPlace] = useState('')
@@ -92,7 +104,7 @@ export default function App() {
     const fallback = () => load(DEFAULT.lat, DEFAULT.lon, `${DEFAULT.name}, ${DEFAULT.country}`)
     if (!navigator.geolocation) { fallback(); return }
     navigator.geolocation.getCurrentPosition(
-      p => load(p.coords.latitude, p.coords.longitude, lang === 'de' ? 'Mein Standort' : 'My location'),
+      p => load(p.coords.latitude, p.coords.longitude, T[lang].myLocation),
       fallback, { timeout: 8000 },
     )
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
@@ -132,6 +144,7 @@ export default function App() {
             <div className="seg">
               <button type="button" className={lang === 'en' ? 'on' : ''} onClick={() => switchLang('en')}>EN</button>
               <button type="button" className={lang === 'de' ? 'on' : ''} onClick={() => switchLang('de')}>DE</button>
+              <button type="button" className={lang === 'sl' ? 'on' : ''} onClick={() => switchLang('sl')}>SL</button>
             </div>
           </div>
         </header>

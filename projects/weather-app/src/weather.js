@@ -26,10 +26,10 @@ export function category(code) {
 }
 
 const LABELS = {
-  clear: { en: 'Clear', de: 'Klar' }, partly: { en: 'Partly cloudy', de: 'Teils bewölkt' },
-  clouds: { en: 'Cloudy', de: 'Bewölkt' }, fog: { en: 'Fog', de: 'Nebel' },
-  drizzle: { en: 'Drizzle', de: 'Nieselregen' }, rain: { en: 'Rain', de: 'Regen' },
-  snow: { en: 'Snow', de: 'Schnee' }, thunder: { en: 'Thunderstorm', de: 'Gewitter' },
+  clear: { en: 'Clear', de: 'Klar', sl: 'Jasno' }, partly: { en: 'Partly cloudy', de: 'Teils bewölkt', sl: 'Delno oblačno' },
+  clouds: { en: 'Cloudy', de: 'Bewölkt', sl: 'Oblačno' }, fog: { en: 'Fog', de: 'Nebel', sl: 'Megla' },
+  drizzle: { en: 'Drizzle', de: 'Nieselregen', sl: 'Rosenje' }, rain: { en: 'Rain', de: 'Regen', sl: 'Dež' },
+  snow: { en: 'Snow', de: 'Schnee', sl: 'Sneg' }, thunder: { en: 'Thunderstorm', de: 'Gewitter', sl: 'Nevihta' },
 }
 export const conditionLabel = (cat, lang) => (LABELS[cat] || LABELS.clouds)[lang] || LABELS[cat].en
 
@@ -51,6 +51,12 @@ function owmToWmo(id) {
 const num = a => a.filter(v => typeof v === 'number' && !Number.isNaN(v))
 const mean = a => a.reduce((x, y) => x + y, 0) / a.length
 const std = a => { const m = mean(a); return Math.sqrt(mean(a.map(v => (v - m) ** 2))) }
+const median = a => { const v = num(a); if (!v.length) return NaN; const s = [...v].sort((x, y) => x - y); const n = s.length; return n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2 }
+// drop the single lowest and highest reading once there are enough models, so a
+// model that is far off cannot drag the consensus. this is dynamic, per-call
+// outlier rejection: no model is ever banned, the extremes just sit out each call.
+const trimmed = a => { const v = num(a); if (v.length >= 6) { const s = [...v].sort((x, y) => x - y); return s.slice(1, -1) } return v }
+const robustMean = a => { const t = trimmed(a); return t.length ? mean(t) : NaN }
 const mode = a => {
   const c = {}; let best = a[0], n = 0
   for (const v of a) { c[v] = (c[v] || 0) + 1; if (c[v] > n) { n = c[v]; best = v } }
@@ -193,18 +199,20 @@ function onsetStats(modelHourly, wantCats) {
   const { hours, perModel } = modelHourly
   if (!hours || hours.length < 2) return null
   const onsets = []
+  let total = 0
   for (const id in perModel) {
     const { precip, code } = perModel[id]
+    if (!Array.isArray(precip) && !Array.isArray(code)) continue
+    total++ // this model covers the spot and gets a vote
     for (let k = 1; k < hours.length; k++) {
       const c = code && code[k] != null ? category(code[k]) : null
       const wet = (c && wantCats.has(c)) || (precip && precip[k] >= 0.2)
       if (wet) { onsets.push(k * 60); break } // minutes from the first future hour
     }
   }
-  if (onsets.length < 3) return null
-  const m = mean(onsets)
-  const sd = std(onsets)
-  return { agree: onsets.length, whenMin: m, sdMin: sd }
+  if (onsets.length < 3 || total < 5) return null
+  // frac = share of covering models that see the event at all -> the real "chance"
+  return { agree: onsets.length, total, frac: onsets.length / total, whenMin: mean(onsets), sdMin: std(onsets) }
 }
 
 // add mean minutes to a base "YYYY-MM-DDTHH:MM" string, return "HH:MM" (rounded to 5)
@@ -223,43 +231,51 @@ export function predictEvents(hourly, nowCat, modelHourly) {
   const wetCats = new Set(['rain', 'drizzle', 'thunder'])
   const nowWet = wetCats.has(nowCat)
 
-  // rain starting / stopping within the window
-  const firstWet = hourly.findIndex((h, i) => i > 0 && wetCats.has(category(h.code)) && (h.pop == null || h.pop >= 40))
+  // rain starting within the window - surfaced only when a strong majority of the
+  // models agree, so the chance shown is a real one, not a coin-flip.
+  const firstWet = hourly.findIndex((h, i) => i > 0 && wetCats.has(category(h.code)))
   if (!nowWet && firstWet > 0 && firstWet <= 12) {
     const h = hourly[firstWet], c = category(h.code)
-    const noun = { rain: ['Rain', 'Regen'], drizzle: ['Drizzle', 'Nieselregen'], thunder: ['A storm', 'Ein Gewitter'] }[c] || ['Rain', 'Regen']
+    // each noun carries its Slovenian gender so the adjective agrees:
+    // dez (m) verjeten, rosenje (n) verjetno, nevihta (f) verjetna; slAcc = accusative.
+    const N = {
+      rain: { en: 'Rain', de: 'Regen', sl: 'Dež', slAdj: 'verjeten', slAcc: 'dež' },
+      drizzle: { en: 'Drizzle', de: 'Nieselregen', sl: 'Rosenje', slAdj: 'verjetno', slAcc: 'rosenje' },
+      thunder: { en: 'A storm', de: 'Ein Gewitter', sl: 'Nevihta', slAdj: 'verjetna', slAcc: 'nevihto' },
+    }
+    const noun = N[c] || N.rain
     const wantCats = c === 'thunder' ? new Set(['thunder']) : new Set(['rain', 'drizzle', 'thunder'])
     const os = onsetStats(modelHourly, wantCats)
     const base = modelHourly?.hours?.[0] || hourly[0]?.time
-    let chip, det
-    // only claim a precise time when the models actually cluster (spread within
-    // ~90 min); otherwise the timing is genuinely uncertain, so stay vague.
-    if (os && base && os.sdMin <= 90) {
-      const at = clockPlus(base, os.whenMin)
+    // gate: at least 60% of the covering models must see it, or we say nothing.
+    if (os && base && os.frac >= 0.6) {
+      const chance = Math.round(os.frac * 100)
+      const precise = os.sdMin <= 90 // models cluster tightly enough for a clock time
+      const at = precise ? clockPlus(base, os.whenMin) : labelHour(h.time)
       const err = Math.max(5, Math.round(os.sdMin / 5) * 5)
-      chip = { en: `${noun[0]} likely around ${at}`, de: `${noun[1]} wahrscheinlich gegen ${at}` }
-      det = {
-        en: `${os.agree} models put ${noun[0].toLowerCase()} near ${at}, give or take ${err} min${h.pop != null ? `, ${h.pop}% chance` : ''}. Worth an umbrella.`,
-        de: `${os.agree} Modelle sehen ${noun[1].toLowerCase()} gegen ${at}, ±${err} Min${h.pop != null ? `, ${h.pop}% Wahrscheinlichkeit` : ''}. Schirm einpacken.`,
+      const chip = {
+        en: precise ? `${noun.en} likely around ${at}` : `${noun.en} likely in ${firstWet}h`,
+        de: precise ? `${noun.de} wahrscheinlich gegen ${at}` : `${noun.de} wahrscheinlich in ${firstWet} Std`,
+        sl: precise ? `${noun.sl} ${noun.slAdj} okoli ${at}` : `${noun.sl} ${noun.slAdj} čez ${firstWet} h`,
       }
-    } else {
-      chip = { en: `${noun[0]} likely in ${firstWet}h`, de: `${noun[1]} wahrscheinlich in ${firstWet} Std` }
-      det = {
-        en: `Models point to ${noun[0].toLowerCase()} starting around ${labelHour(h.time)}${h.pop != null ? `, ${h.pop}% chance` : ''}. Worth an umbrella.`,
-        de: `Modelle deuten auf ${noun[1].toLowerCase()} ab etwa ${labelHour(h.time)}${h.pop != null ? `, ${h.pop}% Wahrscheinlichkeit` : ''}. Schirm einpacken.`,
+      const det = {
+        en: `${os.agree} of ${os.total} models agree (${chance}% chance)${precise ? `, ${noun.en.toLowerCase()} near ${at} give or take ${err} min` : `, ${noun.en.toLowerCase()} around ${at}`}. Worth an umbrella.`,
+        de: `${os.agree} von ${os.total} Modellen stimmen überein (${chance}%)${precise ? `, ${noun.de.toLowerCase()} gegen ${at} ±${err} Min` : `, ${noun.de.toLowerCase()} gegen ${at}`}. Schirm einpacken.`,
+        sl: `${os.agree} od ${os.total} modelov se ujema (verjetnost ${chance} %)${precise ? `, ${noun.slAcc} okoli ${at} ±${err} min` : `, ${noun.slAcc} okoli ${at}`}. Splača se vzeti dežnik.`,
       }
+      out.push({ kind: 'precip-start', cat: c, hoursAway: firstWet, chance, en: chip.en, de: chip.de, sl: chip.sl, detail: det })
     }
-    out.push({ kind: 'precip-start', cat: c, hoursAway: firstWet, en: chip.en, de: chip.de, detail: det })
   }
   if (nowWet) {
     const firstDry = hourly.findIndex((h, i) => i > 0 && !wetCats.has(category(h.code)))
     if (firstDry > 0 && firstDry <= 12) {
       out.push({
         kind: 'precip-stop', cat: 'partly', hoursAway: firstDry,
-        en: `Drying up in ${firstDry}h`, de: `Trocken in ${firstDry} Std`,
+        en: `Drying up in ${firstDry}h`, de: `Trocken in ${firstDry} Std`, sl: `Suho čez ${firstDry} h`,
         detail: {
           en: `The wet spell should ease around ${labelHour(hourly[firstDry].time)}.`,
           de: `Der Niederschlag laesst gegen ${labelHour(hourly[firstDry].time)} nach.`,
+          sl: `Padavine naj bi ponehale okoli ${labelHour(hourly[firstDry].time)}.`,
         },
       })
     }
@@ -273,14 +289,14 @@ export function predictEvents(hourly, nowCat, modelHourly) {
     if (delta <= -5) {
       out.push({
         kind: 'temp-drop', cat: nowCat, hoursAway: window.length - 1,
-        en: `Turning colder, ${Math.round(delta)}°`, de: `Kaelter, ${Math.round(delta)}°`,
-        detail: { en: `Temperature falls about ${Math.abs(Math.round(delta))}° over the next few hours.`, de: `Die Temperatur faellt in den naechsten Stunden um etwa ${Math.abs(Math.round(delta))}°.` },
+        en: `Turning colder, ${Math.round(delta)}°`, de: `Kaelter, ${Math.round(delta)}°`, sl: `Hladneje, ${Math.round(delta)}°`,
+        detail: { en: `Temperature falls about ${Math.abs(Math.round(delta))}° over the next few hours.`, de: `Die Temperatur faellt in den naechsten Stunden um etwa ${Math.abs(Math.round(delta))}°.`, sl: `Temperatura v naslednjih urah pade za približno ${Math.abs(Math.round(delta))}°.` },
       })
     } else if (delta >= 5) {
       out.push({
         kind: 'temp-rise', cat: nowCat, hoursAway: window.length - 1,
-        en: `Warming up, +${Math.round(delta)}°`, de: `Waermer, +${Math.round(delta)}°`,
-        detail: { en: `Temperature climbs about ${Math.round(delta)}° over the next few hours.`, de: `Die Temperatur steigt in den naechsten Stunden um etwa ${Math.round(delta)}°.` },
+        en: `Warming up, +${Math.round(delta)}°`, de: `Waermer, +${Math.round(delta)}°`, sl: `Topleje, +${Math.round(delta)}°`,
+        detail: { en: `Temperature climbs about ${Math.round(delta)}° over the next few hours.`, de: `Die Temperatur steigt in den naechsten Stunden um etwa ${Math.round(delta)}°.`, sl: `Temperatura v naslednjih urah naraste za približno ${Math.round(delta)}°.` },
       })
     }
   }
@@ -290,8 +306,8 @@ export function predictEvents(hourly, nowCat, modelHourly) {
   if (gustPeak.v >= 45) {
     out.push({
       kind: 'wind', cat: nowCat, hoursAway: 0,
-      en: `Gusts up to ${Math.round(gustPeak.v)} km/h`, de: `Boeen bis ${Math.round(gustPeak.v)} km/h`,
-      detail: { en: `Wind gusts peak near ${Math.round(gustPeak.v)} km/h around ${labelHour(gustPeak.h.time)}.`, de: `Windboeen erreichen etwa ${Math.round(gustPeak.v)} km/h gegen ${labelHour(gustPeak.h.time)}.` },
+      en: `Gusts up to ${Math.round(gustPeak.v)} km/h`, de: `Boeen bis ${Math.round(gustPeak.v)} km/h`, sl: `Sunki do ${Math.round(gustPeak.v)} km/h`,
+      detail: { en: `Wind gusts peak near ${Math.round(gustPeak.v)} km/h around ${labelHour(gustPeak.h.time)}.`, de: `Windboeen erreichen etwa ${Math.round(gustPeak.v)} km/h gegen ${labelHour(gustPeak.h.time)}.`, sl: `Sunki vetra dosežejo približno ${Math.round(gustPeak.v)} km/h okoli ${labelHour(gustPeak.h.time)}.` },
     })
   }
 
@@ -303,20 +319,33 @@ function labelHour(iso) {
   return hh
 }
 
-// average the raw-model samples and the api samples separately, then blend.
-// raw is weighted higher, it is many independent national-model calculations
+// robustly average the raw-model samples (outliers trimmed) and blend with the
+// api samples. raw is weighted higher, it is many independent national models.
 const blendField = (rawVals, apiVals) => {
   const r = num(rawVals), a = num(apiVals)
   if (!r.length && !a.length) return NaN
-  if (!a.length) return mean(r)
+  if (!a.length) return robustMean(r)
   if (!r.length) return mean(a)
-  return mean(r) * 0.6 + mean(a) * 0.4
+  return robustMean(r) * 0.7 + mean(a) * 0.3
+}
+
+// freshest single-model "now" reading (open-meteo best_match). used to anchor the
+// headline temperature to the present moment instead of an hourly average, which
+// is what makes "now" and the next hour actually match the sky outside.
+async function fetchNow(lat, lon) {
+  try {
+    const u = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,apparent_temperature&timezone=auto`
+    const r = await fetch(u); if (!r.ok) return null
+    const j = await r.json()
+    const t = j.current?.temperature_2m
+    return typeof t === 'number' ? { tempC: t, feelsC: j.current?.apparent_temperature } : null
+  } catch { return null }
 }
 
 // fetch everything in parallel, then average raw data with api data
 export async function aggregate(lat, lon, owmKey) {
-  const [om, owm, dailyRes, hourly, modelHourly] = await Promise.all([
-    fetchOpenMeteo(lat, lon), fetchOWM(lat, lon, owmKey), fetchDaily(lat, lon), fetchHourly(lat, lon), fetchModelHourly(lat, lon),
+  const [om, owm, dailyRes, hourly, modelHourly, now] = await Promise.all([
+    fetchOpenMeteo(lat, lon), fetchOWM(lat, lon, owmKey), fetchDaily(lat, lon), fetchHourly(lat, lon), fetchModelHourly(lat, lon), fetchNow(lat, lon),
   ])
   const daily = dailyRes.days || []
   const sun = dailyRes.sun || null
@@ -329,17 +358,26 @@ export async function aggregate(lat, lon, owmKey) {
   const cats = sources.map(s => category(s.code))
   const cat = mode(cats)
   const agree = cats.filter(c => c === cat).length / cats.length
-  const spread = std(temps)
+  const spread = std(temps)            // full spread, shown as the honest model range
+  const coreSpread = std(trimmed(temps)) // outliers removed, drives the confidence read
   // confident when the models agree on the condition and cluster on temperature
-  const confidence = Math.round(Math.max(0, Math.min(1, 0.6 * agree + 0.4 * (1 - Math.min(spread / 4, 1)))) * 100)
+  const confidence = Math.round(Math.max(0, Math.min(1, 0.6 * agree + 0.4 * (1 - Math.min(coreSpread / 4, 1)))) * 100)
 
   const nowCat = cat
   const predictions = predictEvents(hourly, nowCat, modelHourly)
 
+  // anchor the headline temperature to the freshest reading. the robust consensus
+  // still carries half the weight, so the ensemble identity holds, but the number
+  // now tracks the present hour rather than lagging it.
+  let tempC = f('tempC')
+  if (now && typeof now.tempC === 'number' && Number.isFinite(tempC)) tempC = tempC * 0.5 + now.tempC * 0.5
+  let feelsC = f('feelsC') || tempC
+  if (now && typeof now.feelsC === 'number' && Number.isFinite(feelsC)) feelsC = feelsC * 0.5 + now.feelsC * 0.5
+
   return {
     count: sources.length, rawCount: raw.length, apiCount: api.length,
-    tempC: f('tempC'), tempMin: Math.min(...temps), tempMax: Math.max(...temps), spread,
-    feelsC: f('feelsC') || f('tempC'),
+    tempC, tempMin: Math.min(...temps), tempMax: Math.max(...temps), spread,
+    feelsC,
     humidity: Math.round(f('humidity')),
     precip: f('precip') || 0,
     cloud: Math.round(f('cloud')),

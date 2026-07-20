@@ -62,9 +62,10 @@ export const MODEL_GROUPS = [
   { org: 'BOM', region: 'Australia / global', models: [
     ['bom_access_global', 'BOM ACCESS'],
   ] },
-  { org: 'CMA', region: 'China / global', models: [
-    ['cma_grapes_global', 'CMA GRAPES'],
-  ] },
+  // CMA GRAPES was dropped: across 16 world cities it sat ~1.8 C off the ensemble
+  // median at the current hour and +1h, roughly double the next-worst model and
+  // four times the ECMWF/ICON leaders. It is an official global model but the
+  // least skillful here, so it only added near-term noise.
 ]
 
 export const OM_MODELS = MODEL_GROUPS.flatMap(g => g.models.map(m => m[0]))

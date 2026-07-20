@@ -35,6 +35,7 @@ export default function App() {
       <div className="lang-switch" role="group" aria-label="Language">
         <button className={lang === 'en' ? 'active' : ''} onClick={() => setLang('en')}>EN</button>
         <button className={lang === 'de' ? 'active' : ''} onClick={() => setLang('de')}>DE</button>
+        <button className={lang === 'sl' ? 'active' : ''} onClick={() => setLang('sl')}>SL</button>
       </div>
       <button className="theme-toggle" onClick={toggleTheme} title="Toggle light / dark">
         {theme === 'dark' ? <Sun /> : <Moon />}
