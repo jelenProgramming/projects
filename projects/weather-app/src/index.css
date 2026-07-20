@@ -222,3 +222,10 @@ body {
 
 /* confidence shown up with the forecast */
 .cconf { font-size: 0.85rem; opacity: 0.82; margin-top: 2px; font-weight: 600; }
+
+/* location-specific severe-weather warning banner (model-derived) */
+.warns { display: flex; flex-direction: column; gap: 7px; }
+.warn { display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-radius: 13px; font-size: 0.92rem; font-weight: 600; border: 1px solid rgba(255, 255, 255, 0.28); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25); }
+.warn__ico { font-size: 1.1rem; line-height: 1; }
+.warn--severe { background: rgba(200, 32, 32, 0.92); color: #fff; }
+.warn--warn { background: rgba(201, 108, 12, 0.9); color: #fff; }

@@ -342,10 +342,76 @@ async function fetchNow(lat, lon) {
   } catch { return null }
 }
 
+// official emergency alerts for the location, from the US National Weather Service
+// (api.weather.gov: free, CORS-enabled, no key). returns real Tornado / Hurricane /
+// Flood / Winter Storm warnings inside the US and its territories, and [] elsewhere,
+// where aggregate() falls back to the model-derived warnings below. known event
+// names are mapped to all three languages; anything else shows the official English.
+const NWS_MAP = {
+  'Tornado Warning': ['Tornado warning', 'Tornadowarnung', 'Opozorilo pred tornadom'],
+  'Tornado Watch': ['Tornado watch', 'Tornado-Bereitschaft', 'Pripravljenost na tornado'],
+  'Hurricane Warning': ['Hurricane warning', 'Hurrikanwarnung', 'Opozorilo pred orkanom'],
+  'Hurricane Watch': ['Hurricane watch', 'Hurrikan-Bereitschaft', 'Pripravljenost na orkan'],
+  'Tropical Storm Warning': ['Tropical storm warning', 'Tropensturmwarnung', 'Opozorilo pred tropskim viharjem'],
+  'Severe Thunderstorm Warning': ['Severe thunderstorm', 'Schweres Gewitter', 'Huda nevihta'],
+  'Flood Warning': ['Flood warning', 'Hochwasserwarnung', 'Opozorilo pred poplavami'],
+  'Flash Flood Warning': ['Flash flood warning', 'Sturzflutwarnung', 'Opozorilo pred hudournikom'],
+  'Winter Storm Warning': ['Winter storm warning', 'Wintersturmwarnung', 'Opozorilo pred snežnim viharjem'],
+  'Blizzard Warning': ['Blizzard warning', 'Blizzardwarnung', 'Opozorilo pred snežnim metežem'],
+  'Excessive Heat Warning': ['Extreme heat warning', 'Extreme Hitzewarnung', 'Opozorilo pred izjemno vročino'],
+  'Heat Advisory': ['Heat advisory', 'Hitzewarnung', 'Opozorilo pred vročino'],
+  'High Wind Warning': ['High wind warning', 'Sturmwarnung', 'Opozorilo pred močnim vetrom'],
+  'Wind Advisory': ['Wind advisory', 'Windwarnung', 'Opozorilo pred vetrom'],
+  'Red Flag Warning': ['Fire weather warning', 'Waldbrandwarnung', 'Opozorilo pred požari'],
+}
+async function fetchAlerts(lat, lon) {
+  try {
+    const u = `https://api.weather.gov/alerts/active?point=${lat.toFixed(4)},${lon.toFixed(4)}`
+    const r = await fetch(u, { headers: { Accept: 'application/geo+json' } })
+    if (!r.ok) return []
+    const j = await r.json()
+    const seen = new Set(), out = []
+    for (const feat of j.features || []) {
+      const p = feat.properties || {}
+      const ev = p.event || ''
+      if (!ev || seen.has(ev)) continue
+      seen.add(ev)
+      const sev = (p.severity === 'Extreme' || p.severity === 'Severe') ? 'severe' : 'warn'
+      const m = NWS_MAP[ev]
+      out.push({ id: 'nws-' + ev.replace(/\s+/g, '-').toLowerCase(), sev, official: true, en: m ? m[0] : ev, de: m ? m[1] : ev, sl: m ? m[2] : ev })
+    }
+    return out.slice(0, 4)
+  } catch { return [] }
+}
+
+// severe-weather warnings derived from the consensus for this location. we only
+// raise one when the averaged value (and the near-term hourly best_match) crosses
+// a threshold, so a single wild model cannot trigger a false alarm. each carries a
+// severity (severe = red, warn = amber) and the same phrasing in all three langs.
+// note: tornado and earthquake are not derivable from forecast data, so they are
+// out of scope; this covers the conditions the models can reliably indicate.
+function buildWarnings({ cat, tempC, feelsC, gustKph, precip, visibility, hourly }) {
+  const W = []
+  const add = (id, sev, en, de, sl) => W.push({ id, sev, en, de, sl })
+  const near = (hourly || []).slice(0, 12)
+  const gust = Math.max(gustKph || 0, ...near.map(h => h.gustKph || 0))
+  const rain = Math.max(precip || 0, ...near.map(h => h.precip || 0))
+  if (gust >= 118) add('wind', 'severe', 'Hurricane-force winds', 'Orkanartige Winde', 'Orkanski vetrovi')
+  else if (gust >= 90) add('wind', 'severe', 'Damaging winds', 'Sturmschäden möglich', 'Škodljiv veter')
+  else if (gust >= 62) add('wind', 'warn', 'Gale-force gusts', 'Sturmböen', 'Sunki viharja')
+  if (cat === 'thunder') add('storm', 'severe', 'Thunderstorm', 'Gewitter', 'Nevihta')
+  if (rain >= 15) add('rain', 'warn', 'Heavy rain, flooding possible', 'Starkregen, Überflutung möglich', 'Močan dež, možne poplave')
+  if (cat === 'snow' && rain >= 5) add('snow', 'warn', 'Heavy snowfall', 'Starker Schneefall', 'Močno sneženje')
+  if (typeof tempC === 'number' && tempC >= 35) add('heat', 'warn', 'Extreme heat', 'Extreme Hitze', 'Izjemna vročina')
+  else if (typeof feelsC === 'number' && feelsC <= -15) add('cold', 'warn', 'Extreme cold', 'Extreme Kälte', 'Izjemen mraz')
+  if (typeof visibility === 'number' && visibility < 200) add('fog', 'warn', 'Dense fog', 'Dichter Nebel', 'Gosta megla')
+  return W
+}
+
 // fetch everything in parallel, then average raw data with api data
 export async function aggregate(lat, lon, owmKey) {
-  const [om, owm, dailyRes, hourly, modelHourly, now] = await Promise.all([
-    fetchOpenMeteo(lat, lon), fetchOWM(lat, lon, owmKey), fetchDaily(lat, lon), fetchHourly(lat, lon), fetchModelHourly(lat, lon), fetchNow(lat, lon),
+  const [om, owm, dailyRes, hourly, modelHourly, now, alerts] = await Promise.all([
+    fetchOpenMeteo(lat, lon), fetchOWM(lat, lon, owmKey), fetchDaily(lat, lon), fetchHourly(lat, lon), fetchModelHourly(lat, lon), fetchNow(lat, lon), fetchAlerts(lat, lon),
   ])
   const daily = dailyRes.days || []
   const sun = dailyRes.sun || null
@@ -390,6 +456,9 @@ export async function aggregate(lat, lon, owmKey) {
     uv: f('uv') ?? sun?.uvMax,
     isDay: mode(sources.map(s => s.isDay)) !== 0,
     category: cat, agreement: agree, confidence, daily, sun, hourly, predictions,
+    // official emergency alerts for this exact point take priority; only if none are
+    // returned do we fall back to the reliable model-derived warnings.
+    warnings: (alerts && alerts.length) ? alerts : buildWarnings({ cat, tempC, feelsC, gustKph: f('gustKph'), precip: f('precip') || 0, visibility: f('visibility'), hourly }),
     sources: sources.map(s => ({ ...s, cat: category(s.code) })),
   }
 }

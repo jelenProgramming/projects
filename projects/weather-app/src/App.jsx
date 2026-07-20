@@ -188,6 +188,16 @@ export default function App() {
 
         {status === 'ok' && wx && (
           <main className="card">
+            {wx.warnings?.length > 0 && (
+              <div className="warns" role="alert">
+                {wx.warnings.map(w => (
+                  <div key={w.id} className={`warn warn--${w.sev}`}>
+                    <span className="warn__ico" aria-hidden="true">⚠</span>
+                    <span>{w[lang]}</span>
+                  </div>
+                ))}
+              </div>
+            )}
             <div className="place">{place}</div>
             <div className="now">
               <WeatherIcon cat={cat} day={day} size={92} />
