@@ -19,6 +19,29 @@ body {
 
 .sky { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; }
 
+/* hyperreal SVG sky animations (transform/opacity only, GPU friendly) */
+.sr-clouds { animation: srDrift 100s linear infinite; will-change: transform; }
+@keyframes srDrift { from { transform: translateX(-60px); } to { transform: translateX(120px); } }
+.sr-rays { animation: srRays 140s linear infinite; }
+@keyframes srRays { to { transform: rotate(360deg); } }
+.sr-bloom { animation: srBloom 5s ease-in-out infinite alternate; }
+@keyframes srBloom { from { transform: scale(1); opacity: 0.9; } to { transform: scale(1.07); opacity: 1; } }
+.sr-rain { animation: srFall linear infinite; will-change: transform; }
+@keyframes srFall { to { transform: translateY(600px); } }
+.sr-snow { animation: srSnow 9s linear infinite; will-change: transform; }
+@keyframes srSnow { to { transform: translateY(600px); } }
+.sr-star { animation: srTwinkle 3.4s ease-in-out infinite alternate; }
+@keyframes srTwinkle { from { opacity: 0.2; } to { opacity: 1; } }
+.sr-flash { opacity: 0; animation: srFlash 9s steps(1, end) infinite; }
+@keyframes srFlash { 0%, 5%, 100% { opacity: 0; } 1% { opacity: 0.7; } 2% { opacity: 0.12; } 3.2% { opacity: 0.55; } }
+
+/* mascot figurines overlay */
+.mascots { position: fixed; left: 50%; bottom: 0; transform: translateX(-50%); width: min(360px, 66vw); z-index: 1; pointer-events: none; filter: drop-shadow(0 10px 26px rgba(0, 0, 0, 0.4)); }
+
+@media (prefers-reduced-motion: reduce) {
+  .sr-clouds, .sr-rays, .sr-bloom, .sr-rain, .sr-snow, .sr-star, .sr-flash { animation: none; }
+}
+
 /* subtle top+bottom scrim so text stays readable over any sky */
 .scrim {
   position: fixed; inset: 0; z-index: 1; pointer-events: none;

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { animate, stagger } from 'animejs'
-import Sky from './Sky.jsx'
+import SkyReal from './SkyReal.jsx'
+import Figures from './Figures.jsx'
 import WeatherIcon from './WeatherIcon.jsx'
 import { aggregate, geocode, conditionLabel, category } from './weather.js'
 
@@ -130,8 +131,8 @@ export default function App() {
 
   return (
     <div className={`app ${day ? 'day' : 'night'}`} data-cat={cat}>
-      <Sky weather={wx} mode="real" />
-      <div className="mesh" aria-hidden="true" />
+      <SkyReal weather={wx} />
+      <Figures cat={cat} day={day} className="mascots" />
       <div className="scrim" />
       <div className="ui">
         <header className="top">
