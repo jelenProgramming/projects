@@ -29,8 +29,8 @@ export default function App() {
   const toggles = (
     <div className="top-toggles">
       <div className="mode-switch" role="group" aria-label="Study mode">
-        <button className={mode === 'calm' ? 'active' : ''} onClick={() => setMode('calm')} title="Cram mode - condensed and calm">😮‍💨</button>
-        <button className={mode === 'explore' ? 'active' : ''} onClick={() => setMode('explore')} title="Explore mode - full content and animations">🧭</button>
+        <button className={mode === 'calm' ? 'active' : ''} onClick={() => setMode('calm')} title="Cram mode | condensed and calm">😮‍💨</button>
+        <button className={mode === 'explore' ? 'active' : ''} onClick={() => setMode('explore')} title="Explore mode | full content and animations">🧭</button>
       </div>
       <div className="lang-switch" role="group" aria-label="Language">
         <button className={lang === 'en' ? 'active' : ''} onClick={() => setLang('en')}>EN</button>
