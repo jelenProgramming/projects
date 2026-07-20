@@ -12,30 +12,46 @@ const WET = new Set(['rain', 'drizzle', 'thunder'])
 function moods(cat, day) {
   if (WET.has(cat)) return { one: { face: 'calm', umbrella: true }, two: { face: 'annoyed', wet: true } }
   if (cat === 'snow') return { one: { face: 'calm', scarf: true }, two: { face: 'cold', cold: true } }
-  if ((cat === 'clear' || cat === 'partly') && day) return { one: { face: 'cool', shades: true }, two: { face: 'cool', shades: true } }
+  if ((cat === 'clear' || cat === 'partly') && day) return { one: { face: 'cool', shades: true, sunscreen: true }, two: { face: 'hot', hot: true, sweat: true } }
   if (!day && (cat === 'clear' || cat === 'partly')) return { one: { face: 'calm' }, two: { face: 'calm' } }
   return { one: { face: 'calm' }, two: { face: 'meh' } }
 }
 
+// realistic-anime face (JJK / MHA / Baki register, not kawaii): sharp angular
+// brows, narrow almond eyes with a bold upper lash line and a small highlight, a
+// defined nose, an understated mouth. squint (a hard curve) for cool / hot moods.
 function Face({ mood }) {
-  const brow = mood === 'annoyed' || mood === 'cold' || mood === 'meh'
-  const frown = mood === 'annoyed' || mood === 'cold'
-  const smirk = mood === 'cool'
+  const angry = mood === 'annoyed' || mood === 'cold'
+  const squint = mood === 'cool' || mood === 'hot'
+  const browL = angry ? 'M -17 51 L -4 57 L -4 59.4 L -17 54 Z' : 'M -17 53 L -4 55 L -4 57 L -17 55.4 Z'
+  const browR = angry ? 'M 17 51 L 4 57 L 4 59.4 L 17 54 Z' : 'M 17 53 L 4 55 L 4 57 L 17 55.4 Z'
   return (
     <g>
-      <g fill="#20242c">
-        <ellipse cx="-10" cy="63" rx="2.7" ry={mood === 'cool' ? 1.8 : 3} />
-        <ellipse cx="10" cy="63" rx="2.7" ry={mood === 'cool' ? 1.8 : 3} />
-      </g>
-      {brow && <g stroke="#20242c" strokeWidth="2.3" strokeLinecap="round">
-        <line x1="-16" y1="55" x2="-5" y2="58" /><line x1="16" y1="55" x2="5" y2="58" />
-      </g>}
-      {frown
-        ? <path d="M -7 78 Q 0 72 7 78" fill="none" stroke="#20242c" strokeWidth="2.3" strokeLinecap="round" />
-        : smirk
-          ? <path d="M -7 74 Q 2 79 8 73" fill="none" stroke="#20242c" strokeWidth="2.3" strokeLinecap="round" />
-          : <path d="M -6 75 Q 0 79 6 75" fill="none" stroke="#20242c" strokeWidth="2.3" strokeLinecap="round" />}
-      {mood === 'cold' && <g fill="#8fd0ff" opacity="0.7"><circle cx="-13" cy="70" r="4" /><circle cx="13" cy="70" r="4" /></g>}
+      <path d={browL} fill="#171a1f" />
+      <path d={browR} fill="#171a1f" />
+      {squint
+        ? <g stroke="#171a1f" strokeWidth="2.6" strokeLinecap="round" fill="none">
+            <path d="M -15 62 Q -10 64.5 -5 61.5" /><path d="M 5 61.5 Q 10 64.5 15 62" />
+          </g>
+        : <g>
+            <path d="M -16 60.5 Q -10 58.4 -4 61" stroke="#171a1f" strokeWidth="2.8" fill="none" strokeLinecap="round" />
+            <path d="M 4 61 Q 10 58.4 16 60.5" stroke="#171a1f" strokeWidth="2.8" fill="none" strokeLinecap="round" />
+            <ellipse cx="-10.5" cy="64" rx="2.4" ry="3.6" fill="#171a1f" />
+            <ellipse cx="10.5" cy="64" rx="2.4" ry="3.6" fill="#171a1f" />
+            <circle cx="-9.3" cy="62.6" r="1" fill="#ffffff" />
+            <circle cx="11.7" cy="62.6" r="1" fill="#ffffff" />
+          </g>}
+      {/* defined nose */}
+      <path d="M 0.5 66 q -1.8 3 -3 3.6" fill="none" stroke="rgba(0,0,0,0.22)" strokeWidth="1.6" strokeLinecap="round" />
+      {/* mouth per mood */}
+      {angry
+        ? <path d="M -6 79 Q 0 74 6 79" fill="none" stroke="#171a1f" strokeWidth="2.3" strokeLinecap="round" />
+        : mood === 'hot'
+          ? <path d="M -5 77 Q 0 82 5 77 Q 0 79.5 -5 77 Z" fill="#171a1f" />
+          : mood === 'cool'
+            ? <path d="M -6 77 Q 3 80 8 75" fill="none" stroke="#171a1f" strokeWidth="2.3" strokeLinecap="round" />
+            : <path d="M -6 78 Q 0 80.5 6 78" fill="none" stroke="#171a1f" strokeWidth="2.3" strokeLinecap="round" />}
+      {mood === 'cold' && <g fill="#8fd0ff" opacity="0.65"><circle cx="-14" cy="72" r="4" /><circle cx="14" cy="72" r="4" /></g>}
     </g>
   )
 }
@@ -74,14 +90,20 @@ function FigureOne({ m }) {
       <line x1="0" y1="88" x2="0" y2="144" stroke="#3a4325" strokeWidth="2.2" />
       <line x1="-14" y1="112" x2="-2" y2="112" stroke="#3a4325" strokeWidth="1.8" />
       <path d="M 15 88 Q 24 104 20 134" fill="none" stroke="#ffffff" strokeOpacity="0.4" strokeWidth="2" strokeLinecap="round" />
+      {/* JoJo cel shadow on the shaded (right) side + hatched inking */}
+      <path d="M 3 85 Q 15 85 23 96 Q 25 132 17 146 L 3 146 Z" fill="rgba(0,0,0,0.17)" />
+      <g stroke="rgba(0,0,0,0.16)" strokeWidth="1" strokeLinecap="round">
+        <line x1="8" y1="101" x2="20" y2="107" /><line x1="6" y1="112" x2="21" y2="120" /><line x1="8" y1="124" x2="20" y2="131" /><line x1="10" y1="135" x2="19" y2="141" />
+      </g>
       <circle cx={m.umbrella ? -31 : -23} cy={m.umbrella ? 94 : 132} r="5.2" fill={skin} />
       <circle cx="23" cy="132" r="5.2" fill={skin} />
-      {/* head + straight blunt-fringe hair */}
+      {/* head + short crop with a straight blunt fringe (short sides, not a bob) */}
       <ellipse cx="0" cy="62" rx="25" ry="25" fill="url(#skin-one)" />
-      <path d="M -25 60 Q -26 33 0 32 Q 26 33 25 60 L 25 52 Q 12 50 8 52 L 6 51 Q 0 53 -6 51 L -8 52 Q -12 50 -25 52 Z" fill="#141414" />
-      <path d="M -25 52 Q 0 47 25 52 L 25 55 Q 0 50 -25 55 Z" fill="#141414" />
+      <path d="M -23 49 Q -23 32 0 31 Q 23 32 23 49 Q 19 45 15 46 Q 11 50 8 47 Q 4 51 0 47 Q -4 51 -8 47 Q -11 50 -15 46 Q -19 45 -23 49 Z" fill="#141414" />
+      <path d="M -16 39 Q -6 34 3 37" stroke="rgba(255,255,255,0.22)" strokeWidth="2.6" fill="none" strokeLinecap="round" />
       <Face mood={m.face} />
       {m.shades && <g><rect x="-18" y="57" width="15" height="9" rx="4" fill="#15181e" /><rect x="3" y="57" width="15" height="9" rx="4" fill="#15181e" /><rect x="-3" y="60" width="6" height="2.2" fill="#15181e" /></g>}
+      {m.sunscreen && <g><rect x="-9" y="66" width="18" height="3.4" rx="1.7" fill="#ffffff" opacity="0.92" transform="rotate(-2 0 67)" /><circle cx="-14" cy="71" r="3" fill="#ffffff" opacity="0.85" /><circle cx="14" cy="71" r="3" fill="#ffffff" opacity="0.85" /></g>}
       {m.scarf && <path d="M -15 90 Q 0 98 15 90 L 13 99 Q 0 106 -13 99 Z" fill="#c0392f" />}
       {m.umbrella && <g>
         <line x1="-31" y1="94" x2="-31" y2="28" stroke="#2a2320" strokeWidth="2.8" strokeLinecap="round" />
@@ -113,15 +135,23 @@ function FigureTwo({ m }) {
       <line x1="4" y1="100" x2="5" y2="118" stroke="#c0392f" strokeWidth="2.4" strokeLinecap="round" />
       <circle cx="12" cy="112" r="4.5" fill="#1c1e22" /><circle cx="12" cy="112" r="2.2" fill="#e8e0c8" />
       <path d="M 15 90 Q 23 106 20 134" fill="none" stroke="#ffffff" strokeOpacity="0.45" strokeWidth="2" strokeLinecap="round" />
+      {/* JoJo cel shadow + hatched inking on the cream panel */}
+      <path d="M 3 88 Q 15 88 23 96 Q 25 132 17 147 L 3 147 Z" fill="rgba(0,0,0,0.13)" />
+      <g stroke="rgba(0,0,0,0.15)" strokeWidth="1" strokeLinecap="round">
+        <line x1="7" y1="123" x2="20" y2="129" /><line x1="6" y1="133" x2="20" y2="140" /><line x1="9" y1="142" x2="18" y2="146" />
+      </g>
       <circle cx="-23" cy="132" r="5.2" fill={skin} />
       <circle cx="23" cy="132" r="5.2" fill={skin} />
-      {/* head + tousled wavy hair */}
+      {/* head + tousled wavy hair (solid cap that sits on the scalp) */}
       <ellipse cx="0" cy="62" rx="25" ry="25" fill="url(#skin-two)" />
-      <path d="M -26 62 Q -30 34 -14 30 Q -8 24 0 28 Q 9 23 16 30 Q 30 34 27 60 Q 24 46 18 50 Q 22 40 14 40 Q 16 48 8 46 Q 12 38 4 42 Q 2 34 -4 42 Q -10 37 -8 46 Q -16 40 -14 50 Q -22 44 -20 54 Q -24 50 -26 62 Z" fill="#3a2a1e" />
+      <path d="M -25 56 Q -28 32 -10 29 Q -4 21 3 27 Q 11 21 17 30 Q 28 34 25 56 Q 21 49 22 53 Q 15 47 12 52 Q 7 46 3 52 Q -2 46 -6 52 Q -12 47 -16 52 Q -21 48 -25 56 Z" fill="#3a2a1e" />
+      <path d="M -14 37 Q -3 31 7 35" stroke="rgba(255,255,255,0.2)" strokeWidth="2.6" fill="none" strokeLinecap="round" />
       <Face mood={m.face} />
       {m.shades && <g><rect x="-18" y="57" width="15" height="9" rx="4" fill="#15181e" /><rect x="3" y="57" width="15" height="9" rx="4" fill="#15181e" /><rect x="-3" y="60" width="6" height="2.2" fill="#15181e" /></g>}
       {m.wet && <g fill="#bfe0ff"><ellipse cx="-20" cy="104" rx="1.7" ry="3.6" /><ellipse cx="21" cy="118" rx="1.7" ry="3.6" /><ellipse cx="4" cy="150" rx="1.7" ry="3.6" /></g>}
-      {m.cold && <g fill="#8fd0ff" opacity="0.7"><circle cx="-13" cy="70" r="4" /><circle cx="13" cy="70" r="4" /></g>}
+      {m.cold && <g fill="#8fd0ff" opacity="0.7"><circle cx="-13" cy="71" r="4" /><circle cx="13" cy="71" r="4" /></g>}
+      {m.hot && <g fill="#ff7a6b" opacity="0.5"><circle cx="-13" cy="72" r="5" /><circle cx="13" cy="72" r="5" /></g>}
+      {m.sweat && <g fill="#bfe0ff"><ellipse cx="20" cy="52" rx="2" ry="4.2" /><ellipse cx="-18" cy="55" rx="1.6" ry="3.4" /></g>}
     </g>
   )
 }

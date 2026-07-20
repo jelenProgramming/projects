@@ -15,7 +15,7 @@ body {
   overflow-x: hidden;
 }
 
-.app { position: relative; min-height: 100vh;
+.app { position: relative; min-height: 100vh; min-height: 100dvh;
   --ink: #eef4fb; --ink-dim: rgba(238, 244, 251, 0.82);
   --tile: rgba(255, 255, 255, 0.08); --tile-brd: rgba(255, 255, 255, 0.16);
 }
@@ -58,7 +58,7 @@ body {
 
 .ui {
   position: relative; z-index: 2;
-  max-width: 640px; margin: 0 auto; min-height: 100vh;
+  max-width: 640px; margin: 0 auto; min-height: 100vh; min-height: 100dvh;
   padding: clamp(16px, 4vw, 34px);
   display: flex; flex-direction: column; gap: 18px;
   color: var(--ink);
@@ -176,9 +176,18 @@ body {
 @media (max-width: 520px) {
   .now { gap: 14px; }
   .now .temp { font-size: clamp(3.6rem, 20vw, 5rem); }
+  .mascots { width: min(300px, 74vw); }
+  .ui { padding-bottom: 26px; }
 }
 @media (max-width: 430px) {
   .grid { grid-template-columns: repeat(2, 1fr); }
+  .top { gap: 8px; }
+  .brand { font-size: 0.98rem; }
+}
+/* iOS: keep the fixed sky glued to the visual viewport, respect the notch */
+@supports (padding: max(0px)) {
+  .ui { padding-left: max(clamp(16px, 4vw, 34px), env(safe-area-inset-left));
+        padding-right: max(clamp(16px, 4vw, 34px), env(safe-area-inset-right)); }
 }
 
 /* condition-tinted mesh gradient over the canvas sky */
