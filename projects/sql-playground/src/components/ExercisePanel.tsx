@@ -78,7 +78,7 @@ export default function ExercisePanel({ makeDb, passed, onPass, lang, t }: Props
                   {'●'.repeat(exercise.difficulty)}
                   {'○'.repeat(3 - exercise.difficulty)}
                 </span>
-                <span className="exTitle">{exercise.title[lang]}</span>
+                <span className="exTitle">{exercise.title[lang] ?? exercise.title.en}</span>
                 {passed.has(exercise.id) && (
                   <span className="exDone" aria-label={t.solved}>
                     {t.solved}
@@ -87,10 +87,10 @@ export default function ExercisePanel({ makeDb, passed, onPass, lang, t }: Props
               </button>
               {isOpen && (
                 <div className="exBody">
-                  <p className="exPrompt">{exercise.prompt[lang]}</p>
+                  <p className="exPrompt">{exercise.prompt[lang] ?? exercise.prompt.en}</p>
                   <details className="exHint">
                     <summary>{t.hint}</summary>
-                    <p>{exercise.hint[lang]}</p>
+                    <p>{exercise.hint[lang] ?? exercise.hint.en}</p>
                   </details>
                   <QueryEditor
                     value={drafts[exercise.id] ?? ''}

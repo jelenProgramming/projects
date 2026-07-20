@@ -3,6 +3,7 @@ export type Lang = 'en' | 'de' | 'sl'
 export interface Localized {
   en: string
   de: string
+  sl?: string
 }
 
 export interface UIStrings {
@@ -150,7 +151,8 @@ export const UI: Record<Lang, UIStrings> = {
 export function loadStoredLang(key: string): Lang {
   try {
     const v = window.localStorage.getItem(key)
-    return v === 'de' || v === 'sl' ? v : 'en'
+    if (v === 'de' || v === 'sl') return v
+    return 'en'
   } catch {
     return 'en'
   }
