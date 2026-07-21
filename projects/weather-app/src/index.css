@@ -272,3 +272,11 @@ body {
 .dayPop__grid span { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.72; }
 .dayPop__grid b { font-size: 1rem; font-weight: 700; }
 @media (prefers-reduced-motion: reduce) { .dayPop, .results, .results li { animation: none; opacity: 1; } }
+
+/* hourly strip: day switch + slide-in animation */
+.hoursWrap { display: flex; flex-direction: column; gap: 6px; }
+.hoursHead { display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; font-weight: 600; opacity: 0.92; padding: 0 2px; }
+.hoursNow { background: var(--glass); border: 1px solid var(--brd); border-radius: 999px; color: var(--ink); font: inherit; font-size: 0.72rem; font-weight: 600; padding: 3px 12px; cursor: pointer; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.hours { animation: hoursSwap 0.34s cubic-bezier(0.2, 0.9, 0.3, 1); }
+@keyframes hoursSwap { from { opacity: 0; transform: translateX(26px); } to { opacity: 1; transform: translateX(0); } }
+@media (prefers-reduced-motion: reduce) { .hours { animation: none; } }

@@ -165,6 +165,22 @@ async function fetchHourly(lat, lon) {
   } catch { return [] }
 }
 
+// full hourly for the next 7 days, tagged with each point's date, so the outlook
+// can swap the strip to any chosen day's 24 hours.
+async function fetchWeekHourly(lat, lon) {
+  try {
+    const u = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+      `&hourly=temperature_2m,precipitation_probability,weather_code,is_day&forecast_days=7&timezone=auto`
+    const r = await fetch(u)
+    if (!r.ok) return []
+    const j = await r.json(); const h = j.hourly || {}; const times = h.time || []
+    return times.map((t, i) => ({
+      date: t.slice(0, 10), time: t, hour: Number(t.slice(11, 13)),
+      tempC: h.temperature_2m?.[i], code: h.weather_code?.[i], pop: h.precipitation_probability?.[i], isDay: h.is_day?.[i] !== 0,
+    }))
+  } catch { return [] }
+}
+
 // per-model hourly precip + weather code, for a model-averaged onset time.
 // returns { hours:[iso...], perModel:{ id:{precip,code} } } from the current hour.
 async function fetchModelHourly(lat, lon) {
@@ -410,8 +426,8 @@ function buildWarnings({ cat, tempC, feelsC, gustKph, precip, visibility, hourly
 
 // fetch everything in parallel, then average raw data with api data
 export async function aggregate(lat, lon, owmKey) {
-  const [om, owm, dailyRes, hourly, modelHourly, now, alerts] = await Promise.all([
-    fetchOpenMeteo(lat, lon), fetchOWM(lat, lon, owmKey), fetchDaily(lat, lon), fetchHourly(lat, lon), fetchModelHourly(lat, lon), fetchNow(lat, lon), fetchAlerts(lat, lon),
+  const [om, owm, dailyRes, hourly, modelHourly, now, alerts, weekHours] = await Promise.all([
+    fetchOpenMeteo(lat, lon), fetchOWM(lat, lon, owmKey), fetchDaily(lat, lon), fetchHourly(lat, lon), fetchModelHourly(lat, lon), fetchNow(lat, lon), fetchAlerts(lat, lon), fetchWeekHourly(lat, lon),
   ])
   const daily = dailyRes.days || []
   const sun = dailyRes.sun || null
@@ -455,7 +471,7 @@ export async function aggregate(lat, lon, owmKey) {
     visibility: f('visibility'),
     uv: f('uv') ?? sun?.uvMax,
     isDay: mode(sources.map(s => s.isDay)) !== 0,
-    category: cat, agreement: agree, confidence, daily, sun, hourly, predictions,
+    category: cat, agreement: agree, confidence, daily, sun, hourly, weekHours, predictions,
     // official emergency alerts for this exact point take priority; only if none are
     // returned do we fall back to the reliable model-derived warnings.
     warnings: (alerts && alerts.length) ? alerts : buildWarnings({ cat, tempC, feelsC, gustKph: f('gustKph'), precip: f('precip') || 0, visibility: f('visibility'), hourly }),

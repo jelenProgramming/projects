@@ -64,6 +64,9 @@ export default function App() {
   const [openSources, setOpenSources] = useState(false)
   const [openPred, setOpenPred] = useState(-1)
   const [openDay, setOpenDay] = useState(-1)
+  const [selDay, setSelDay] = useState(-1) // which day's hours the strip shows (-1 = next 24h)
+  const [showChars, setShowChars] = useState(() => get('wx:chars', '1') !== '0')
+  const toggleChars = () => setShowChars(v => { put('wx:chars', v ? '0' : '1'); return !v })
   const dayTimer = useRef(null)
   const dayArm = () => { clearTimeout(dayTimer.current); dayTimer.current = setTimeout(() => setOpenDay(-1), 160) }
   const dayKeep = () => clearTimeout(dayTimer.current)
@@ -160,6 +163,9 @@ export default function App() {
               <button type="button" className={lang === 'de' ? 'on' : ''} onClick={() => switchLang('de')}>DE</button>
               <button type="button" className={lang === 'sl' ? 'on' : ''} onClick={() => switchLang('sl')}>SL</button>
             </div>
+            <div className="seg">
+              <button type="button" className={showChars ? 'on' : ''} onClick={toggleChars} aria-pressed={showChars} title="Show / hide characters">☺</button>
+            </div>
           </div>
         </header>
 
@@ -231,18 +237,34 @@ export default function App() {
               </div>
             </div>
 
-            {wx.hourly?.length > 1 && (
-              <div className="hours">
-                {wx.hourly.slice(0, 24).map((h, i) => (
-                  <div key={h.time} className="hour">
-                    <span className="hName">{i === 0 ? t.now : String(h.hour).padStart(2, '0')}</span>
-                    <WeatherIcon cat={category(h.code)} day={h.isDay} size={30} />
-                    <span className="hTemp">{toTemp(h.tempC, unit)}°</span>
-                    <span className="hPop">{h.pop > 5 ? `${h.pop}%` : ''}</span>
+            {(() => {
+              const dayObj = selDay >= 0 ? wx.daily?.[selDay] : null
+              const stripHours = dayObj && wx.weekHours?.length
+                ? wx.weekHours.filter(h => h.date === dayObj.date)
+                : (wx.hourly || []).slice(0, 24)
+              if (stripHours.length < 2) return null
+              const dayName = dayObj ? (selDay === 0 ? t.today : t.days[new Date(dayObj.date).getDay()]) : null
+              return (
+                <div className="hoursWrap">
+                  {dayObj && (
+                    <div className="hoursHead">
+                      <span>{dayName}</span>
+                      <button type="button" className="hoursNow" onClick={() => setSelDay(-1)}>{t.now}</button>
+                    </div>
+                  )}
+                  <div className="hours" key={selDay}>
+                    {stripHours.map((h, i) => (
+                      <div key={h.time} className="hour">
+                        <span className="hName">{!dayObj && i === 0 ? t.now : String(h.hour).padStart(2, '0')}</span>
+                        <WeatherIcon cat={category(h.code)} day={h.isDay} size={30} />
+                        <span className="hTemp">{toTemp(h.tempC, unit)}°</span>
+                        <span className="hPop">{h.pop > 5 ? `${h.pop}%` : ''}</span>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            )}
+                </div>
+              )
+            })()}
 
             <div className="grid">
               <div><span>{t.humidity}</span><b>{wx.humidity}%</b></div>
@@ -268,7 +290,7 @@ export default function App() {
                 <div className="outlookLabel">{t.outlook}</div>
                 <div className="days">
                   {wx.daily.map((d, i) => (
-                    <button key={d.date} type="button" className={`day ${openDay === i ? 'day--on' : ''}`} aria-expanded={openDay === i} onClick={() => { dayKeep(); setOpenDay(openDay === i ? -1 : i) }} onMouseLeave={dayArm}>
+                    <button key={d.date} type="button" className={`day ${selDay === i ? 'day--on' : ''}`} aria-expanded={openDay === i} onClick={() => { dayKeep(); setOpenDay(openDay === i ? -1 : i); setSelDay(selDay === i ? -1 : i) }} onMouseLeave={dayArm}>
                       <span className="dName">{i === 0 ? t.today : t.days[new Date(d.date).getDay()]}</span>
                       <WeatherIcon cat={category(d.code)} day size={28} />
                       {d.pop > 5 && <span className="dPop">{d.pop}%</span>}
@@ -315,7 +337,7 @@ export default function App() {
           </main>
         )}
 
-        <Figures cat={cat} day={day} className="mascots" />
+        {showChars && <Figures cat={cat} day={day} className="mascots" />}
         <footer className="foot"><span className="copy">© 2026 David Jelen</span></footer>
       </div>
     </div>
