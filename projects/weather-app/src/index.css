@@ -43,8 +43,8 @@ body {
 .sr-flash { opacity: 0; animation: srFlash 9s steps(1, end) infinite; }
 @keyframes srFlash { 0%, 5%, 100% { opacity: 0; } 1% { opacity: 0.7; } 2% { opacity: 0.12; } 3.2% { opacity: 0.55; } }
 
-/* mascot figurines overlay */
-.mascots { position: fixed; left: 50%; bottom: 0; transform: translateX(-50%); width: min(360px, 66vw); z-index: 1; pointer-events: none; filter: drop-shadow(0 10px 26px rgba(0, 0, 0, 0.4)); }
+/* mascot figurines: a small, unobtrusive addition in the normal flow (not fixed) */
+.mascots { display: block; width: min(220px, 52vw); margin: 2px auto -6px; pointer-events: none; opacity: 0.95; filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.32)); }
 
 @media (prefers-reduced-motion: reduce) {
   .sr-clouds, .sr-rays, .sr-bloom, .sr-rain, .sr-snow, .sr-star, .sr-flash { animation: none; }
@@ -176,8 +176,7 @@ body {
 @media (max-width: 520px) {
   .now { gap: 14px; }
   .now .temp { font-size: clamp(3.6rem, 20vw, 5rem); }
-  .mascots { width: min(300px, 74vw); }
-  .ui { padding-bottom: 26px; }
+  .mascots { width: min(180px, 60vw); }
 }
 @media (max-width: 430px) {
   .grid { grid-template-columns: repeat(2, 1fr); }
@@ -229,3 +228,47 @@ body {
 .warn__ico { font-size: 1.1rem; line-height: 1; }
 .warn--severe { background: rgba(200, 32, 32, 0.92); color: #fff; }
 .warn--warn { background: rgba(201, 108, 12, 0.9); color: #fff; }
+
+/* live search suggestions dropdown (floats over content, animated) */
+.searchWrap { position: relative; }
+.results {
+  position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 20;
+  background: var(--glass-strong); border: 1px solid var(--brd); border-radius: 16px; overflow: hidden;
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  animation: resDrop 0.18s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+@keyframes resDrop { from { opacity: 0; transform: translateY(-8px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.results li { opacity: 0; animation: resItem 0.22s ease-out forwards; }
+@keyframes resItem { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: translateX(0); } }
+.results li button { width: 100%; text-align: left; background: none; border: 0; color: var(--ink); padding: 11px 16px; font: inherit; cursor: pointer; display: flex; flex-direction: column; gap: 1px; transition: background 0.12s; }
+.results li + li button { border-top: 1px solid rgba(128, 128, 128, 0.18); }
+.results li button:hover { background: var(--glass); }
+.resName { font-weight: 600; font-size: 0.95rem; }
+.resSub { font-size: 0.76rem; opacity: 0.7; }
+
+/* 7-day outlook: click a day for an auto-closing detail popover */
+.days { position: relative; }
+.day { cursor: pointer; color: inherit; font: inherit; transition: background 0.15s, transform 0.1s; }
+.day:hover { background: var(--glass-strong); }
+.day:active { transform: scale(0.97); }
+.day--on { outline: 2px solid rgba(255, 255, 255, 0.55); outline-offset: -1px; }
+.dayPop {
+  position: absolute; bottom: calc(100% + 12px); transform: translateX(-50%);
+  width: min(220px, 76vw); z-index: 20; color: var(--ink);
+  background: var(--glass-strong); border: 1px solid var(--brd); border-radius: 16px; padding: 14px;
+  backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
+  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.4);
+  display: flex; flex-direction: column; gap: 12px;
+  animation: dayPopIn 0.17s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+.dayPop::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 7px solid transparent; border-top-color: var(--glass-strong); }
+@keyframes dayPopIn { from { opacity: 0; transform: translateX(-50%) translateY(8px) scale(0.94); } to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); } }
+.dayPop__head { display: flex; align-items: center; gap: 10px; }
+.dayPop__day { font-size: 0.98rem; font-weight: 700; }
+.dayPop__cond { font-size: 0.8rem; opacity: 0.82; }
+.dayPop__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.dayPop__grid > div { background: var(--tile); border: 1px solid var(--tile-brd); border-radius: 11px; padding: 8px 10px; display: flex; flex-direction: column; gap: 2px; }
+.dayPop__grid span { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.72; }
+.dayPop__grid b { font-size: 1rem; font-weight: 700; }
+@media (prefers-reduced-motion: reduce) { .dayPop, .results, .results li { animation: none; opacity: 1; } }

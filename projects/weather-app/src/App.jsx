@@ -63,6 +63,10 @@ export default function App() {
   const [results, setResults] = useState([])
   const [openSources, setOpenSources] = useState(false)
   const [openPred, setOpenPred] = useState(-1)
+  const [openDay, setOpenDay] = useState(-1)
+  const dayTimer = useRef(null)
+  const dayArm = () => { clearTimeout(dayTimer.current); dayTimer.current = setTimeout(() => setOpenDay(-1), 160) }
+  const dayKeep = () => clearTimeout(dayTimer.current)
   const t = T[lang]
 
   useEffect(() => { document.documentElement.lang = lang }, [lang])
@@ -110,14 +114,24 @@ export default function App() {
     )
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // live suggestions as you type (debounced), so you never have to submit to see them
+  useEffect(() => {
+    const q = query.trim()
+    if (q.length < 2) { setResults([]); return }
+    const id = setTimeout(async () => {
+      try { setResults(await geocode(q, lang)) } catch { setResults([]) }
+    }, 220)
+    return () => clearTimeout(id)
+  }, [query, lang])
+
   async function onSearch(e) {
     e.preventDefault()
     const q = query.trim()
     if (!q) return
+    if (results.length) { pick(results[0]); return } // Enter picks the top suggestion
     try {
       const hits = await geocode(q, lang)
-      if (hits.length === 1) pick(hits[0])
-      else setResults(hits)
+      if (hits.length) pick(hits[0]); else setResults([])
     } catch { setResults([]) }
   }
   const label = h => [h.name, h.admin, h.country].filter(Boolean).join(', ')
@@ -132,7 +146,6 @@ export default function App() {
   return (
     <div className={`app ${day ? 'day' : 'night'}`} data-cat={cat}>
       <SkyReal weather={wx} />
-      <Figures cat={cat} day={day} className="mascots" />
       <div className="scrim" />
       <div className="ui">
         <header className="top">
@@ -150,17 +163,25 @@ export default function App() {
           </div>
         </header>
 
-        <form className="search" onSubmit={onSearch}>
-          <input value={query} onChange={e => setQuery(e.target.value)} placeholder={t.search} aria-label={t.search} />
-          <button type="submit" aria-label="search">→</button>
-        </form>
-        {results.length > 0 && (
-          <ul className="results">
-            {results.map((h, i) => (
-              <li key={i}><button type="button" onClick={() => pick(h)}>{label(h)}</button></li>
-            ))}
-          </ul>
-        )}
+        <div className="searchWrap">
+          <form className="search" onSubmit={onSearch}>
+            <input value={query} onChange={e => setQuery(e.target.value)} placeholder={t.search} aria-label={t.search}
+              autoComplete="off" onFocus={e => e.target.select()} />
+            <button type="submit" aria-label="search" title={t.search}>→</button>
+          </form>
+          {results.length > 0 && (
+            <ul className="results">
+              {results.map((h, i) => (
+                <li key={i} style={{ animationDelay: `${i * 28}ms` }}>
+                  <button type="button" onClick={() => pick(h)}>
+                    <span className="resName">{h.name}</span>
+                    <span className="resSub">{[h.admin, h.country].filter(Boolean).join(', ')}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
 
         {status === 'ok' && wx?.predictions?.length > 0 && (
           <div className="preds">
@@ -247,13 +268,32 @@ export default function App() {
                 <div className="outlookLabel">{t.outlook}</div>
                 <div className="days">
                   {wx.daily.map((d, i) => (
-                    <div key={d.date} className="day">
+                    <button key={d.date} type="button" className={`day ${openDay === i ? 'day--on' : ''}`} aria-expanded={openDay === i} onClick={() => { dayKeep(); setOpenDay(openDay === i ? -1 : i) }} onMouseLeave={dayArm}>
                       <span className="dName">{i === 0 ? t.today : t.days[new Date(d.date).getDay()]}</span>
                       <WeatherIcon cat={category(d.code)} day size={28} />
                       {d.pop > 5 && <span className="dPop">{d.pop}%</span>}
                       <span className="dTemp">{toTemp(d.max, unit)}°<i>{toTemp(d.min, unit)}°</i></span>
-                    </div>
+                    </button>
                   ))}
+                  {openDay >= 0 && wx.daily[openDay] && (
+                    <div className="dayPop" role="dialog"
+                      style={{ left: `${Math.min(Math.max(((openDay + 0.5) / wx.daily.length) * 100, 18), 82)}%` }}
+                      onMouseEnter={dayKeep} onMouseLeave={() => { dayKeep(); setOpenDay(-1) }}>
+                      <div className="dayPop__head">
+                        <WeatherIcon cat={category(wx.daily[openDay].code)} day size={38} />
+                        <div>
+                          <div className="dayPop__day">{openDay === 0 ? t.today : t.days[new Date(wx.daily[openDay].date).getDay()]}</div>
+                          <div className="dayPop__cond">{conditionLabel(category(wx.daily[openDay].code), lang)}</div>
+                        </div>
+                      </div>
+                      <div className="dayPop__grid">
+                        <div><span>↑</span><b>{toTemp(wx.daily[openDay].max, unit)}°</b></div>
+                        <div><span>↓</span><b>{toTemp(wx.daily[openDay].min, unit)}°</b></div>
+                        <div><span>{t.precip}</span><b>{wx.daily[openDay].pop != null ? wx.daily[openDay].pop : 0}%</b></div>
+                        <div><span>{t.uv}</span><b>{wx.daily[openDay].uvMax != null ? Math.round(wx.daily[openDay].uvMax) : 'n/a'}</b></div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -275,6 +315,7 @@ export default function App() {
           </main>
         )}
 
+        <Figures cat={cat} day={day} className="mascots" />
         <footer className="foot"><span className="copy">© 2026 David Jelen</span></footer>
       </div>
     </div>
