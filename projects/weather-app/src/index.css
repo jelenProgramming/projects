@@ -25,7 +25,7 @@ body {
   --tile: rgba(255, 255, 255, 0.42); --tile-brd: rgba(0, 0, 0, 0.08);
 }
 
-.sky { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; }
+.sky { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; pointer-events: none; }
 
 /* hyperreal SVG sky animations (transform/opacity only, GPU friendly) */
 .sr-clouds { animation: srDrift 100s linear infinite; will-change: transform; }
